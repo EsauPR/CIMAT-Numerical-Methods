@@ -9,7 +9,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "../../src/matrix.h"
-#include "../../src/linear_equations_systems_solutions/gaussian_elimination.h"
 
 
 int main(int argc, char const *argv[]) {
