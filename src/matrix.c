@@ -13,16 +13,15 @@
 
 /*Create the memory for a array*/
 double *create_dynamic_array(int size) {
-    return malloc(size * sizeof(double));
+    return (double *)malloc(size * sizeof(double));
 }
 
 /* Create the memory for a augmented matrix with a extra col */
-double **create_augmented_matrix(int rows, int cols) {
-    double **matrix = NULL;
-    matrix = calloc(rows, sizeof(double *));
+double **create_matrix(int rows, int cols) {
+    double **matrix = (double **)malloc(rows * sizeof(double*));
 
     for (int i = 0; i < rows; i++){
-        matrix[i] = create_dynamic_array(cols + 1);
+        matrix[i] = create_dynamic_array(cols);
     }
 
     return matrix;
@@ -30,7 +29,7 @@ double **create_augmented_matrix(int rows, int cols) {
 
 /* Create a square augmented matrix with a extra col*/
 double **create_square_augmented_matrix(int size) {
-    return create_augmented_matrix(size, size);
+    return create_matrix(size, size + 1);
 }
 
 /* Liberate the matrix memory */
@@ -58,7 +57,7 @@ matrix_point find_matrix_max_element(double ** matrix, int from_row, int from_co
 
     for (int i = from_row; i <= to_row; i++) {
         for (int j = from_col; j <= to_col; j++) {
-            if (matrix[i][j] > mp.value) {
+            if (ABS(matrix[i][j]) > ABS(mp.value)) {
                 mp.value = matrix[i][j];
                 mp.row = i;
                 mp.col = j;
@@ -105,17 +104,21 @@ double get_diagonal_determinant(double **matrix, int size) {
     return determinant;
 }
 
-/* Read a augmented square matrix  */
-double **read_augmented_square_matrix(int size) {
-    double **matrix = create_square_augmented_matrix(size);
+double **read_matrix(int rows, int cols) {
+    double **matrix = create_square_augmented_matrix(rows);
 
-    for (int i = 0; i < size; i++) {
-        for (int j = 0; j <= size; j++) {
+    for (int i = 0; i < cols; i++) {
+        for (int j = 0; j < cols; j++) {
             scanf("%lf", &matrix[i][j]);
         }
     }
 
     return matrix;
+}
+
+/* Read a augmented square matrix  */
+double **read_augmented_square_matrix(int size) {
+    return read_matrix(size, size + 1);
 }
 
 /* Print the augmented matrix solution */

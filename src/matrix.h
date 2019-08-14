@@ -20,6 +20,8 @@
 /* Generic swap */
 #define SWAP(x, y) do { typeof(x) SWAP = x; x = y; y = SWAP; } while (0)
 
+#define ABS(n) ((n < 0)? (-n):(n))
+
 /* Represent a matrix element with the positions i,j */
 typedef struct matrix_point {
     double value;
@@ -32,7 +34,7 @@ typedef struct matrix_point {
 EXTERN double *create_dynamic_array(int size);
 
 /* Create the memory for a augmented matrix with a extra col */
-EXTERN double **create_augmented_matrix(int rows, int cols);
+EXTERN double **create_matrix(int rows, int cols);
 
 /* Create a square augmented matrix with a extra col*/
 EXTERN double **create_square_augmented_matrix(int size);
@@ -58,6 +60,8 @@ EXTERN void print_matrix(double **matrix, int rows, int cols);
 /* Compute the determinant for a diagonal or triangular matrix */
 EXTERN double get_diagonal_determinant(double **matrix, int size);
 
+/* Read a augmented square matrix  */
+EXTERN double **read_matrix(int rows, int cols);
 /* Read a augmented square matrix  */
 EXTERN double **read_augmented_square_matrix(int size);
 
