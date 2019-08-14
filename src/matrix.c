@@ -9,7 +9,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-
+#include "matrix.h"
 
 /*Create the memory for a array*/
 double *create_dynamic_array(int size) {
@@ -19,7 +19,7 @@ double *create_dynamic_array(int size) {
 /* Create the memory for a augmented matrix with a extra col */
 double **create_augmented_matrix(int rows, int cols) {
     double **matrix = NULL;
-    matrix = malloc(rows * sizeof(double *));
+    matrix = calloc(rows, sizeof(double *));
 
     for (int i = 0; i < rows; i++){
         matrix[i] = create_dynamic_array(cols + 1);
@@ -54,6 +54,38 @@ void print_matrix(double **matrix, int rows, int cols) {
             printf("%lf ", matrix[i][j]);
         }
         puts("");
+    }
+    puts("");
+}
+
+/* Compute the determinant for a diagonal or triangular matrix */
+double get_diagonal_determinant(double **matrix, int size) {
+    double determinant = 1.0;
+
+    for (int i = 0; i < size; i++) {
+        determinant *= matrix[i][i];
+    }
+
+    return determinant;
+}
+
+/* Read a augmented square matrix  */
+double **read_augmented_square_matrix(int size) {
+    double **matrix = create_square_augmented_matrix(size);
+
+    for (int i = 0; i < size; i++) {
+        for (int j = 0; j <= size; j++) {
+            scanf("%lf", &matrix[i][j]);
+        }
+    }
+
+    return matrix;
+}
+
+/* Print the augmented matrix solution */
+void print_result(double *result, int size) {
+    for (int i = 0; i < size; i++){
+        printf("X_%d = %lf\n", i + 1, result[i]);
     }
     puts("");
 }
