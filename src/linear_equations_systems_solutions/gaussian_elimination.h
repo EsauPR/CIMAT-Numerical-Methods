@@ -16,7 +16,8 @@
     #define EXTERN extern
 #endif
 
-
+/* Solve a square matrix by gaussian elimination without pivot */
+EXTERN double *solve_by_simple_gaussian_elimination(double **matrix, int size);
 
 
 #endif
