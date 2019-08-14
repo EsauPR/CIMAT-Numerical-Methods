@@ -20,13 +20,18 @@ int main(int argc, char const *argv[]) {
     double **matrix = read_augmented_square_matrix(size);
     print_matrix(matrix, size, size + 1);
 
-    // double *result = solve_lower_triangular_matrix(matrix, size);
-    // print_result(result, size);
+    double *result = solve_by_simple_gaussian_elimination(matrix, size);
+    if (result == NULL) {
+        puts("The sysyem has not a unique solution");
+    }
 
-    // printf("Determinant: %lf\n", get_diagonal_determinant(matrix, size));
+    print_matrix(matrix, size, size + 1);
+    print_result(result, size);
 
-    // free_squared_augmented_matriz(matrix, size);
-    // free(result);
+    printf("Determinant: %lf\n", get_diagonal_determinant(matrix, size));
+
+    free_squared_augmented_matriz(matrix, size);
+    free(result);
 
     return 0;
 }
