@@ -7,33 +7,43 @@
     @email esau.opr@gmail.com
 */
 
-#include <stdio.h>
-#include <stdlib.h>
 
+#ifndef MATRIX_H
+#define MATRIX_H
+
+#ifdef MATRIX_IMPORT
+    #define EXTERN
+#else
+    #define EXTERN extern
+#endif
 
 /*Create the memory for a array*/
-double *create_dynamic_array(int size);
+EXTERN double *create_dynamic_array(int size);
 
 /* Create the memory for a augmented matrix with a extra col */
-double **create_augmented_matrix(int rows, int cols);
+EXTERN double **create_augmented_matrix(int rows, int cols);
 
 /* Create a square augmented matrix with a extra col*/
-double **create_square_augmented_matrix(int size);
+EXTERN double **create_square_augmented_matrix(int size);
 
 /* Liberate the matrix memory */
-void free_matriz(double **matrix, int rows, int cols);
+EXTERN void free_matriz(double **matrix, int rows, int cols);
 
 /* Liberate the matrix memory */
-void free_squared_augmented_matriz(double **matrix, int size);
+EXTERN void free_squared_augmented_matriz(double **matrix, int size);
 
 /* Print a matrix*/
-void print_matrix(double **matrix, int rows, int cols);
+EXTERN void print_matrix(double **matrix, int rows, int cols);
 
 /* Compute the determinant for a diagonal or triangular matrix */
-double get_diagonal_determinant(double **matrix, int size);
+EXTERN double get_diagonal_determinant(double **matrix, int size);
 
 /* Read a augmented square matrix  */
-double **read_augmented_square_matrix(int size);
+EXTERN double **read_augmented_square_matrix(int size);
 
 /* Print the augmented matrix solution */
-void print_result(double *result, int size);
+EXTERN void print_result(double *result, int size);
+
+#undef MATRIX_IMPORT
+#undef EXTERN
+#endif

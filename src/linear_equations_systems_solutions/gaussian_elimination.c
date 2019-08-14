@@ -7,6 +7,8 @@
     @email esau.opr@gmail.com
 */
 
-#include <stdlib.h>
 #include <stdio.h>
+
+#define DIRECT_SOLUTION_IMPORT
+#include "../matrix.h"
 #include "gaussian_elimination.h"

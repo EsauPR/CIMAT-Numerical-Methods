@@ -10,6 +10,9 @@
 
 
 #include <stdio.h>
+
+#define DIRECT_SOLUTION_IMPORT
+#include "../matrix.h"
 #include "direct_solution.h"
 
 /* Return array with the solution for a diagonal matrix */

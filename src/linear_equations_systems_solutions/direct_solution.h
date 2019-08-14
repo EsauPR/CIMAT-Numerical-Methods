@@ -8,6 +8,19 @@
     @email esau.opr@gmail.com
 */
 
+#ifndef DIRECT_SOLUTION_H
+#define DIRECT_SOLUTION_H
+
+#ifdef DIRECT_SOLUTION_IMPORT
+    #define EXTERN
+#else
+    #define EXTERN extern
+#endif
+
 
 /* Return array with the solution for a diagonal matrix */
-double *solve_diagonal_matrix(double **matrix, int size);
+EXTERN double *solve_diagonal_matrix(double **matrix, int size);
+
+#undef DIRECT_SOLUTION_IMPORT
+#undef EXTERN
+#endif

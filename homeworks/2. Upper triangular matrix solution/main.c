@@ -8,15 +8,15 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "../../src/matrix.c"
-#include "../../src/linear_equations_systems_solutions/backward_substitution.c"
+#include "../../src/matrix.h"
+#include "../../src/linear_equations_systems_solutions/backward_substitution.h"
 
 
 int main(int argc, char const *argv[]) {
     int size;
 
     scanf("%d", &size);
-
+    printf("ok");
     double **matrix = read_augmented_square_matrix(size);
     print_matrix(matrix, size, size + 1);
 

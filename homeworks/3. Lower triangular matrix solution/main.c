@@ -8,8 +8,8 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "../../src/matrix.c"
-#include "../../src/linear_equations_systems_solutions/backward_substitution.c"
+#include "../../src/matrix.h"
+#include "../../src/linear_equations_systems_solutions/backward_substitution.h"
 
 
 int main(int argc, char const *argv[]) {

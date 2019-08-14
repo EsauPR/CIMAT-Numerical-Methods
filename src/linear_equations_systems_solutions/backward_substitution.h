@@ -1,16 +1,16 @@
 /**
     ANSI C standard: c11
-    backward_substitutions.h
+    BACKWARD_SUBSTITUTION.h
     Purpose: Prototype for implementation for backward substitution algorithms
 
     @author Esaú Peralta
     @email esau.opr@gmail.com
 */
 
-#ifndef backward_substitutions_H
-#define backward_substitutions_H
+#ifndef BACKWARD_SUBSTITUTION_H
+#define BACKWARD_SUBSTITUTION_H
 
-#ifdef backward_substitution_IMPORT
+#ifdef BACKWARD_SUBSTITUTION_IMPORT
     #define EXTERN
 #else
     #define EXTERN extern
@@ -30,6 +30,6 @@ EXTERN double *solve_lower_triangular_matrix(double **matrix, int size);
 */
 EXTERN double *solve_upper_triangular_matrix(double **matrix, int size);
 
-#undef backward_substitution_IMPORT
+#undef BACKWARD_SUBSTITUTION_IMPORT
 #undef EXTERN
 #endif

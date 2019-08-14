@@ -8,8 +8,8 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "../../src/matrix.c"
-#include "../../src/linear_equations_systems_solutions/gaussian_elimination.c"
+#include "../../src/matrix.h"
+#include "../../src/linear_equations_systems_solutions/gaussian_elimination.h"
 
 
 int main(int argc, char const *argv[]) {
@@ -20,13 +20,13 @@ int main(int argc, char const *argv[]) {
     double **matrix = read_augmented_square_matrix(size);
     print_matrix(matrix, size, size + 1);
 
-    double *result = solve_lower_triangular_matrix(matrix, size);
-    print_result(result, size);
+    // double *result = solve_lower_triangular_matrix(matrix, size);
+    // print_result(result, size);
 
-    printf("Determinant: %lf\n", get_diagonal_determinant(matrix, size));
+    // printf("Determinant: %lf\n", get_diagonal_determinant(matrix, size));
 
-    free_squared_augmented_matriz(matrix, size);
-    free(result);
+    // free_squared_augmented_matriz(matrix, size);
+    // free(result);
 
     return 0;
 }

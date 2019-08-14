@@ -13,7 +13,7 @@ DEFS = -DDEBUG_FLAG -DEXPERIMENTAL=0
 BIN = main
 
 # Object files from which $BIN depends
-OBJS = ../../src/linear_equations_systems_solutions/backward_substitution.o \
+OBJS = ../../src/linear_equations_systems_solutions/direct_solution.o \
 	../../src/matrix.o
 
 # This default rule compiles the executable program
