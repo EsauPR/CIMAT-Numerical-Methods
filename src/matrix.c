@@ -47,6 +47,42 @@ void free_squared_augmented_matriz(double **matrix, int size) {
     free_matriz(matrix, size, size + 1);
 }
 
+
+/* Find the max element into a matrix range */
+matrix_point find_matrix_max_element(double ** matrix, int from_row, int from_col, int to_row, int to_col) {
+    matrix_point mp;
+
+    mp.value = matrix[from_row][from_col];
+    mp.row = from_row;
+    mp.col = from_col;
+
+    for (int i = from_row; i <= to_row; i++) {
+        for (int j = from_col; j <= to_col; j++) {
+            if (matrix[i][j] > mp.value) {
+                mp.value = matrix[i][j];
+                mp.row = i;
+                mp.col = j;
+            }
+        }
+    }
+
+    return mp;
+}
+
+/* Swap matrix columns */
+void swap_matrix_cols(double **matrix, int col_size, int col_1, int col_2) {
+    for (int i = 0; i < col_size; i++){
+        SWAP(matrix[i][col_1], matrix[i][col_2]);
+    }
+}
+
+/* Swap matrix rows */
+void swap_matrix_rows(double **matrix, int row_size, int row_1, int row_2) {
+    for (int i = 0; i < row_size; i++){
+        SWAP(matrix[row_1][i], matrix[row_2][i]);
+    }
+}
+
 /* Print a matrix*/
 void print_matrix(double **matrix, int rows, int cols) {
     for (int i = 0; i < rows; i++) {
