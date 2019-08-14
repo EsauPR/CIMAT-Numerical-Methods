@@ -26,7 +26,6 @@ double *solve_lower_triangular_matrix(double **matrix, int size) {
 
     for (int i = 1; i < size; i++) {
         result[i] = matrix[i][size];
-        printf("%lf\n", result[i]);
         for (int j = 0; j < i; j++) {
             result[i] -= matrix[i][j] * result[j];
         }

@@ -21,11 +21,12 @@ int main(int argc, char const *argv[]) {
     print_matrix(matrix, size, size + 1);
 
     double *result = solve_by_simple_gaussian_elimination(matrix, size);
+
     if (result == NULL) {
         puts("The sysyem has not a unique solution");
+        return 0;
     }
 
-    print_matrix(matrix, size, size + 1);
     print_result(result, size);
 
     printf("Determinant: %lf\n", get_diagonal_determinant(matrix, size));
