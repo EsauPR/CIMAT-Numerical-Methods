@@ -9,9 +9,9 @@
 
 
 #include <stdio.h>
+#include "../matrix.h"
 
 #define BACKWARD_SUBSTITUTION_IMPORT
-#include "../matrix.h"
 #include "backward_substitution.h"
 
 
