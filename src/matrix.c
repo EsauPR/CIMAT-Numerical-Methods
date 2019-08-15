@@ -48,8 +48,8 @@ void free_squared_augmented_matriz(double **matrix, int size) {
 
 
 /* Find the max element into a matrix range */
-matrix_point find_matrix_max_element(double ** matrix, int from_row, int from_col, int to_row, int to_col) {
-    matrix_point mp;
+MatrixElement find_matrix_max_element(double ** matrix, int from_row, int from_col, int to_row, int to_col) {
+    MatrixElement mp;
 
     mp.value = matrix[from_row][from_col];
     mp.row = from_row;
@@ -119,12 +119,4 @@ double **read_matrix(int rows, int cols) {
 /* Read a augmented square matrix  */
 double **read_augmented_square_matrix(int size) {
     return read_matrix(size, size + 1);
-}
-
-/* Print the augmented matrix solution */
-void print_result(double *result, int size) {
-    for (int i = 0; i < size; i++){
-        printf("X_%d = %lf\n", i + 1, result[i]);
-    }
-    puts("");
 }

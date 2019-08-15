@@ -23,11 +23,11 @@
 #define ABS(n) ((n < 0)? (-n):(n))
 
 /* Represent a matrix element with the positions i,j */
-typedef struct matrix_point {
+typedef struct matrix_MatrixElement{
     double value;
     int row;
     int col;
-} matrix_point;
+} MatrixElement;
 
 
 /*Create the memory for a array*/
@@ -46,7 +46,7 @@ EXTERN void free_matriz(double **matrix, int rows, int cols);
 EXTERN void free_squared_augmented_matriz(double **matrix, int size);
 
 /* Find the max element into a matrix range */
-EXTERN matrix_point find_matrix_max_element(double ** matrix, int from_row, int from_col, int to_row, int to_col);
+EXTERN MatrixElement find_matrix_max_element(double ** matrix, int from_row, int from_col, int to_row, int to_col);
 
 /* Swap matrix columns */
 EXTERN void swap_matrix_cols(double **matrix, int col_size, int col_1, int col_2);
@@ -64,9 +64,6 @@ EXTERN double get_diagonal_determinant(double **matrix, int size);
 EXTERN double **read_matrix(int rows, int cols);
 /* Read a augmented square matrix  */
 EXTERN double **read_augmented_square_matrix(int size);
-
-/* Print the augmented matrix solution */
-EXTERN void print_result(double *result, int size);
 
 #undef MATRIX_IMPORT
 #undef EXTERN

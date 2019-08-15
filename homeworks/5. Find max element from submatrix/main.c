@@ -19,7 +19,7 @@ int main(int argc, char const *argv[]) {
     double **matrix = read_matrix(size, size);
     print_matrix(matrix, size, size);
 
-    matrix_point mp = find_matrix_max_element(matrix, 0, 0, size - 1, size - 1);
+    MatrixElement mp = find_matrix_max_element(matrix, 0, 0, size - 1, size - 1);
 
     printf("El elemento con mayor valor obsoluto es: %lf, en (%d, %d)\n", mp.value, mp.row + 1, mp.col + 1);
 

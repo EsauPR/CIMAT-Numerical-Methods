@@ -20,36 +20,46 @@
     using backward substitution
 
 */
-double *solve_lower_triangular_matrix(double **matrix, int size) {
-    double * result = create_dynamic_array(size);
-    result[0] = matrix[0][size] / matrix[0][0];
+SystemSolution solve_lower_triangular_matrix(double **matrix, int size) {
+    SystemSolution system_solution;
+    system_solution.size = size;
+    system_solution.solution = create_dynamic_array(size);
+    system_solution.determinat = matrix[0][0];
+
+    system_solution.solution[0] = matrix[0][size] / matrix[0][0];
 
     for (int i = 1; i < size; i++) {
-        result[i] = matrix[i][size];
+        system_solution.solution[i] = matrix[i][size];
         for (int j = 0; j < i; j++) {
-            result[i] -= matrix[i][j] * result[j];
+            system_solution.solution[i] -= matrix[i][j] * system_solution.solution[j];
         }
-        result[i] /= matrix[i][i];
+        system_solution.solution[i] /= matrix[i][i];
+        system_solution.determinat *= matrix[i][i];
     }
 
-    return result;
+    return system_solution;
 }
 
 /*
     Return array with the solution for a upper triangular matrix
     using backward substitution
 */
-double *solve_upper_triangular_matrix(double **matrix, int size) {
-    double * result = create_dynamic_array(size);
-    result[size - 1] = matrix[size - 1][size] / matrix[size - 1][size - 1];
+SystemSolution solve_upper_triangular_matrix(double **matrix, int size) {
+    SystemSolution system_solution;
+    system_solution.size = size;
+    system_solution.solution = create_dynamic_array(size);
+    system_solution.determinat = matrix[0][0];
+
+    system_solution.solution[size - 1] = matrix[size - 1][size] / matrix[size - 1][size - 1];
 
     for (int i = 2; i <= size; i++) {
-        result[size - i] = matrix[size - i][size];
+        system_solution.solution[size - i] = matrix[size - i][size];
         for (int j = 1; j < i; j++) {
-            result[size - i] -= matrix[size - i][size - j] * result[size - j];
+            system_solution.solution[size - i] -= matrix[size - i][size - j] * system_solution.solution[size - j];
         }
-        result[size - i] /= matrix[size - i][size - i];
+        system_solution.solution[size - i] /= matrix[size - i][size - i];
+        system_solution.determinat *= matrix[i - 1][i - 1];
     }
 
-    return result;
+    return system_solution;
 }

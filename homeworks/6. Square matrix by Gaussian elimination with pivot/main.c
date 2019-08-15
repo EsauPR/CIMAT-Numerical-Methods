@@ -8,7 +8,9 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+
 #include "../../src/matrix.h"
+#include "../../src/linear_equations_systems_solutions/solution.h"
 #include "../../src/linear_equations_systems_solutions/gaussian_elimination.h"
 
 
@@ -20,19 +22,17 @@ int main(int argc, char const *argv[]) {
     double **matrix = read_augmented_square_matrix(size);
     print_matrix(matrix, size, size + 1);
 
-    double *result = solve_by_simple_gaussian_elimination(matrix, size);
+    SystemSolution system_solution = solve_by_gaussian_elimination(matrix, size);
 
-    if (result == NULL) {
+    if ( system_solution.solution == NULL) {
         puts("The sysyem has not a unique solution");
         return 0;
     }
 
-    print_result(result, size);
-
-    printf("Determinant: %lf\n", get_diagonal_determinant(matrix, size));
+    print_system_solution(system_solution);
 
     free_squared_augmented_matriz(matrix, size);
-    free(result);
+    free(system_solution.solution);
 
     return 0;
 }

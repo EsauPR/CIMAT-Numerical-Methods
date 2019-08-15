@@ -14,6 +14,7 @@ BIN = main
 
 # Object files from which $BIN depends
 OBJS = ../../src/linear_equations_systems_solutions/direct_solution.o \
+	../../src/linear_equations_systems_solutions/solution.o \
 	../../src/matrix.o
 
 # This default rule compiles the executable program

@@ -11,6 +11,8 @@
 #ifndef DIRECT_SOLUTION_H
 #define DIRECT_SOLUTION_H
 
+#include "solution.h"
+
 #ifdef DIRECT_SOLUTION_IMPORT
     #define EXTERN
 #else
@@ -19,7 +21,7 @@
 
 
 /* Return array with the solution for a diagonal matrix */
-EXTERN double *solve_diagonal_matrix(double **matrix, int size);
+EXTERN SystemSolution solve_diagonal_matrix(double **matrix, int size);
 
 #undef DIRECT_SOLUTION_IMPORT
 #undef EXTERN

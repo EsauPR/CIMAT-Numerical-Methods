@@ -16,17 +16,15 @@ int main(int argc, char const *argv[]) {
     int size;
 
     scanf("%d", &size);
-    printf("ok");
+
     double **matrix = read_augmented_square_matrix(size);
     print_matrix(matrix, size, size + 1);
 
-    double *result = solve_upper_triangular_matrix(matrix, size);
-    print_result(result, size);
-
-    printf("Determinant: %lf\n", get_diagonal_determinant(matrix, size));
+    SystemSolution system_solution = solve_upper_triangular_matrix(matrix, size);
+    print_system_solution(system_solution);
 
     free_squared_augmented_matriz(matrix, size);
-    free(result);
+    free(system_solution.solution);
 
     return 0;
 }
