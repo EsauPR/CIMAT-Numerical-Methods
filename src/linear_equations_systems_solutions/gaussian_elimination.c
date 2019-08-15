@@ -51,8 +51,10 @@ SystemSolution solve_by_simple_gaussian_elimination(double **matrix, int size) {
             }
 
             swap_matrix_rows(matrix, size + 1, pivot, mp.row);
+            system_solution.determinat *= -1.0;
         }
 
+        system_solution.determinat *= matrix[pivot][pivot];
         gaussian_elimination_make_row_pivot(matrix, size, pivot);
         gaussian_elimination_make_cols_zeros(matrix, size, pivot);
     }
@@ -103,14 +105,17 @@ SystemSolution solve_by_gaussian_elimination(double **matrix, int size) {
         if (ABS(matrix[pivot][pivot]) != ABS(mp.value)) {
             if ( pivot != mp.row) {
                 swap_matrix_rows(matrix, size + 1, pivot, mp.row);
+                system_solution.determinat *= -1.0;
             }
 
             if ( pivot != mp.col) {
                 swap_matrix_cols(matrix, size, pivot, mp.col);
                 SWAP(positions_map[pivot], positions_map[mp.col]);
+                system_solution.determinat *= -1.0;
             }
         }
 
+        system_solution.determinat *= matrix[pivot][pivot];
         gaussian_elimination_make_row_pivot(matrix, size, pivot);
         gaussian_elimination_make_cols_zeros(matrix, size, pivot);
     }
