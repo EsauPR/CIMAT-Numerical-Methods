@@ -27,11 +27,6 @@ double **create_matrix(int rows, int cols) {
     return matrix;
 }
 
-/* Create a square augmented matrix with a extra col*/
-double **create_square_augmented_matrix(int size) {
-    return create_matrix(size, size + 1);
-}
-
 /* Liberate the matrix memory */
 void free_matriz(double **matrix, int rows, int cols) {
     for (int i = 0; i < rows; i++){
@@ -94,9 +89,9 @@ void print_matrix(double **matrix, int rows, int cols) {
 }
 
 double **read_matrix(int rows, int cols) {
-    double **matrix = create_square_augmented_matrix(rows);
+    double **matrix = create_matrix(rows, cols);
 
-    for (int i = 0; i < cols; i++) {
+    for (int i = 0; i < rows; i++) {
         for (int j = 0; j < cols; j++) {
             scanf("%lf", &matrix[i][j]);
         }

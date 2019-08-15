@@ -36,9 +36,6 @@ EXTERN double *create_dynamic_array(int size);
 /* Create the memory for a augmented matrix with a extra col */
 EXTERN double **create_matrix(int rows, int cols);
 
-/* Create a square augmented matrix with a extra col*/
-EXTERN double **create_square_augmented_matrix(int size);
-
 /* Liberate the matrix memory */
 EXTERN void free_matriz(double **matrix, int rows, int cols);
 
