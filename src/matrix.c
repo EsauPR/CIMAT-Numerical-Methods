@@ -93,17 +93,6 @@ void print_matrix(double **matrix, int rows, int cols) {
     puts("");
 }
 
-/* Compute the determinant for a diagonal or triangular matrix */
-double get_diagonal_determinant(double **matrix, int size) {
-    double determinant = 1.0;
-
-    for (int i = 0; i < size; i++) {
-        determinant *= matrix[i][i];
-    }
-
-    return determinant;
-}
-
 double **read_matrix(int rows, int cols) {
     double **matrix = create_square_augmented_matrix(rows);
 

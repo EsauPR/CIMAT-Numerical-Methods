@@ -57,9 +57,6 @@ EXTERN void swap_matrix_rows(double **matrix, int row_size, int row_1, int row_2
 /* Print a matrix*/
 EXTERN void print_matrix(double **matrix, int rows, int cols);
 
-/* Compute the determinant for a diagonal or triangular matrix */
-EXTERN double get_diagonal_determinant(double **matrix, int size);
-
 /* Read a augmented square matrix  */
 EXTERN double **read_matrix(int rows, int cols);
 /* Read a augmented square matrix  */
