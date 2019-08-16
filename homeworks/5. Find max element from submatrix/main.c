@@ -11,7 +11,7 @@
 #include "../../src/matrix.h"
 
 
-int main(int argc, char const *argv[]) {
+int main() {
     int size;
 
     scanf("%d", &size);
@@ -23,7 +23,7 @@ int main(int argc, char const *argv[]) {
 
     printf("El elemento con mayor valor obsoluto es: %lf, en (%d, %d)\n", mp.value, mp.row + 1, mp.col + 1);
 
-    free_matriz(matrix, size, size);
+    free_matriz(matrix, size);
 
     return 0;
 }

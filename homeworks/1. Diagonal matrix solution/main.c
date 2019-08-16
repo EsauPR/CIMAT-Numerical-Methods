@@ -12,7 +12,7 @@
 #include "../../src/linear_equations_systems_solutions/direct_solution.h"
 
 
-int main(int argc, char const *argv[]) {
+int main() {
     int size;
 
     scanf("%d", &size);
@@ -23,7 +23,7 @@ int main(int argc, char const *argv[]) {
     SystemSolution system_solution = solve_diagonal_matrix(matrix, size);
     print_system_solution(system_solution);
 
-    free_squared_augmented_matriz(matrix, size);
+    free_matriz(matrix, size);
     free(system_solution.solution);
 
     return 0;

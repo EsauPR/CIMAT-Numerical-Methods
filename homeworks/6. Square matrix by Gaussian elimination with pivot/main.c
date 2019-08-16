@@ -14,7 +14,7 @@
 #include "../../src/linear_equations_systems_solutions/gaussian_elimination.h"
 
 
-int main(int argc, char const *argv[]) {
+int main() {
     int size;
 
     scanf("%d", &size);
@@ -31,7 +31,7 @@ int main(int argc, char const *argv[]) {
 
     print_system_solution(system_solution);
 
-    free_squared_augmented_matriz(matrix, size);
+    free_matriz(matrix, size);
     free(system_solution.solution);
 
     return 0;
