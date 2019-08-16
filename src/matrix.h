@@ -37,10 +37,7 @@ EXTERN double *create_dynamic_array(int size);
 EXTERN double **create_matrix(int rows, int cols);
 
 /* Liberate the matrix memory */
-EXTERN void free_matriz(double **matrix, int rows, int cols);
-
-/* Liberate the matrix memory */
-EXTERN void free_squared_augmented_matriz(double **matrix, int size);
+EXTERN void free_matriz(double **matrix, int rows);
 
 /* Find the max element into a matrix range */
 EXTERN MatrixElement find_matrix_max_element(double ** matrix, int from_row, int from_col, int to_row, int to_col);

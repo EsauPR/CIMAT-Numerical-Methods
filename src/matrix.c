@@ -28,17 +28,12 @@ double **create_matrix(int rows, int cols) {
 }
 
 /* Liberate the matrix memory */
-void free_matriz(double **matrix, int rows, int cols) {
+void free_matriz(double **matrix, int rows) {
     for (int i = 0; i < rows; i++){
         free(matrix[i]);
     }
 
     free(matrix);
-}
-
-/* Liberate the matrix memory */
-void free_squared_augmented_matriz(double **matrix, int size) {
-    free_matriz(matrix, size, size + 1);
 }
 
 
