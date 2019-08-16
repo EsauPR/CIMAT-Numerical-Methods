@@ -1,7 +1,7 @@
 # Makefile
 
 # Compiler flags: all warnings + debugger meta-data
-CFLAGS = -Wall -g
+CFLAGS = -Wall -Wextra -Werror -Wpedantic -g
 
 # External libraries: only math in this example
 LIBS = -lm
