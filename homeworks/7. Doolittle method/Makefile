@@ -1,7 +1,7 @@
 # Makefile
 
 # Compiler flags: all warnings + debugger meta-data
-CFLAGS = -Wall -Wextra -Werror -Wpedantic-g
+CFLAGS = -Wall -Wextra -Werror -Wpedantic -g
 
 # External libraries: only math in this example
 LIBS = -lm
@@ -14,7 +14,7 @@ BIN = main
 
 # Object files from which $BIN depends
 OBJS = ../../src/linear_equations_systems_solutions/backward_substitution.o \
-	../../src/linear_equations_systems_solutions/gaussian_elimination.o \
+	../../src/linear_equations_systems_solutions/doolittle.o \
 	../../src/linear_equations_systems_solutions/solution.o \
 	../../src/matrix.o
 
