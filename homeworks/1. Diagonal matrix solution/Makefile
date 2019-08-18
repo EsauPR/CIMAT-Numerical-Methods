@@ -1,7 +1,7 @@
 # Makefile
 
 # Compiler flags: all warnings + debugger meta-data
-CFLAGS = -Wall -Wextra -Werror -Wpedantic-g
+CFLAGS = -Wall -Wextra -Werror -Wpedantic -g
 
 # External libraries: only math in this example
 LIBS = -lm
@@ -15,7 +15,8 @@ BIN = main
 # Object files from which $BIN depends
 OBJS = ../../src/linear_equations_systems_solutions/direct_solution.o \
 	../../src/linear_equations_systems_solutions/solution.o \
-	../../src/matrix.o
+	../../src/matrix/matrixio.o \
+	../../src/matrix/matrix.o
 
 # This default rule compiles the executable program
 $(BIN): $(OBJS) $(BIN).c
