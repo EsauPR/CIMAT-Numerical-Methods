@@ -8,37 +8,36 @@
 */
 
 #include <stdio.h>
-#include "../matrix.h"
+#include <stdlib.h>
+
+#include "../matrix/matrixio.h"
+#include "../matrix/matrix.h"
+#include "../linear_equations_systems_solutions/backward_substitution.h"
 
 #define DOOLITTLE_IMPORT
 #include "doolittle.h"
 
 
 SystemSolution solve_by_doolittle_method(double **matrix, int size) {
-    SystemSolution system_solution;
-    system_solution.solution = NULL;
-    system_solution.determinat = matrix[0][0];
-
-    for (int i = 1; i < size; i++) {
-        matrix[i][0] /= matrix[0][0];
+    SystemSolution system_solution = LU_decomposition(matrix, size);
+    if (system_solution.size == -1) {
+        return system_solution;
     }
-
-    for (int i = 1; i < size; i++) {
-        for (int j = 1; j < size; j++) {
-            int limit = (j < i) ? j:i;
-            for (int k = 0; k < limit; k++) {
-                matrix[i][j] -= matrix[i][k] * matrix[k][j];
-            }
-
-            if (j < i) {
-                matrix[i][j] /= matrix[j][j];
-            }
-        }
-
-        system_solution.determinat *= matrix[i][i];
+    // Solve Ly = b
+    double diagonal_backup[size];
+    for (int i = 0; i < size; i++) {
+        diagonal_backup[i] = matrix[i][i];
+        matrix[i][i] = 1.0;
     }
+    system_solution.solution = solve_lower_triangular_matrix(matrix, size).solution;
 
-    print_matrix(matrix, size, size);
+    // Solve Ux = y
+    for (int i = 0; i < size; i++) {
+        matrix[i][i] = diagonal_backup[i];
+        matrix[i][size] = system_solution.solution[i];
+    }
+    free(system_solution.solution);
+    system_solution.solution = solve_upper_triangular_matrix(matrix, size).solution;
 
     return system_solution;
 }
