@@ -20,7 +20,7 @@
 typedef struct solution_SystemSolution {
     int size;
     double * solution;
-    double determinat;
+    double determinant;
 } SystemSolution;
 
 

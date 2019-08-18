@@ -8,7 +8,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "../../src/matrix.h"
+#include "../../src/matrix/matrixio.h"
 #include "../../src/linear_equations_systems_solutions/direct_solution.h"
 
 
@@ -17,7 +17,7 @@ int main() {
 
     scanf("%d", &size);
 
-    double **matrix = read_augmented_square_matrix(size);
+    double **matrix = read_matrix(size, size + 1);
     print_matrix(matrix, size, size + 1);
 
     SystemSolution system_solution = solve_diagonal_matrix(matrix, size);

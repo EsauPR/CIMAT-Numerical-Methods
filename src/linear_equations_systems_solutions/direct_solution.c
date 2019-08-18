@@ -10,7 +10,7 @@
 
 
 #include <stdio.h>
-#include "../matrix.h"
+#include "../matrix/matrixio.h"
 
 #define DIRECT_SOLUTION_IMPORT
 #include "direct_solution.h"
@@ -20,11 +20,11 @@ SystemSolution solve_diagonal_matrix(double **matrix, int size) {
     SystemSolution system_solution;
     system_solution.solution = create_dynamic_array(size);
     system_solution.size = size;
-    system_solution.determinat = 1.0;
+    system_solution.determinant = 1.0;
 
     for (int i = 0; i < size; i++) {
         system_solution.solution[i] = matrix[i][size] / matrix[i][i];
-        system_solution.determinat *= matrix[i][i];
+        system_solution.determinant *= matrix[i][i];
     }
 
     return system_solution;

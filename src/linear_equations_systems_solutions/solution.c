@@ -20,5 +20,5 @@ void print_system_solution(SystemSolution system_solution) {
     }
     puts("");
 
-    printf("Determinant: %lf\n", system_solution.determinat);
+    printf("Determinant: %lf\n", system_solution.determinant);
 }

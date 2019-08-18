@@ -9,7 +9,7 @@
 
 #include <stdio.h>
 
-#include "../matrix.h"
+#include "../matrix/matrix.h"
 #include "backward_substitution.h"
 #include "solution.h"
 
@@ -39,7 +39,7 @@ SystemSolution solve_by_simple_gaussian_elimination(double **matrix, int size) {
     SystemSolution system_solution;
     system_solution.solution = NULL;
     system_solution.size = size;
-    system_solution.determinat = 1.0;
+    system_solution.determinant = 1.0;
 
     for (int pivot = 0; pivot < size; pivot++) {
         // Replaze the pivots with value zero
@@ -51,10 +51,10 @@ SystemSolution solve_by_simple_gaussian_elimination(double **matrix, int size) {
             }
 
             swap_matrix_rows(matrix, size + 1, pivot, mp.row);
-            system_solution.determinat *= -1.0;
+            system_solution.determinant *= -1.0;
         }
 
-        system_solution.determinat *= matrix[pivot][pivot];
+        system_solution.determinant *= matrix[pivot][pivot];
         gaussian_elimination_make_row_pivot(matrix, size, pivot);
         gaussian_elimination_make_cols_zeros(matrix, size, pivot);
     }
@@ -92,7 +92,7 @@ SystemSolution solve_by_gaussian_elimination(double **matrix, int size) {
     SystemSolution system_solution;
     system_solution.solution = NULL;
     system_solution.size = size;
-    system_solution.determinat = 1.0;
+    system_solution.determinant = 1.0;
 
     for (int pivot = 0; pivot < size; pivot++) {
         MatrixElement mp = find_matrix_max_element(matrix, pivot, pivot, size - 1, size - 1);
@@ -105,17 +105,17 @@ SystemSolution solve_by_gaussian_elimination(double **matrix, int size) {
         if (ABS(matrix[pivot][pivot]) != ABS(mp.value)) {
             if ( pivot != mp.row) {
                 swap_matrix_rows(matrix, size + 1, pivot, mp.row);
-                system_solution.determinat *= -1.0;
+                system_solution.determinant *= -1.0;
             }
 
             if ( pivot != mp.col) {
                 swap_matrix_cols(matrix, size, pivot, mp.col);
                 SWAP(positions_map[pivot], positions_map[mp.col]);
-                system_solution.determinat *= -1.0;
+                system_solution.determinant *= -1.0;
             }
         }
 
-        system_solution.determinat *= matrix[pivot][pivot];
+        system_solution.determinant *= matrix[pivot][pivot];
         gaussian_elimination_make_row_pivot(matrix, size, pivot);
         gaussian_elimination_make_cols_zeros(matrix, size, pivot);
     }

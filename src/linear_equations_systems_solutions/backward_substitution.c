@@ -9,7 +9,9 @@
 
 
 #include <stdio.h>
-#include "../matrix.h"
+
+#include "../matrix/matrixio.h"
+#include "../matrix/matrix.h"
 
 #define BACKWARD_SUBSTITUTION_IMPORT
 #include "backward_substitution.h"
@@ -24,7 +26,7 @@ SystemSolution solve_lower_triangular_matrix(double **matrix, int size) {
     SystemSolution system_solution;
     system_solution.size = size;
     system_solution.solution = create_dynamic_array(size);
-    system_solution.determinat = matrix[0][0];
+    system_solution.determinant = matrix[0][0];
 
     system_solution.solution[0] = matrix[0][size] / matrix[0][0];
 
@@ -34,7 +36,7 @@ SystemSolution solve_lower_triangular_matrix(double **matrix, int size) {
             system_solution.solution[i] -= matrix[i][j] * system_solution.solution[j];
         }
         system_solution.solution[i] /= matrix[i][i];
-        system_solution.determinat *= matrix[i][i];
+        system_solution.determinant *= matrix[i][i];
     }
 
     return system_solution;
@@ -48,7 +50,7 @@ SystemSolution solve_upper_triangular_matrix(double **matrix, int size) {
     SystemSolution system_solution;
     system_solution.size = size;
     system_solution.solution = create_dynamic_array(size);
-    system_solution.determinat = matrix[0][0];
+    system_solution.determinant = matrix[0][0];
 
     system_solution.solution[size - 1] = matrix[size - 1][size] / matrix[size - 1][size - 1];
 
@@ -58,7 +60,7 @@ SystemSolution solve_upper_triangular_matrix(double **matrix, int size) {
             system_solution.solution[size - i] -= matrix[size - i][size - j] * system_solution.solution[size - j];
         }
         system_solution.solution[size - i] /= matrix[size - i][size - i];
-        system_solution.determinat *= matrix[i - 1][i - 1];
+        system_solution.determinant *= matrix[i - 1][i - 1];
     }
 
     return system_solution;

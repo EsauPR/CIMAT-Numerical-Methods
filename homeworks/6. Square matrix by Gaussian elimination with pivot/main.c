@@ -9,7 +9,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "../../src/matrix.h"
+#include "../../src/matrix/matrixio.h"
 #include "../../src/linear_equations_systems_solutions/solution.h"
 #include "../../src/linear_equations_systems_solutions/gaussian_elimination.h"
 
@@ -19,13 +19,13 @@ int main() {
 
     scanf("%d", &size);
 
-    double **matrix = read_augmented_square_matrix(size);
+    double **matrix = read_matrix(size, size + 1);
     print_matrix(matrix, size, size + 1);
 
     SystemSolution system_solution = solve_by_gaussian_elimination(matrix, size);
 
     if ( system_solution.solution == NULL) {
-        puts("The sysyem has not a unique solution");
+        puts("The system has not a unique solution");
         return 0;
     }
 
