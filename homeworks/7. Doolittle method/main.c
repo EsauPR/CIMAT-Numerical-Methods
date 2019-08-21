@@ -23,7 +23,6 @@ int main() {
     print_matrix(matrix, size, size + 1);
 
     SystemSolution system_solution = solve_by_doolittle_method(matrix, size);
-    print_matrix(matrix, size, size + 1);
 
     if ( system_solution.solution == NULL) {
         puts("The system has not a unique solution");
