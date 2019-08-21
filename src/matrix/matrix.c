@@ -47,14 +47,6 @@ void swap_matrix_rows(double **matrix, int row_size, int row_1, int row_2) {
     }
 }
 
-/* Restore a matrix row in a range */
-void restore_matrix_row(double **matrix, double *backup_row, int row, int from, int to) {
-    for (int i = from; i <= to; i++) {
-        matrix[row][i] = backup_row[i];
-    }
-}
-
-
 /*
     Make a LU decomposition over the same matrix. L is a lower trangular matrix
     with ones over the diagonal.
@@ -70,16 +62,12 @@ SystemSolution LU_decomposition(double ** matrix, int size) {
     SystemSolution system_solution;
     system_solution.size = size;
     system_solution.solution = NULL;
-    system_solution.determinant = matrix[0][0];
+    system_solution.determinant = 1.0;
 
     double backup_row[size + 1];
 
-    for (int i = 1; i < size; i++) {
-        matrix[i][0] /= matrix[0][0];
-    }
-
-    for (int i = 1, swap_row = 1; i < size; i++) {
-        for (int j = 1; j < size; j++) {
+    for (int i = 0, swap_row = i; i < size; i++) {
+        for (int j = 0; j < size; j++) {
             backup_row[j] = matrix[i][j];
 
             int limit = (j < i) ? j:i;
@@ -95,11 +83,10 @@ SystemSolution LU_decomposition(double ** matrix, int size) {
         // Swap rows to avoid division by zero
         if (matrix[i][i] == 0.0 && i < size -1) {
             // No more swaps available
-            if (swap_row++ == size) {
+            if (++swap_row == size) {
                 system_solution.size = -1;
                 return system_solution;
             }
-
             // Restore current row and swap
             SWAP(matrix[i][0], matrix[swap_row][0]);
             SWAP(matrix[i][size], matrix[swap_row][size]);
@@ -107,13 +94,13 @@ SystemSolution LU_decomposition(double ** matrix, int size) {
                 matrix[i][j] = backup_row[j];
                 SWAP(matrix[i][j], matrix[swap_row][j]);
             }
-
-            i--; // Reset computation for the current row
+            // Reset computation for the current row
+            i--;
             system_solution.determinant *= -1;
             continue;
         }
 
-        swap_row = i;
+        swap_row = i + 1;
         system_solution.determinant *= matrix[i][i];
     }
 
