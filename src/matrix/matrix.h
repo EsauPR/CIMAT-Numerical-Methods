@@ -22,7 +22,7 @@
 /* Generic swap */
 #define SWAP(x, y) do { typeof(x) SWAP = x; x = y; y = SWAP; } while (0)
 
-#define ABS(n) ((n < 0)? (-n):(n))
+#define ABS(n) (((n) < 0)? -(n):(n))
 
 /* Represent a matrix element with the positions i,j */
 typedef struct matrix_MatrixElement{
