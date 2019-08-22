@@ -24,12 +24,22 @@
 
 #define ABS(n) (((n) < 0)? -(n):(n))
 
+
+/*
+    Falgs to make operations
+*/
+typedef unsigned char __flag_t;
+static const unsigned char __NO_MATRIX_FLAGS__ = 0;
+static const unsigned char __DIAGONAL_HAS_ONES__ = 1;
+
+
 /* Represent a matrix element with the positions i,j */
 typedef struct matrix_MatrixElement{
     double value;
     int row;
     int col;
 } MatrixElement;
+
 
 /* Find the max element into a matrix range */
 EXTERN MatrixElement find_matrix_max_element(double ** matrix, int from_row, int from_col, int to_row, int to_col);
