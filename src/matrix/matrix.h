@@ -42,7 +42,7 @@ typedef struct matrix_MatrixElement{
 
 
 /* Find the max element into a matrix range */
-EXTERN MatrixElement find_matrix_max_element(double ** matrix, int from_row, int from_col, int to_row, int to_col);
+EXTERN MatrixElement find_matrix_max_element(double ** matrix, int from_row, int to_row, int from_col, int to_col);
 
 /* Swap matrix columns */
 EXTERN void swap_matrix_cols(double **matrix, int col_size, int col_1, int col_2);

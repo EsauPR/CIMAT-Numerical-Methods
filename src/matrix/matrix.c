@@ -13,15 +13,15 @@
 
 
 /* Find the max element into a matrix range */
-MatrixElement find_matrix_max_element(double ** matrix, int from_row, int from_col, int to_row, int to_col) {
+MatrixElement find_matrix_max_element(double ** matrix, int from_row, int to_row, int from_col, int to_col) {
     MatrixElement mp;
 
     mp.value = matrix[from_row][from_col];
     mp.row = from_row;
     mp.col = from_col;
 
-    for (int i = from_row; i <= to_row; i++) {
-        for (int j = from_col; j <= to_col; j++) {
+    for (int i = from_row; i < to_row; i++) {
+        for (int j = from_col; j < to_col; j++) {
             if (ABS(matrix[i][j]) > ABS(mp.value)) {
                 mp.value = matrix[i][j];
                 mp.row = i;
