@@ -8,22 +8,35 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "../../src/matrix.h"
+#include "../../src/matrix/matrixio.h"
+#include "../../src/matrix/matrix.h"
 
 
-int main() {
-    int size;
+int main(int argc, char *argv[]) {
+    int rows, cols;
 
-    scanf("%d", &size);
+    if (argc < 2) {
+        perror("main(): 1 Args missing");
+        exit(EXIT_FAILURE);
+    }
 
-    double **matrix = read_matrix(size, size);
-    print_matrix(matrix, size, size);
+    FILE *fp = fopen(argv[1], "r");
+    if(fp == NULL) {
+        perror("fopen()");
+        fclose(fp);
+        exit(EXIT_FAILURE);
+    }
 
-    MatrixElement mp = find_matrix_max_element(matrix, 0, 0, size - 1, size - 1);
+    fscanf(fp, "%d %d", &rows, &cols);
 
+    double **matrix = allocate_matrix(rows, cols);
+    read_matrix(fp, matrix, 0, rows, 0, cols);
+    print_matrix(matrix, rows, cols);
+
+    MatrixElement mp = find_matrix_max_element(matrix, 0, rows, 0, cols);
     printf("El elemento con mayor valor obsoluto es: %lf, en (%d, %d)\n", mp.value, mp.row + 1, mp.col + 1);
 
-    free_matriz(matrix, size);
+    free_matriz(matrix);
 
     return 0;
 }
