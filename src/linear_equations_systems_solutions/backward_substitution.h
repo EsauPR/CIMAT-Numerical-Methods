@@ -23,14 +23,17 @@
     Return array with the solution for a lower triangular matrix
     using backward substitution
 
+    Use the flag 'diag_with_ones' to asume that the diagonal is fullfiled with ones
 */
-EXTERN SystemSolution solve_lower_triangular_matrix(double **matrix, int size);
+EXTERN SystemSolution solve_lower_triangular_matrix(AugmentedMatrix, __flag_t flags);
 
 /*
     Return array with the solution for a upper triangular matrix
     using backward substitution
+
+    Use the flag 'diag_with_ones' to asume that the diagonal is fullfiled with ones
 */
-EXTERN SystemSolution solve_upper_triangular_matrix(double **matrix, int size);
+EXTERN SystemSolution solve_upper_triangular_matrix(AugmentedMatrix, __flag_t flags);
 
 #undef BACKWARD_SUBSTITUTION_IMPORT
 #undef EXTERN
