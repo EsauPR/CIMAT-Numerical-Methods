@@ -17,8 +17,12 @@
     #define EXTERN extern
 #endif
 
-
-
+/* Struct to represent a linear equation system solution */
+typedef struct {
+    int rows;
+    int cols;
+    double ** content;
+} AugmentedMatrix;
 
 /*Create the memory for a array*/
 EXTERN double *create_dynamic_array(int size);
@@ -27,13 +31,16 @@ EXTERN double *create_dynamic_array(int size);
 EXTERN double **create_matrix(int rows, int cols);
 
 /* Liberate the matrix memory */
-EXTERN void free_matriz(double **matrix, int rows);
+EXTERN void free_matriz(double **matrix);
 
 /* Print a matrix*/
 EXTERN void print_matrix(double **matrix, int rows, int cols);
 
-/* Read a matrix  */
-EXTERN double **read_matrix(int rows, int cols);
+/* Read a matrix and put the elements in a especif location range */
+EXTERN void read_matrix(FILE *fp, double** matrix, int from_row, int to_row, int from_col, int  to_col);
+
+/* Read two matrices and put the values in a augmented matrix*/
+EXTERN AugmentedMatrix read_augmented_matrix(char* matrix1_fname, char* matrix2_fname);
 
 #undef MATRIXIO_IMPORT
 #undef EXTERN
