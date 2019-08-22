@@ -49,7 +49,7 @@ SystemSolution solve_by_simple_gaussian_elimination(AugmentedMatrix matrix) {
     for (int pivot = 0; pivot < size; pivot++) {
         // Replaze the pivots with value zero
         if (mtxa[pivot][pivot] == 0) {
-            MatrixElement mp = find_matrix_max_element(mtxa, pivot + 1, pivot, size - 1, pivot);
+            MatrixElement mp = find_matrix_max_element(mtxa, pivot + 1, size, pivot, pivot + 1);
 
             if (mp.value == 0.0) {
                 return system_solution; // There is not solution
@@ -103,7 +103,7 @@ SystemSolution solve_by_gaussian_elimination(AugmentedMatrix matrix) {
     system_solution.determinant = 1.0;
 
     for (int pivot = 0; pivot < size; pivot++) {
-        MatrixElement mp = find_matrix_max_element(mtxa, pivot, pivot, size - 1, size - 1);
+        MatrixElement mp = find_matrix_max_element(mtxa, pivot, size, pivot, size);
 
         if (mp.value == 0.0) {
             return system_solution;
