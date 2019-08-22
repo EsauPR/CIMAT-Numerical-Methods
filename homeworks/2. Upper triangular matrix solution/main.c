@@ -25,7 +25,7 @@ int main(int argc, char *argv[]) {
     SystemSolution system_solution = solve_upper_triangular_matrix(matrix, __NO_MATRIX_FLAGS__);
     print_system_solution(system_solution);
 
-    free_matriz(matrix.content);
+    free_matriz(matrix);
     free(system_solution.solution);
 
     return 0;

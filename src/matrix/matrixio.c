@@ -23,26 +23,35 @@ double *create_dynamic_array(int size) {
 }
 
 /* Create the memory for a matrix */
-double **allocate_matrix(int rows, int cols) {
-    double **matrix = (double **)malloc(rows * sizeof(double*));
+Matrix allocate_matrix(int rows, int cols) {
+    Matrix matrix;
+    matrix.rows = rows;
+    matrix.cols = cols;
+    matrix.content = (double **)malloc(rows * sizeof(double*));
 
-    if (matrix == NULL) {
-        printf("ERROR: %s\n", strerror(errno));
+    if (matrix.content == NULL) {
+        perror("allocate_matrix(): ");
+        exit(EXIT_FAILURE);
     }
 
-    matrix[0] = create_dynamic_array(rows * cols);
+    matrix.pointer_start = create_dynamic_array(rows * cols);
+    if (matrix.pointer_start == NULL) {
+        perror("allocate_matrix(): ");
+        exit(EXIT_FAILURE);
+    }
 
+    matrix.content[0] = matrix.pointer_start;
     for (int i = 1; i < rows; i++){
-        matrix[i] = matrix[0] + i * cols;
+        matrix.content[i] = matrix.content[0] + i * cols;
     }
 
     return matrix;
 }
 
 /* Liberate the matrix memory */
-void free_matriz(double **matrix) {
-    free(matrix[0]);
-    free(matrix);
+void free_matriz(Matrix matrix) {
+    free(matrix.pointer_start);
+    free(matrix.content);
 }
 
 /* Print a matrix*/
@@ -68,11 +77,6 @@ void read_matrix(FILE *fp, double** matrix, int from_row, int to_row, int from_c
 
 /* Read two matrices and put the values in a augmented matrix*/
 AugmentedMatrix read_augmented_matrix(char *matrix1_fname, char *matrix2_fname){
-    AugmentedMatrix matrix;
-    matrix.content = NULL;
-    matrix.rows = 0;
-    matrix.cols = 0;
-
     int rows1, cols1;
     int rows2, cols2;
 
@@ -93,9 +97,7 @@ AugmentedMatrix read_augmented_matrix(char *matrix1_fname, char *matrix2_fname){
     fscanf(fp1, "%d %d", &rows1, &cols1);
     fscanf(fp2, "%d %d", &rows2, &cols2);
 
-    matrix.content = allocate_matrix(rows1, cols1 + cols2);
-    matrix.rows = rows1;
-    matrix.cols = cols1 + cols2;
+    Matrix matrix = allocate_matrix(rows1, cols1 + cols2);
 
     read_matrix(fp1, matrix.content, 0, rows1, 0, cols1);
     read_matrix(fp2, matrix.content, 0, rows1, cols1, cols1 + cols2);

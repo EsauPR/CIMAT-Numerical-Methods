@@ -41,10 +41,8 @@ void swap_matrix_cols(double **matrix, int col_size, int col_1, int col_2) {
 }
 
 /* Swap matrix rows */
-void swap_matrix_rows(double **matrix, int row_size, int row_1, int row_2) {
-    for (int i = 0; i < row_size; i++){
-        SWAP(matrix[row_1][i], matrix[row_2][i]);
-    }
+void swap_matrix_rows(double **matrix, int row_1, int row_2) {
+    SWAP(matrix[row_1], matrix[row_2]);
 }
 
 /*

@@ -21,17 +21,21 @@
 typedef struct {
     int rows;
     int cols;
+    double * pointer_start;
     double ** content;
-} AugmentedMatrix;
+} Matrix;
+
+typedef Matrix AugmentedMatrix;
+
 
 /*Create the memory for a array*/
 EXTERN double *create_dynamic_array(int size);
 
 /* Create the memory for a matrix */
-EXTERN double **allocate_matrix(int rows, int cols);
+EXTERN Matrix allocate_matrix(int rows, int cols);
 
 /* Liberate the matrix memory */
-EXTERN void free_matriz(double **matrix);
+EXTERN void free_matriz(Matrix matrix);
 
 /* Print a matrix*/
 EXTERN void print_matrix(double **matrix, int rows, int cols);

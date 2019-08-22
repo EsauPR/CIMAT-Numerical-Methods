@@ -48,7 +48,7 @@ EXTERN MatrixElement find_matrix_max_element(double ** matrix, int from_row, int
 EXTERN void swap_matrix_cols(double **matrix, int col_size, int col_1, int col_2);
 
 /* Swap matrix rows */
-EXTERN void swap_matrix_rows(double **matrix, int row_size, int row_1, int row_2);
+EXTERN void swap_matrix_rows(double **matrix, int row_1, int row_2);
 
 /*
     Make a LU decomposition over the same matrix. L is a lower trangular matrix

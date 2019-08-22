@@ -29,11 +29,15 @@ int main(int argc, char *argv[]) {
 
     fscanf(fp, "%d %d", &rows, &cols);
 
-    double **matrix = allocate_matrix(rows, cols);
-    read_matrix(fp, matrix, 0, rows, 0, cols);
-    print_matrix(matrix, rows, cols);
+    Matrix matrix = allocate_matrix(rows, cols);
+    read_matrix(fp, matrix.content, 0, rows, 0, cols);
+    fclose(fp);
 
-    MatrixElement mp = find_matrix_max_element(matrix, 0, rows, 0, cols);
+    print_matrix(matrix.content, rows, cols);
+    swap_matrix_rows(matrix.content, 0, 1);
+    print_matrix(matrix.content, rows, cols);
+
+    MatrixElement mp = find_matrix_max_element(matrix.content, 0, rows, 0, cols);
     printf("El elemento con mayor valor obsoluto es: %lf, en (%d, %d)\n", mp.value, mp.row + 1, mp.col + 1);
 
     free_matriz(matrix);
