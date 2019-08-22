@@ -12,15 +12,16 @@
 #include "../../src/linear_equations_systems_solutions/gaussian_elimination.h"
 
 
-int main() {
-    int size;
+int main(int argc, char *argv[]) {
+    if (argc < 3) {
+        perror("main(): 2 Args missing");
+        exit(EXIT_FAILURE);
+    }
 
-    scanf("%d", &size);
+    AugmentedMatrix matrix = read_augmented_matrix(argv[1], argv[2]);
+    print_matrix(matrix.content, matrix.rows, matrix.cols);
 
-    double **matrix = read_matrix(size, size + 1);
-    print_matrix(matrix, size, size + 1);
-
-    SystemSolution system_solution = solve_by_simple_gaussian_elimination(matrix, size);
+    SystemSolution system_solution = solve_by_simple_gaussian_elimination(matrix);
 
     if (system_solution.solution == NULL) {
         puts("The system has not a unique solution");
@@ -29,7 +30,7 @@ int main() {
 
     print_system_solution(system_solution);
 
-    free_matriz(matrix, size);
+    free_matriz(matrix.content);
     free(system_solution.solution);
 
     return 0;
