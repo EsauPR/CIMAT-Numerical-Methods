@@ -9,21 +9,23 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "../../src/matrix/matrixio.h"
+#include "../../src/matrix/matrix.h"
 #include "../../src/linear_equations_systems_solutions/backward_substitution.h"
 
 
-int main() {
-    int size;
+int main(int argc, char *argv[]) {
+    if (argc < 3) {
+        perror("main(): 2 Args missing");
+        exit(EXIT_FAILURE);
+    }
 
-    scanf("%d", &size);
+    AugmentedMatrix matrix = read_augmented_matrix(argv[1], argv[2]);
+    print_matrix(matrix.content, matrix.rows, matrix.cols);
 
-    double **matrix = read_matrix(size, size + 1);
-    print_matrix(matrix, size, size + 1);
-
-    SystemSolution system_solution = solve_lower_triangular_matrix(matrix, size);
+    SystemSolution system_solution = solve_lower_triangular_matrix(matrix, __NO_MATRIX_FLAGS__);
     print_system_solution(system_solution);
 
-    free_matriz(matrix, size);
+    free_matriz(matrix.content);
     free(system_solution.solution);
 
     return 0;
