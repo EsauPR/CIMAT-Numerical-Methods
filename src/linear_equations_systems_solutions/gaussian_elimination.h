@@ -19,10 +19,10 @@
 #endif
 
 /* Solve a square matrix by gaussian elimination without pivot */
-EXTERN SystemSolution solve_by_simple_gaussian_elimination(double **matrix, int size);
+EXTERN SystemSolution solve_by_simple_gaussian_elimination(AugmentedMatrix matrix);
 
 /* Solve a square matrix by gaussian elimination with pivot */
-EXTERN SystemSolution solve_by_gaussian_elimination(double **matrix, int size);
+EXTERN SystemSolution solve_by_gaussian_elimination(AugmentedMatrix matrix);
 
 
 #endif
