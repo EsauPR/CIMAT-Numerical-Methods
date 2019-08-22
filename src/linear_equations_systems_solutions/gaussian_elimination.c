@@ -80,11 +80,16 @@ static void gaussian_elimination_set_positions_map(int *positions_map, int size)
 /* Sort the result by positions map */
 static void gaussian_elimination_sort_result(double *result, int *positions_map, int size) {
     for (int i = 0; i < size; i++) {
-        if (positions_map[i] != i) {
-            SWAP(result[i], result[positions_map[i]]);
-            positions_map[positions_map[i]] = positions_map[i];
-            positions_map[i] = i;
+        if (positions_map[i] == i) continue;
+
+        int pos = positions_map[i];
+        while(1) {
+            pos = positions_map[pos];
+            if (positions_map[pos] == i) break;
         }
+
+        SWAP(result[i], result[pos]);
+        SWAP(positions_map[i], positions_map[pos]);
     }
 }
 
