@@ -16,15 +16,18 @@
 #include "direct_solution.h"
 
 /* Return array with the solution for a diagonal matrix */
-SystemSolution solve_diagonal_matrix(double **matrix, int size) {
+SystemSolution solve_diagonal_matrix(AugmentedMatrix matrix) {
+    double ** mtx = matrix.content;
+    int size = matrix.rows;
+
     SystemSolution system_solution;
     system_solution.solution = create_dynamic_array(size);
     system_solution.size = size;
     system_solution.determinant = 1.0;
 
     for (int i = 0; i < size; i++) {
-        system_solution.solution[i] = matrix[i][size] / matrix[i][i];
-        system_solution.determinant *= matrix[i][i];
+        system_solution.solution[i] = mtx[i][size] / mtx[i][i];
+        system_solution.determinant *= mtx[i][i];
     }
 
     return system_solution;
