@@ -28,7 +28,7 @@ typedef struct {
 EXTERN double *create_dynamic_array(int size);
 
 /* Create the memory for a matrix */
-EXTERN double **create_matrix(int rows, int cols);
+EXTERN double **allocate_matrix(int rows, int cols);
 
 /* Liberate the matrix memory */
 EXTERN void free_matriz(double **matrix);

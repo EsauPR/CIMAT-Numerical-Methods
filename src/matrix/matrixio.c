@@ -23,7 +23,7 @@ double *create_dynamic_array(int size) {
 }
 
 /* Create the memory for a matrix */
-double **create_matrix(int rows, int cols) {
+double **allocate_matrix(int rows, int cols) {
     double **matrix = (double **)malloc(rows * sizeof(double*));
 
     if (matrix == NULL) {
@@ -93,7 +93,7 @@ AugmentedMatrix read_augmented_matrix(char *matrix1_fname, char *matrix2_fname){
     fscanf(fp1, "%d %d", &rows1, &cols1);
     fscanf(fp2, "%d %d", &rows2, &cols2);
 
-    matrix.content = create_matrix(rows1, cols1 + cols2);
+    matrix.content = allocate_matrix(rows1, cols1 + cols2);
     matrix.rows = rows1;
     matrix.cols = cols1 + cols2;
 
