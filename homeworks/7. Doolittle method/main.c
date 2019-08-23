@@ -28,10 +28,9 @@ int main(int argc, char *argv[]) {
 
     if ( system_solution.solution == NULL) {
         puts("The system has not a unique solution");
-        return 0;
+    } else {
+        print_system_solution(system_solution);
     }
-
-    print_system_solution(system_solution);
 
     free_matriz(matrix);
     free(system_solution.solution);
