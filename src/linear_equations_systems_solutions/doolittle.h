@@ -10,6 +10,7 @@
 #ifndef DOOLITTLE_H
 #define DOOLITTLE_H
 
+#include "../matrix/matrixio.h"
 #include "solution.h"
 
 #ifdef DOOLITTLE_IMPORT
@@ -18,8 +19,8 @@
     #define EXTERN extern
 #endif
 
-/* Solve a square matrix by gaussian elimination with pivot */
-EXTERN SystemSolution solve_by_doolittle_method(double **matrix, int size);
+/* Solve a square matrix by Doolittle method */
+EXTERN SystemSolution solve_by_doolittle_method(AugmentedMatrix);
 
 #undef DOOLITTLE_IMPORT
 #undef EXTERN

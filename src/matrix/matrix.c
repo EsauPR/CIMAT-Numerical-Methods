@@ -86,12 +86,10 @@ SystemSolution LU_decomposition(double ** matrix, int size) {
                 return system_solution;
             }
             // Restore current row and swap
-            SWAP(matrix[i][0], matrix[swap_row][0]);
-            SWAP(matrix[i][size], matrix[swap_row][size]);
-            for (int j = 1; j < size; j++){
+            for (int j = 0; j < size; j++){
                 matrix[i][j] = backup_row[j];
-                SWAP(matrix[i][j], matrix[swap_row][j]);
             }
+            swap_matrix_rows(matrix, i, swap_row);
             // Reset computation for the current row
             i--;
             system_solution.determinant *= -1;

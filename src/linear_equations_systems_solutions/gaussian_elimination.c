@@ -55,7 +55,7 @@ SystemSolution solve_by_simple_gaussian_elimination(AugmentedMatrix matrix) {
                 return system_solution; // There is not solution
             }
 
-            swap_matrix_rows(mtxa, size + 1, pivot, mp.row);
+            swap_matrix_rows(mtxa, pivot, mp.row);
             system_solution.determinant *= -1.0;
         }
 
@@ -117,7 +117,7 @@ SystemSolution solve_by_gaussian_elimination(AugmentedMatrix matrix) {
         // Swap rows and columns
         if (ABS(mtxa[pivot][pivot]) != ABS(mp.value)) {
             if ( pivot != mp.row) {
-                swap_matrix_rows(mtxa, size + 1, pivot, mp.row);
+                swap_matrix_rows(mtxa, pivot, mp.row);
                 system_solution.determinant *= -1.0;
             }
 
