@@ -7,11 +7,8 @@
    @email esau.opr@gmail.com
 */
 
-#include <stdio.h>
 #include <stdlib.h>
-
-#include "../matrix/matrixio.h"
-#include "../matrix/matrix.h"
+#include "../matrix/matrixLU.h"
 #include "../linear_equations_systems_solutions/backward_substitution.h"
 
 #define DOOLITTLE_IMPORT

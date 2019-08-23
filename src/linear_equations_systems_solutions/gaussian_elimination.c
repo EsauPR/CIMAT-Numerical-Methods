@@ -7,12 +7,7 @@
     @email esau.opr@gmail.com
 */
 
-#include <stdio.h>
-
-#include "../matrix/matrixio.h"
-#include "../matrix/matrix.h"
 #include "backward_substitution.h"
-#include "solution.h"
 
 #define GAUSSIAN_ELIMINATION_IMPORT
 #include "gaussian_elimination.h"

@@ -7,12 +7,6 @@
     @email esau.opr@gmail.com
 */
 
-
-#include <stdio.h>
-
-#include "../matrix/matrixio.h"
-#include "../matrix/matrix.h"
-
 #define BACKWARD_SUBSTITUTION_IMPORT
 #include "backward_substitution.h"
 

@@ -8,10 +8,6 @@
     @email esau.opr@gmail.com
 */
 
-
-#include <stdio.h>
-#include "../matrix/matrixio.h"
-
 #define DIRECT_SOLUTION_IMPORT
 #include "direct_solution.h"
 

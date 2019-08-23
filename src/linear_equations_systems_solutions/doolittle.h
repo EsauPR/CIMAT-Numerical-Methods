@@ -20,7 +20,7 @@
 #endif
 
 /* Solve a square matrix by Doolittle method */
-EXTERN SystemSolution solve_by_doolittle_method(AugmentedMatrix);
+EXTERN SystemSolution solve_by_doolittle_method(AugmentedMatrix matrix);
 
 #undef DOOLITTLE_IMPORT
 #undef EXTERN

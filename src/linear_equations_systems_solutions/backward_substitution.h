@@ -10,6 +10,8 @@
 #ifndef BACKWARD_SUBSTITUTION_H
 #define BACKWARD_SUBSTITUTION_H
 
+#include "../matrix/matrixio.h"
+#include "../matrix/matrix.h"
 #include "solution.h"
 
 #ifdef BACKWARD_SUBSTITUTION_IMPORT

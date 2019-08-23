@@ -6,10 +6,7 @@
     @email esau.opr@gmail.com
 */
 
-#include <stdio.h>
 #include <stdlib.h>
-#include "../../src/matrix/matrixio.h"
-#include "../../src/matrix/matrix.h"
 #include "../../src/linear_equations_systems_solutions/backward_substitution.h"
 
 

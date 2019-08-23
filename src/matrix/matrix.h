@@ -11,8 +11,6 @@
 #ifndef MATRIX_H
 #define MATRIX_H
 
-#include "../linear_equations_systems_solutions/solution.h"
-
 #ifdef MATRIX_IMPORT
     #define EXTERN
 #else
@@ -49,16 +47,6 @@ EXTERN void swap_matrix_cols(double **matrix, int col_size, int col_1, int col_2
 
 /* Swap matrix rows */
 EXTERN void swap_matrix_rows(double **matrix, int row_1, int row_2);
-
-/*
-    Make a LU decomposition over the same matrix. L is a lower trangular matrix
-    with ones over the diagonal.
-
-    You must asume that the diagonal is ones for L and the values already computed for U
-
-    Returns the determinant for U
-*/
-EXTERN SystemSolution LU_decomposition(double ** matrix, int size);
 
 #undef MATRIX_IMPORT
 #undef EXTERN

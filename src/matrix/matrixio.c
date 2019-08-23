@@ -7,11 +7,13 @@
     @email esau.opr@gmail.com
 */
 
-#include <stdio.h>
 #include <stdlib.h>
-#include <errno.h>
 #include <string.h>
+#include <errno.h>
+
+#define MATRIXIO_IMPORT
 #include "matrixio.h"
+
 
 /*Create the memory for a array*/
 double *create_dynamic_array(int size) {

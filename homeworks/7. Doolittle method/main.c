@@ -6,12 +6,8 @@
     @email esau.opr@gmail.com
 */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <errno.h>
 
-#include "../../src/matrix/matrixio.h"
-#include "../../src/linear_equations_systems_solutions/solution.h"
+#include <stdlib.h>
 #include "../../src/linear_equations_systems_solutions/doolittle.h"
 
 

@@ -11,6 +11,8 @@
 #ifndef MATRIXIO_H
 #define MATRIXIO_H
 
+#include <stdio.h>
+
 #ifdef MATRIXIO_IMPORT
     #define EXTERN
 #else

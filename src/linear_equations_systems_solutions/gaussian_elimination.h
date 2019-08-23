@@ -10,6 +10,7 @@
 #ifndef GAUSSIAN_ELIMINATION_H
 #define GAUSSIAN_ELIMINATION_H
 
+#include "../matrix/matrixio.h"
 #include "solution.h"
 
 #ifdef GAUSSIAN_ELIMINATION_IMPORT
