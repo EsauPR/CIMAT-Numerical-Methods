@@ -22,6 +22,9 @@
 
 #define ABS(n) (((n) < 0)? -(n):(n))
 
+/* Epsilon value */
+static const double EPSILON = 2.22045E-16;
+
 
 /*
     Falgs to make operations
