@@ -41,10 +41,16 @@ typedef Matrix AugmentedMatrix;
 
 
 /*Create the memory for a array*/
-EXTERN double *allocate_array(int size);
+EXTERN int *allocate_int_array(int size);
+
+/*Create the memory for a array*/
+EXTERN double *allocate_double_array(int size);
 
 /* Create the memory for a matrix */
 EXTERN Matrix allocate_matrix(int rows, int cols);
+
+/* Copy the matrix memory */
+EXTERN Matrix copy_matriz(Matrix matrix);
 
 /* Liberate the matrix memory */
 EXTERN void free_matriz(Matrix matrix);

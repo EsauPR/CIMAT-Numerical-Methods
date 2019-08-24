@@ -23,8 +23,6 @@ SystemSolution LU_decomposition(double ** matrix, int size) {
 
     double backup_row[size + 1];
 
-    matrix_LU_set_positions_map(system_solution.solution, size);
-
     for (int i = 0, swap_row = i; i < size; i++) {
         for (int j = 0; j < size; j++) {
             backup_row[j] = matrix[i][j];
@@ -51,6 +49,7 @@ SystemSolution LU_decomposition(double ** matrix, int size) {
                 matrix[i][j] = backup_row[j];
             }
             swap_matrix_rows(matrix, i, swap_row);
+            SWAP(system_solution.rows_perm_map[i], system_solution.rows_perm_map[swap_row]);
             // Reset computation for the current row
             i--;
             system_solution.determinant *= -1;

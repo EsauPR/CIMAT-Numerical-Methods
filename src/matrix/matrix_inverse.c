@@ -5,22 +5,10 @@
 #define MATRIX_INVERSE_IMPORT
 #include "matrix_inverse.h"
 
-
-static Matrix matrix_inverse_get_indentity(int size) {
-    Matrix matrix = allocate_matrix(size, size);
-
-    for (int i = 0; i < size; i++) {
-        matrix.content[i][i] = 1.0;
-    }
-
-    return matrix;
-}
-
-
 /* Compute the matrix inverse with LU factorization */
 Matrix get_matrix_inverse(Matrix matrix) {
     int size = matrix.rows;
-    Matrix inverse = matrix_inverse_get_indentity(size);
+    Matrix inverse = allocate_matrix(size, size);
     SystemSolution ss = LU_decomposition(matrix.content, size);
 
     if (ss.state & __MATRIX_NO_LU_DECOMPOSITION__) {
@@ -31,7 +19,7 @@ Matrix get_matrix_inverse(Matrix matrix) {
     for (int i = 0; i < size; i++) {
         // Copy the column i to make Ax=I[:,i]
         for (int j = 0; j < size; j++) {
-            matrix.content[j][size] = inverse.content[j][i];
+            matrix.content[j][size] = (j==i)? 1.0: 0.0;
         }
         // Solve Ly = I[:,i]
         ss.solution = solve_lower_triangular_matrix(matrix, __MATRIX_DIAG_HAS_ONES__).solution;
@@ -40,13 +28,17 @@ Matrix get_matrix_inverse(Matrix matrix) {
             matrix.content[j][size] = ss.solution[j];
         }
         free(ss.solution);
+        ss.solution = NULL;
         ss.solution = solve_upper_triangular_matrix(matrix, __MATRIX_NO_FLAGS__).solution;
-        // Copy x to form A^-1[:,i]
+        // Copy x to form A^-1[:,i] mapping by positions map array
         for (int j = 0; j < size; j++) {
-            inverse.content[j][i] = ss.solution[j];
+            inverse.content[j][ss.rows_perm_map[i]] = ss.solution[j];
         }
         free(ss.solution);
+        ss.solution = NULL;
     }
+
+    free_system_solution(&ss);
 
     return inverse;
 }

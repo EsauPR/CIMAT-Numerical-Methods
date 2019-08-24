@@ -60,7 +60,7 @@ EXTERN void swap_matrix_cols(double **matrix, int col_size, int col_1, int col_2
 EXTERN void swap_matrix_rows(double **matrix, int row_1, int row_2);
 
 /* Multiply matrix a x b and returns the values in a new matrix */
-EXTERN Matrix matrix_multiply(Matrix a, Matrix b);
+EXTERN Matrix multiply_square_matrices(Matrix a, Matrix b);
 
 #undef MATRIX_IMPORT
 #undef EXTERN

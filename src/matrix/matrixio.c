@@ -16,7 +16,16 @@
 
 
 /*Create the memory for a array*/
-double *allocate_array(int size) {
+int *allocate_int_array(int size) {
+    int * dinmem = (int *)calloc(size, sizeof(int));
+    if (dinmem == NULL) {
+        printf("ERROR: %s\n", strerror(errno));
+    }
+    return dinmem;
+}
+
+/*Create the memory for a array*/
+double *allocate_double_array(int size) {
     double * dinmem = (double *)calloc(size, sizeof(double));
     if (dinmem == NULL) {
         printf("ERROR: %s\n", strerror(errno));
@@ -37,7 +46,7 @@ Matrix allocate_matrix(int rows, int cols) {
         exit(EXIT_FAILURE);
     }
 
-    matrix.pointer_start = allocate_array(rows * cols);
+    matrix.pointer_start = allocate_double_array(rows * cols);
     if (matrix.pointer_start == NULL) {
         perror("allocate_matrix(): ");
         exit(EXIT_FAILURE);
@@ -49,6 +58,12 @@ Matrix allocate_matrix(int rows, int cols) {
     }
 
     return matrix;
+}
+
+Matrix copy_matriz(Matrix matrix) {
+    Matrix matrix_copy = allocate_matrix(matrix.rows, matrix.cols);
+    memcpy(matrix_copy.content[0], matrix.content[0], matrix.rows * matrix.cols * sizeof(**matrix.content));
+    return matrix_copy;
 }
 
 /* Liberate the matrix memory */
@@ -85,14 +100,12 @@ AugmentedMatrix read_augmented_matrix(char *matrix1_fname, char *matrix2_fname){
     FILE *fp1 = fopen(matrix1_fname, "r");
     if(fp1 == NULL) {
         perror("fopen()");
-        fclose(fp1);
         exit(EXIT_FAILURE);
     }
 
     FILE *fp2 = fopen(matrix2_fname, "r");
     if (fp2 == NULL ) {
         perror("fopen()");
-        fclose(fp2);
         exit(EXIT_FAILURE);
     }
 

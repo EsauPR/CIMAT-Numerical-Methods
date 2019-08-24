@@ -22,18 +22,21 @@ int main(int argc, char *argv[]) {
 
     FILE *fp = fopen(argv[1], "r");
     if(fp == NULL) {
-        perror("fopen()");
-        fclose(fp);
+        perror("fopen()"); puts(argv[1]);
         exit(EXIT_FAILURE);
     }
 
     fscanf(fp, "%d %d", &rows, &cols);
 
-    Matrix matrix = allocate_matrix(rows, cols + 1, __T_DOUBLE);
+    Matrix matrix = allocate_matrix(rows, cols + 1);
     read_matrix(fp, matrix.content, 0, rows, 0, cols);
     fclose(fp);
 
-    Matrix inverse = get_matrix_inverse(matrix);
+    Matrix matrix_copy = copy_matriz(matrix);
+    print_matrix(matrix_copy.content, matrix_copy.rows, matrix_copy.rows);
+
+
+    Matrix inverse = get_matrix_inverse(matrix_copy);
 
     if (inverse.state & __MATRIX_NO_INVERSE__) {
         puts("The system has not a unique solution");
@@ -41,8 +44,13 @@ int main(int argc, char *argv[]) {
         print_matrix(inverse.content, inverse.rows, inverse.cols);
     }
 
+    Matrix identity = multiply_square_matrices(matrix, inverse);
+    print_matrix(identity.content, identity.rows, identity.cols);
+
     free_matriz(matrix);
+    free_matriz(matrix_copy);
     free_matriz(inverse);
+    free_matriz(identity);
 
     return 0;
 }

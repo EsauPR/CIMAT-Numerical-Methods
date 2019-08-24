@@ -9,6 +9,7 @@
 
 
 #include <stdio.h>
+#include <stdlib.h>
 #include "../matrix/matrixio.h"
 
 #define SOLUTION_IMPORT
@@ -17,12 +18,8 @@
 
 /* Return a pointer array to track a permutation mapping */
 int *create_permutation_map(int size) {
-    int *map = allocate_array(size, __T_INT);
-
-    for (int i = 0; i < size; i++) {
-        map[i] = i;
-    }
-
+    int * map = allocate_int_array(size);
+    for (int i = 0; i < size; map[i] = i, i++);
     return map;
 }
 
