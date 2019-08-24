@@ -22,12 +22,12 @@ SystemSolution LDLt_decomposition(double ** matrix, int size) {
     system_solution.solution = NULL;
     system_solution.determinant = 1.0;
 
-    // double backup_row[size + 1];
+    double backup_row[size + 1];
 
-    // for (int i = 0, swap_row = i; i < size; i++) {
-    for (int i = 0; i < size; i++) {
+    for (int i = 0, swap_row = i; i < size; i++) {
+    // for (int i = 0; i < size; i++) {
         for (int j = 0; j <= i; j++) {
-            // backup_row[j] = matrix[i][j];
+            backup_row[j] = matrix[i][j];
 
             int limit = (i == j)? i:j;
             for (int k = 0; k < limit; k++) {
@@ -41,25 +41,25 @@ SystemSolution LDLt_decomposition(double ** matrix, int size) {
             }
         }
 
-        // // Swap rows to avoid division by zero
-        // if (matrix[i][i] == 0.0 && i < size) {
-        //     // No more swaps available
-        //     if (++swap_row >= size) {
-        //         system_solution.state &= __MATRIX_NO_LDLT_DECOMPOSITION__ & __SOLUTION_NO_EXISTS__;
-        //         return system_solution;
-        //     }
-        //     // Restore current row and swap
-        //     for (int j = 0; j < size; j++) {
-        //         matrix[i][j] = backup_row[j];
-        //     }
-        //     swap_matrix_rows(matrix, i, swap_row);
-        //     // Reset computation for the current row
-        //     i--;
-        //     system_solution.determinant *= -1;
-        //     continue;
-        // }
+        // Swap rows to avoid division by zero
+        if (matrix[i][i] == 0.0 && i < size) {
+            // No more swaps available
+            if (++swap_row >= size) {
+                system_solution.state &= __MATRIX_NO_LDLT_DECOMPOSITION__ & __SOLUTION_NO_EXISTS__;
+                return system_solution;
+            }
+            // Restore current row and swap
+            for (int j = 0; j < size; j++) {
+                matrix[i][j] = backup_row[j];
+            }
+            swap_matrix_rows(matrix, i, swap_row);
+            // Reset computation for the current row
+            i--;
+            system_solution.determinant *= -1;
+            continue;
+        }
 
-        // swap_row = i + 1;
+        swap_row = i + 1;
         system_solution.determinant *= matrix[i][i];
     }
 
