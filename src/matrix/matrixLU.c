@@ -4,6 +4,7 @@
 #define MATRIXLU_IMPORT
 #include "matrixLU.h"
 
+
 /*
     Make a LU decomposition over the same matrix. L is a lower trangular matrix
     with ones over the diagonal.
@@ -14,14 +15,15 @@
 
     If the decomposition is not possible SystemSolution.size is equal to -1
 */
-
 SystemSolution LU_decomposition(double ** matrix, int size) {
     SystemSolution system_solution = SystemSolutionDefault;
     system_solution.size = size;
-    system_solution.solution = NULL;
+    system_solution.rows_perm_map = create_permutation_map(size);
     system_solution.determinant = 1.0;
 
     double backup_row[size + 1];
+
+    matrix_LU_set_positions_map(system_solution.solution, size);
 
     for (int i = 0, swap_row = i; i < size; i++) {
         for (int j = 0; j < size; j++) {

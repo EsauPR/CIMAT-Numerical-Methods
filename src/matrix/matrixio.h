@@ -40,11 +40,20 @@ typedef struct Matrix Matrix;
 typedef Matrix AugmentedMatrix;
 
 
+/* Types to allocate memory */
+typedef enum {
+    __CHAR_SIZE = sizeof(char),
+    __T_INT = sizeof(int),
+    __T_FLOAT = sizeof(float),
+    __T_DOUBLE = sizeof(double),
+} __TYPE_SIZE;
+
+
 /*Create the memory for a array*/
-EXTERN double *create_dynamic_array(int size);
+EXTERN double *allocate_array(int size, __TYPE_SIZE type_size);
 
 /* Create the memory for a matrix */
-EXTERN Matrix allocate_matrix(int rows, int cols);
+EXTERN Matrix allocate_matrix(int rows, int cols, __TYPE_SIZE type_size);
 
 /* Liberate the matrix memory */
 EXTERN void free_matriz(Matrix matrix);
@@ -52,7 +61,7 @@ EXTERN void free_matriz(Matrix matrix);
 /* Print a matrix*/
 EXTERN void print_matrix(double **matrix, int rows, int cols);
 
-/* Read a matrix and put the elements in a especif location range */
+/* Read a matrix and put the elements in a especific location range */
 EXTERN void read_matrix(FILE *fp, double** matrix, int from_row, int to_row, int from_col, int  to_col);
 
 /* Read two matrices and put the values in a augmented matrix*/

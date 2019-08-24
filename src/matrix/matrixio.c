@@ -16,8 +16,8 @@
 
 
 /*Create the memory for a array*/
-double *create_dynamic_array(int size) {
-    double * dinmem = (double *)calloc(size, sizeof(double));
+double *allocate_array(int size, __TYPE_SIZE type_size) {
+    double * dinmem = (double *)calloc(size, type_size);
     if (dinmem == NULL) {
         printf("ERROR: %s\n", strerror(errno));
     }
@@ -25,18 +25,18 @@ double *create_dynamic_array(int size) {
 }
 
 /* Create the memory for a matrix */
-Matrix allocate_matrix(int rows, int cols) {
+Matrix allocate_matrix(int rows, int cols, __TYPE_SIZE type_size) {
     Matrix matrix = Matrix_Default;
     matrix.rows = rows;
     matrix.cols = cols;
-    matrix.content = (double **)calloc(rows, sizeof(double*));
+    matrix.content = (double **)calloc(rows, type_size);
 
     if (matrix.content == NULL) {
         perror("allocate_matrix(): ");
         exit(EXIT_FAILURE);
     }
 
-    matrix.pointer_start = create_dynamic_array(rows * cols);
+    matrix.pointer_start = allocate_array(rows * cols, type_size);
     if (matrix.pointer_start == NULL) {
         perror("allocate_matrix(): ");
         exit(EXIT_FAILURE);
@@ -76,7 +76,6 @@ void read_matrix(FILE *fp, double** matrix, int from_row, int to_row, int from_c
     }
 }
 
-
 /* Read two matrices and put the values in a augmented matrix*/
 AugmentedMatrix read_augmented_matrix(char *matrix1_fname, char *matrix2_fname){
     int rows1, cols1;
@@ -99,7 +98,7 @@ AugmentedMatrix read_augmented_matrix(char *matrix1_fname, char *matrix2_fname){
     fscanf(fp1, "%d %d", &rows1, &cols1);
     fscanf(fp2, "%d %d", &rows2, &cols2);
 
-    Matrix matrix = allocate_matrix(rows1, cols1 + cols2);
+    Matrix matrix = allocate_matrix(rows1, cols1 + cols2, __T_DOUBLE);
 
     read_matrix(fp1, matrix.content, 0, rows1, 0, cols1);
     read_matrix(fp2, matrix.content, 0, rows1, cols1, cols1 + cols2);

@@ -29,7 +29,7 @@ int main(int argc, char *argv[]) {
 
     fscanf(fp, "%d %d", &rows, &cols);
 
-    Matrix matrix = allocate_matrix(rows, cols + 1);
+    Matrix matrix = allocate_matrix(rows, cols + 1, __T_DOUBLE);
     read_matrix(fp, matrix.content, 0, rows, 0, cols);
     fclose(fp);
 
