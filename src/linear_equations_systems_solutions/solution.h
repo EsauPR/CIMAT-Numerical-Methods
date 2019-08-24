@@ -46,8 +46,11 @@ EXTERN int* create_permutation_map(int size);
 // EXTERN void *sort_matix_rows_by_perm_map(int *array, int* permutation_map, int size);
 
 
-/* Free the solution struct for a linear equation system*/
-EXTERN void free_system_solution(SystemSolution * system_solution);
+/*
+    Free the solution struct for a linear equation system
+    Returns the same struct values with NULL on freeded pointers
+*/
+EXTERN SystemSolution free_system_solution(SystemSolution system_solution);
 
 /* Print the solution for a linear equation system*/
 EXTERN void print_system_solution(SystemSolution system_solution);

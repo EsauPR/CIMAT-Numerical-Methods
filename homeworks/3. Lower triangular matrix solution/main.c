@@ -23,7 +23,7 @@ int main(int argc, char *argv[]) {
     print_system_solution(system_solution);
 
     free_matriz(matrix);
-    free(system_solution.solution);
+    free_system_solution(system_solution);
 
     return 0;
 }

@@ -9,10 +9,10 @@
 Matrix get_matrix_inverse(Matrix matrix) {
     int size = matrix.rows;
     Matrix inverse = allocate_matrix(size, size);
-    SystemSolution ss = LU_decomposition(matrix.content, size);
+    SystemSolution lu_sol = LU_decomposition(matrix.content, size);
 
-    if (ss.state & __MATRIX_NO_LU_DECOMPOSITION__) {
-        inverse.state &= __MATRIX_NO_INVERSE__ & ss.state;
+    if (lu_sol.state & __MATRIX_NO_LU_DECOMPOSITION__) {
+        inverse.state &= __MATRIX_NO_INVERSE__ & lu_sol.state;
         return inverse;
     }
 
@@ -21,24 +21,25 @@ Matrix get_matrix_inverse(Matrix matrix) {
         for (int j = 0; j < size; j++) {
             matrix.content[j][size] = (j==i)? 1.0: 0.0;
         }
+
         // Solve Ly = I[:,i]
-        ss.solution = solve_lower_triangular_matrix(matrix, __MATRIX_DIAG_HAS_ONES__).solution;
+        SystemSolution ss = solve_lower_triangular_matrix(matrix, __MATRIX_DIAG_HAS_ONES__);
+
         // Solve Ux = y
         for (int j = 0; j < size; j++) {
             matrix.content[j][size] = ss.solution[j];
         }
-        free(ss.solution);
-        ss.solution = NULL;
-        ss.solution = solve_upper_triangular_matrix(matrix, __MATRIX_NO_FLAGS__).solution;
+        free_system_solution(ss);
+        ss = solve_upper_triangular_matrix(matrix, __MATRIX_NO_FLAGS__);
+
         // Copy x to form A^-1[:,i] mapping by positions map array
         for (int j = 0; j < size; j++) {
-            inverse.content[j][ss.rows_perm_map[i]] = ss.solution[j];
+            inverse.content[j][lu_sol.rows_perm_map[i]] = ss.solution[j];
         }
-        free(ss.solution);
-        ss.solution = NULL;
+        free_system_solution(ss);
     }
 
-    free_system_solution(&ss);
+    free_system_solution(lu_sol);
 
     return inverse;
 }

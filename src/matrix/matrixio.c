@@ -66,10 +66,16 @@ Matrix copy_matriz(Matrix matrix) {
     return matrix_copy;
 }
 
-/* Liberate the matrix memory */
-void free_matriz(Matrix matrix) {
+/*
+    Liberate the matrix memory
+    Returns the same struct values with NULL on freeded pointers
+*/
+Matrix free_matriz(Matrix matrix) {
     free(matrix.pointer_start);
+    matrix.pointer_start = NULL;
     free(matrix.content);
+    matrix.content = NULL;
+    return matrix;
 }
 
 /* Print a matrix*/

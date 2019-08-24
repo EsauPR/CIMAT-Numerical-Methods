@@ -23,20 +23,25 @@ int *create_permutation_map(int size) {
     return map;
 }
 
-/* Free the solution struct for a linear equation system*/
-void free_system_solution(SystemSolution * system_solution) {
-    if (system_solution->solution != NULL) {
-        free(system_solution->solution);
-        system_solution->solution = NULL;
+/*
+    Free the solution struct for a linear equation system
+    Returns the same struct values with NULL on freeded pointers
+*/
+SystemSolution free_system_solution(SystemSolution system_solution) {
+    if (system_solution.solution != NULL) {
+        free(system_solution.solution);
+        system_solution.solution = NULL;
     }
-    if (system_solution->rows_perm_map != NULL) {
-        free(system_solution->rows_perm_map);
-        system_solution->rows_perm_map = NULL;
+    if (system_solution.rows_perm_map != NULL) {
+        free(system_solution.rows_perm_map);
+        system_solution.rows_perm_map = NULL;
     }
-    if (system_solution->cols_perm_map != NULL) {
-        free(system_solution->cols_perm_map);
-        system_solution->cols_perm_map = NULL;
+    if (system_solution.cols_perm_map != NULL) {
+        free(system_solution.cols_perm_map);
+        system_solution.cols_perm_map = NULL;
     }
+
+    return system_solution;
 }
 
 /* Print the solution for a linear equation system*/

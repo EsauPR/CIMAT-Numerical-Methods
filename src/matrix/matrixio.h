@@ -52,8 +52,11 @@ EXTERN Matrix allocate_matrix(int rows, int cols);
 /* Copy the matrix memory */
 EXTERN Matrix copy_matriz(Matrix matrix);
 
-/* Liberate the matrix memory */
-EXTERN void free_matriz(Matrix matrix);
+/*
+    Liberate the matrix memory
+    Returns the same struct values with NULL on freeded pointers
+*/
+EXTERN Matrix free_matriz(Matrix matrix);
 
 /* Print a matrix*/
 EXTERN void print_matrix(double **matrix, int rows, int cols);

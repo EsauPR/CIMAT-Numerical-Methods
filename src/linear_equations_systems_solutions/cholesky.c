@@ -23,6 +23,7 @@ SystemSolution solve_by_cholesky_method(AugmentedMatrix matrix) {
     if (system_solution.state & __MATRIX_NO_LDLT_DECOMPOSITION__) {
         return system_solution;
     }
+    double determinat = system_solution.determinant;
 
     // Multiply L x D in the same matrix, this LD is matriz is a lower traingular matrix
     for (int i = 1; i < size; i++) {
@@ -31,13 +32,14 @@ SystemSolution solve_by_cholesky_method(AugmentedMatrix matrix) {
         }
     }
     // Solve Ly = b where L has a diagonal with ones
-    system_solution.solution = solve_lower_triangular_matrix(matrix, __MATRIX_NO_FLAGS__).solution;
+    system_solution = solve_lower_triangular_matrix(matrix, __MATRIX_NO_FLAGS__);
     // Solve Ux = y
     for (int i = 0; i < size; i++) {
         mtxc[i][size] = system_solution.solution[i];
     }
-    free(system_solution.solution);
-    system_solution.solution = solve_upper_triangular_matrix(matrix, __MATRIX_DIAG_HAS_ONES__).solution;
+    free_system_solution(system_solution);
+    system_solution = solve_upper_triangular_matrix(matrix, __MATRIX_DIAG_HAS_ONES__);
 
+    system_solution.determinant = determinat;
     return system_solution;
 }
