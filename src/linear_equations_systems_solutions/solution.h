@@ -16,12 +16,23 @@
     #define EXTERN extern
 #endif
 
+
+/*
+    Flags to know the solution state or information
+*/
+static const unsigned char __SOLUTION_NO_STATE__ = 0;
+static const unsigned char __SOLUTION_NO_EXISTS__ = 1;
+
+
 /* Struct to represent a linear equation system solution */
-typedef struct solution_SystemSolution {
+static const struct solution_SystemSolution {
     int size;
-    double * solution;
     double determinant;
-} SystemSolution;
+    double * solution;
+    unsigned char state;
+} SystemSolutionDefault = {0, 1.0, NULL, __SOLUTION_NO_STATE__};
+
+typedef struct solution_SystemSolution SystemSolution;
 
 
 /* Print the solution for a linear equation system*/

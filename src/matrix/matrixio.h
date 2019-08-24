@@ -19,14 +19,24 @@
     #define EXTERN extern
 #endif
 
+
+/*
+    Flags to know matrix state or information
+*/
+static const unsigned char __NO_STATE__ = 0;
+
+
 /* Struct to represent a linear equation system solution */
-typedef struct {
+static const struct Matrix{
     int rows;
     int cols;
     double * pointer_start;
     double ** content;
-} Matrix;
+    unsigned char state;
 
+} Matrix_Default = {0, 0, NULL, NULL, __NO_STATE__};
+
+typedef struct Matrix Matrix;
 typedef Matrix AugmentedMatrix;
 
 

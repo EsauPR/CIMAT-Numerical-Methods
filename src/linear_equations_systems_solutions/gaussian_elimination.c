@@ -36,7 +36,7 @@ SystemSolution solve_by_simple_gaussian_elimination(AugmentedMatrix matrix) {
     double **mtxa = matrix.content;
     int size = matrix.rows;
 
-    SystemSolution system_solution;
+    SystemSolution system_solution = SystemSolutionDefault;
     system_solution.solution = NULL;
     system_solution.size = size;
     system_solution.determinant = 1.0;
@@ -59,7 +59,7 @@ SystemSolution solve_by_simple_gaussian_elimination(AugmentedMatrix matrix) {
         gaussian_elimination_make_cols_zeros(mtxa, size, pivot);
     }
 
-    system_solution.solution = solve_upper_triangular_matrix(matrix, __NO_MATRIX_FLAGS__).solution;
+    system_solution.solution = solve_upper_triangular_matrix(matrix, __MATRIX_NO_FLAGS__).solution;
     return system_solution;
 }
 
@@ -97,7 +97,7 @@ SystemSolution solve_by_gaussian_elimination(AugmentedMatrix matrix) {
     int positions_map[size];
     gaussian_elimination_set_positions_map(positions_map, size);
 
-    SystemSolution system_solution;
+    SystemSolution system_solution = SystemSolutionDefault;
     system_solution.solution = NULL;
     system_solution.size = size;
     system_solution.determinant = 1.0;
@@ -128,7 +128,7 @@ SystemSolution solve_by_gaussian_elimination(AugmentedMatrix matrix) {
         gaussian_elimination_make_cols_zeros(mtxa, size, pivot);
     }
 
-    system_solution.solution = solve_upper_triangular_matrix(matrix, __NO_MATRIX_FLAGS__).solution;
+    system_solution.solution = solve_upper_triangular_matrix(matrix, __MATRIX_NO_FLAGS__).solution;
     gaussian_elimination_sort_result(system_solution.solution, positions_map, size);
 
     return system_solution;

@@ -16,7 +16,7 @@
 */
 
 SystemSolution LU_decomposition(double ** matrix, int size) {
-    SystemSolution system_solution;
+    SystemSolution system_solution = SystemSolutionDefault;
     system_solution.size = size;
     system_solution.solution = NULL;
     system_solution.determinant = 1.0;
@@ -38,14 +38,14 @@ SystemSolution LU_decomposition(double ** matrix, int size) {
         }
 
         // Swap rows to avoid division by zero
-        if (matrix[i][i] == 0.0 && i < size -1) {
+        if (matrix[i][i] == 0.0 && i < size) {
             // No more swaps available
-            if (++swap_row == size) {
-                system_solution.size = -1;
+            if (++swap_row >= size) {
+                system_solution.state &= __MATRIX_NO_LU_DECOMPOSITION__ & __SOLUTION_NO_EXISTS__;
                 return system_solution;
             }
             // Restore current row and swap
-            for (int j = 0; j < size; j++){
+            for (int j = 0; j < size; j++) {
                 matrix[i][j] = backup_row[j];
             }
             swap_matrix_rows(matrix, i, swap_row);

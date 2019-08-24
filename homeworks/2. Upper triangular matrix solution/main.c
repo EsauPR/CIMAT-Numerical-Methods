@@ -20,7 +20,7 @@ int main(int argc, char *argv[]) {
     AugmentedMatrix matrix = read_augmented_matrix(argv[1], argv[2]);
     print_matrix(matrix.content, matrix.rows, matrix.cols);
 
-    SystemSolution system_solution = solve_upper_triangular_matrix(matrix, __NO_MATRIX_FLAGS__);
+    SystemSolution system_solution = solve_upper_triangular_matrix(matrix, __MATRIX_NO_FLAGS__);
     print_system_solution(system_solution);
 
     free_matriz(matrix);

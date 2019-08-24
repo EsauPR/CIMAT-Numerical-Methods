@@ -17,7 +17,7 @@
 
 /*Create the memory for a array*/
 double *create_dynamic_array(int size) {
-    double * dinmem = (double *)malloc(size * sizeof(double));
+    double * dinmem = (double *)calloc(size, sizeof(double));
     if (dinmem == NULL) {
         printf("ERROR: %s\n", strerror(errno));
     }
@@ -26,10 +26,10 @@ double *create_dynamic_array(int size) {
 
 /* Create the memory for a matrix */
 Matrix allocate_matrix(int rows, int cols) {
-    Matrix matrix;
+    Matrix matrix = Matrix_Default;
     matrix.rows = rows;
     matrix.cols = cols;
-    matrix.content = (double **)malloc(rows * sizeof(double*));
+    matrix.content = (double **)calloc(rows, sizeof(double*));
 
     if (matrix.content == NULL) {
         perror("allocate_matrix(): ");

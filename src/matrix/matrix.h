@@ -27,19 +27,25 @@ static const double EPSILON = 2.22045E-16;
 
 
 /*
-    Falgs to make operations
+    Flags to modify matrix operations o process, state and information
 */
 typedef unsigned char __flag_t;
-static const unsigned char __NO_MATRIX_FLAGS__ = 0;
-static const unsigned char __DIAGONAL_HAS_ONES__ = 1;
+static const unsigned char __MATRIX_NO_FLAGS__ = 0;
+static const unsigned char __MATRIX_NO_STATE__ = __MATRIX_NO_FLAGS__;
+static const unsigned char __MATRIX_DIAG_HAS_ONES__ = 1;
+static const unsigned char __MATRIX_NO_INVERSE__ = 1 << 1;
+static const unsigned char __MATRIX_NO_LU_DECOMPOSITION__ = 1 << 2;
+static const unsigned char __MATRIX_NO_LDLT_DECOMPOSITION__ = 1 << 3;
 
 
 /* Represent a matrix element with the positions i,j */
-typedef struct matrix_MatrixElement{
+static const struct matrix_MatrixElement {
     double value;
     int row;
     int col;
-} MatrixElement;
+} MatrixElementDefault = {0.0, 0, 0};
+
+typedef struct matrix_MatrixElement MatrixElement;
 
 
 /* Find the max element into a matrix range */

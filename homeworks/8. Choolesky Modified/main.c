@@ -22,7 +22,7 @@ int main(int argc, char *argv[]) {
 
     SystemSolution system_solution = solve_by_cholesky_method(matrix);
 
-    if ( system_solution.solution == NULL) {
+    if ( system_solution.state & __SOLUTION_NO_EXISTS__) {
         puts("The system has not a unique solution");
     } else {
         print_system_solution(system_solution);

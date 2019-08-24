@@ -6,9 +6,10 @@
     @email esau.opr@gmail.com
 */
 
+
 #include <stdlib.h>
-#include "../../src/matrix/matrixio.h"
 #include "../../src/matrix/matrix.h"
+#include "../../src/matrix/matrix_inverse.h"
 
 
 int main(int argc, char *argv[]) {
@@ -28,16 +29,20 @@ int main(int argc, char *argv[]) {
 
     fscanf(fp, "%d %d", &rows, &cols);
 
-    Matrix matrix = allocate_matrix(rows, cols);
+    Matrix matrix = allocate_matrix(rows, cols + 1);
     read_matrix(fp, matrix.content, 0, rows, 0, cols);
     fclose(fp);
 
-    print_matrix(matrix.content, rows, cols);
+    Matrix inverse = get_matrix_inverse(matrix);
 
-    MatrixElement mp = find_matrix_max_element(matrix.content, 0, rows, 0, cols);
-    printf("El elemento con mayor valor obsoluto es: %lf, en (%d, %d)\n", mp.value, mp.row + 1, mp.col + 1);
+    if (inverse.state & __MATRIX_NO_INVERSE__) {
+        puts("The system has not a unique solution");
+    } else {
+        print_matrix(inverse.content, inverse.rows, inverse.cols);
+    }
 
     free_matriz(matrix);
+    free_matriz(inverse);
 
     return 0;
 }
