@@ -30,6 +30,7 @@ Matrix allocate_matrix(int rows, int cols) {
     matrix.rows = rows;
     matrix.cols = cols;
     matrix.content = (double **)calloc(rows, sizeof(double*));
+    matrix.state = 0;
 
     if (matrix.content == NULL) {
         perror("allocate_matrix(): ");
