@@ -41,18 +41,27 @@ typedef Matrix AugmentedMatrix;
 
 
 /*Create the memory for a array*/
-EXTERN double *create_dynamic_array(int size);
+EXTERN int *allocate_int_array(int size);
+
+/*Create the memory for a array*/
+EXTERN double *allocate_double_array(int size);
 
 /* Create the memory for a matrix */
 EXTERN Matrix allocate_matrix(int rows, int cols);
 
-/* Liberate the matrix memory */
-EXTERN void free_matriz(Matrix matrix);
+/* Copy the matrix memory */
+EXTERN Matrix copy_matriz(Matrix matrix);
+
+/*
+    Liberate the matrix memory
+    Returns the same struct values with NULL on freeded pointers
+*/
+EXTERN Matrix free_matriz(Matrix matrix);
 
 /* Print a matrix*/
 EXTERN void print_matrix(double **matrix, int rows, int cols);
 
-/* Read a matrix and put the elements in a especif location range */
+/* Read a matrix and put the elements in a especific location range */
 EXTERN void read_matrix(FILE *fp, double** matrix, int from_row, int to_row, int from_col, int  to_col);
 
 /* Read two matrices and put the values in a augmented matrix*/

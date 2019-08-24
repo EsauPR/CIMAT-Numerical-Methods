@@ -42,3 +42,20 @@ void swap_matrix_cols(double **matrix, int col_size, int col_1, int col_2) {
 void swap_matrix_rows(double **matrix, int row_1, int row_2) {
     SWAP(matrix[row_1], matrix[row_2]);
 }
+
+/* Multiply matrix a x b and returns the values in a new matrix */
+Matrix multiply_square_matrices(Matrix a, Matrix b) {
+    int size = a.rows;
+
+    Matrix result = allocate_matrix(size, size);
+    for (int i = 0; i < size; i++) {
+        for (int j = 0; j < size; j++) {
+            result.content[i][j] = 0.0;
+            for (int k = 0; k < size; k++) {
+                result.content[i][j] += a.content[i][k] * b.content[k][j];
+            }
+        }
+    }
+
+    return result;
+}

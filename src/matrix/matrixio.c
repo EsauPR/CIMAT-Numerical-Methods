@@ -16,7 +16,16 @@
 
 
 /*Create the memory for a array*/
-double *create_dynamic_array(int size) {
+int *allocate_int_array(int size) {
+    int * dinmem = (int *)calloc(size, sizeof(int));
+    if (dinmem == NULL) {
+        printf("ERROR: %s\n", strerror(errno));
+    }
+    return dinmem;
+}
+
+/*Create the memory for a array*/
+double *allocate_double_array(int size) {
     double * dinmem = (double *)calloc(size, sizeof(double));
     if (dinmem == NULL) {
         printf("ERROR: %s\n", strerror(errno));
@@ -27,16 +36,17 @@ double *create_dynamic_array(int size) {
 /* Create the memory for a matrix */
 Matrix allocate_matrix(int rows, int cols) {
     Matrix matrix = Matrix_Default;
+    matrix.content = (double **)calloc(rows, sizeof(double *));
     matrix.rows = rows;
     matrix.cols = cols;
-    matrix.content = (double **)calloc(rows, sizeof(double*));
+    matrix.state = 0;
 
     if (matrix.content == NULL) {
         perror("allocate_matrix(): ");
         exit(EXIT_FAILURE);
     }
 
-    matrix.pointer_start = create_dynamic_array(rows * cols);
+    matrix.pointer_start = allocate_double_array(rows * cols);
     if (matrix.pointer_start == NULL) {
         perror("allocate_matrix(): ");
         exit(EXIT_FAILURE);
@@ -50,10 +60,22 @@ Matrix allocate_matrix(int rows, int cols) {
     return matrix;
 }
 
-/* Liberate the matrix memory */
-void free_matriz(Matrix matrix) {
+Matrix copy_matriz(Matrix matrix) {
+    Matrix matrix_copy = allocate_matrix(matrix.rows, matrix.cols);
+    memcpy(matrix_copy.content[0], matrix.content[0], matrix.rows * matrix.cols * sizeof(**matrix.content));
+    return matrix_copy;
+}
+
+/*
+    Liberate the matrix memory
+    Returns the same struct values with NULL on freeded pointers
+*/
+Matrix free_matriz(Matrix matrix) {
     free(matrix.pointer_start);
+    matrix.pointer_start = NULL;
     free(matrix.content);
+    matrix.content = NULL;
+    return matrix;
 }
 
 /* Print a matrix*/
@@ -76,7 +98,6 @@ void read_matrix(FILE *fp, double** matrix, int from_row, int to_row, int from_c
     }
 }
 
-
 /* Read two matrices and put the values in a augmented matrix*/
 AugmentedMatrix read_augmented_matrix(char *matrix1_fname, char *matrix2_fname){
     int rows1, cols1;
@@ -85,14 +106,12 @@ AugmentedMatrix read_augmented_matrix(char *matrix1_fname, char *matrix2_fname){
     FILE *fp1 = fopen(matrix1_fname, "r");
     if(fp1 == NULL) {
         perror("fopen()");
-        fclose(fp1);
         exit(EXIT_FAILURE);
     }
 
     FILE *fp2 = fopen(matrix2_fname, "r");
     if (fp2 == NULL ) {
         perror("fopen()");
-        fclose(fp2);
         exit(EXIT_FAILURE);
     }
 
