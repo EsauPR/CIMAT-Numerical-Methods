@@ -15,11 +15,30 @@ $ make
 ### Input
 The executable input is the augmented matrix that represents the equations system splitted in two files  *F1* and *F2*
 
- - *F1*: Square matrix with size $N x N$ that represents the firsts members for the equations system.
- - *F2*: Matrix with size $N x 1$ that represents the seconds members for the equations system.
+- *F1*: Square matrix with size $N x N$ that represents the firsts members for the equations system.
+
+```
+4 4
+
+1.0 0.0 0.0 0.0
+0.0 2.0 0.0 0.0
+0.0 0.0 3.0 0.0
+0.0 0.0 0.0 4.0
+```
+
+- *F2*: Matrix with size $N x 1$ that represents the seconds members for the equations system.
+
+```
+4 1
+
+1.0
+2.0
+3.0
+4.0
+```
 
 ``` bash
-$ make run f1=[matrix_path] f2=[../inputs/V_DIAG.txt]
+$ make run f1=[matrix_path] f2=[matrix_path]
 ```
 
 Example:
