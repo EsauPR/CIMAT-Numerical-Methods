@@ -19,19 +19,7 @@ int main(int argc, char *argv[]) {
         exit(EXIT_FAILURE);
     }
 
-    FILE *fp = fopen(argv[1], "r");
-    if(fp == NULL) {
-        perror("fopen()");
-        fclose(fp);
-        exit(EXIT_FAILURE);
-    }
-
-    fscanf(fp, "%d %d", &rows, &cols);
-
-    Matrix matrix = matrixio_allocate(rows, cols);
-    matrixio_read(fp, matrix.content, 0, rows, 0, cols);
-    fclose(fp);
-
+    Matrix matrix = matrixio_read(argv[1]);
     matrixio_show(matrix.content, rows, cols);
 
     MatrixElement mp = matrix_find_max_element(matrix.content, 0, rows, 0, cols);

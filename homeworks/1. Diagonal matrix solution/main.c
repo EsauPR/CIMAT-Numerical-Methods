@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include <errno.h>
 #include "../../src/matrix/matrixio.h"
+#include "../../src/matrix/matrix.h"
 #include "../../src/linear_equations_systems_solutions/direct_solution.h"
 
 int main(int argc, char *argv[]) {
@@ -18,8 +19,10 @@ int main(int argc, char *argv[]) {
         exit(EXIT_FAILURE);
     }
 
-    AugmentedMatrix matrix = matrixio_read_augmented_matrix(argv[1], argv[2]);
+    AugmentedMatrix matrix = matrixio_read_augmented(argv[1], argv[2]);
     matrixio_show(matrix.content, matrix.rows, matrix.cols);
+
+    __flag_err flags = matrix_is_square(matrix)
 
     SystemSolution system_solution = solve_diagonal_matrix(matrix);
     solution_show(system_solution);

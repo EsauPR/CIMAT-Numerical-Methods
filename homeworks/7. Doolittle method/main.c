@@ -17,12 +17,12 @@ int main(int argc, char *argv[]) {
         exit(EXIT_FAILURE);
     }
 
-    AugmentedMatrix matrix = matrixio_read_augmented_matrix(argv[1], argv[2]);
+    AugmentedMatrix matrix = matrixio_read_augmented(argv[1], argv[2]);
     matrixio_show(matrix.content, matrix.rows, matrix.cols);
 
     SystemSolution system_solution = solve_by_doolittle_method(matrix);
 
-    if ( system_solution.state & __SOLUTION_NO_EXISTS__) {
+    if ( system_solution.state & __MATRIX_ERR_NO_SOLUTION__) {
         puts("The system has not a unique solution");
     } else {
         solution_show(system_solution);

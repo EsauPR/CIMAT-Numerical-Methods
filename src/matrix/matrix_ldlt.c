@@ -45,7 +45,7 @@ SystemSolution matrix_ldlt_decomposition(double ** matrix, int size) {
         if (matrix[i][i] == 0.0 && i < size) {
             // No more swaps available
             if (++swap_row >= size) {
-                system_solution.state &= __MATRIX_NO_LDLT_DECOMPOSITION__ & __SOLUTION_NO_EXISTS__;
+                system_solution.state &= __MATRIX_ERR_NO_LDLT_DECOMPOSITION__;
                 return system_solution;
             }
             // Restore current row and swap

@@ -21,8 +21,6 @@
     Flags to know the solution state or information
 */
 static const unsigned char __SOLUTION_NO_STATE__ = 0;
-static const unsigned char __SOLUTION_NO_EXISTS__ = 1;
-
 
 /* Struct to represent a linear equation system solution */
 static const struct solution_SystemSolution {

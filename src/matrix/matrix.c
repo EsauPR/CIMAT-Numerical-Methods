@@ -59,3 +59,84 @@ Matrix matrix_multiply_square_matrices(Matrix a, Matrix b) {
 
     return result;
 }
+
+/* Verify that the matrix is a upper triangular matrix */
+__flag_err matrix_is_upper_triangular(Matrix matrix) {
+    __flag_err flags = 0;
+
+    for (int i = 0; i < matrix.rows; i++) {
+        if (IS_ZERO(matrix.content[i][i])) {
+            flags &= __MATRIX_ERR_HAS_ZERO_ON_DIAG__;
+        }
+        for (int j = 0; j < i; j++) {
+            if(!IS_ZERO(matrix.content[i][j])) {
+                flags &= __MATRIX_ERR_NO_UPPER_TRIANGULAR__;
+                return flags;
+            }
+        }
+    }
+
+    return flags;
+}
+
+/* Verify that the matrix is a lower triangular matrix */
+__flag_err matrix_is_lower_triangular(Matrix matrix) {
+    __flag_err flags = 0;
+
+    for (int i = 0; i < matrix.rows; i++) {
+        if (IS_ZERO(matrix.content[i][i])) {
+            flags &= __MATRIX_ERR_HAS_ZERO_ON_DIAG__;
+        }
+        for (int j = i+1; j < matrix.cols; j++) {
+            if(!IS_ZERO(matrix.content[i][j])) {
+                flags &= __MATRIX_ERR_NO_LOWER_TRIANGULAR__;
+                return flags;
+            }
+        }
+    }
+
+    return flags;
+}
+
+/* Verify that the matrix is a diagonal matrix */
+__flag_err matrix_is_diagonal(Matrix matrix) {
+    __flag_err flags = 0;
+
+    flags &= matrix_is_upper_triangular(matrix);
+    flags &= matrix_is_lower_triangular(matrix);
+
+    if (!(!(flags & __MATRIX_ERR_NO_LOWER_TRIANGULAR__) &&
+        !(flags & __MATRIX_ERR_NO_UPPER_TRIANGULAR__) &&
+        !(flags & __MATRIX_ERR_HAS_ZERO_ON_DIAG__))) {
+        flags &= __MATRIX_ERR_NO_DIAGONAL_MATRIX__;
+    }
+
+    return flags;
+}
+
+/* Verify that the matrix is a simetric matrix */
+__flag_err matrix_is_simetric(Matrix matrix) {
+    __flag_err flags = 0;
+
+    for (int i = 0; i < matrix.rows; i++) {
+        for (int j = 0; j < matrix.cols; j++) {
+            if (matrix.content[i][j] != matrix.content[j][i]) {
+                flags &= __MATRIX_ERR_NO_SIMETRIC__;
+                return flags;
+            }
+        }
+    }
+
+    return flags;
+}
+
+/* Verify that the matrix is a square matrix */
+__flag_err matrix_is_square(Matrix matrix) {
+    __flag_err flags = 0;
+
+    if (matrix.rows != matrix.cols) {
+        flags &= __MATRIX_ERR_NO_SQUARE_MATRIX__;
+    }
+
+    return flags;
+}

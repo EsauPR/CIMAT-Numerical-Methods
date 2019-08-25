@@ -59,13 +59,13 @@ EXTERN Matrix matrixio_copy(Matrix matrix);
 EXTERN Matrix matrixio_free(Matrix matrix);
 
 /* Print a matrix*/
-EXTERN void matrixio_show(double **matrix, int rows, int cols);
+EXTERN void matrixio_show(double ** matrix, int rows, int cols);
 
-/* Read a matrix and put the elements in a especific location range */
-EXTERN void matrixio_read(FILE *fp, double** matrix, int from_row, int to_row, int from_col, int  to_col);
+/* Read a matrix from a file */
+Matrix matrixio_read(char * file_name);
 
-/* Read two matrices and put the values in a augmented matrix*/
-EXTERN AugmentedMatrix matrixio_read_augmented_matrix(char* matrix1_fname, char* matrix2_fname);
+/* Read two matrices from files and put the values in a augmented matrix*/
+EXTERN AugmentedMatrix matrixio_read_augmented(char * file1_name, char * file2_name);
 
 #undef MATRIXIO_IMPORT
 #undef EXTERN

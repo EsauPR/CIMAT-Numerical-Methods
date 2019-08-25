@@ -16,10 +16,10 @@ int main(int argc, char *argv[]) {
         exit(EXIT_FAILURE);
     }
 
-    AugmentedMatrix matrix = matrixio_read_augmented_matrix(argv[1], argv[2]);
+    AugmentedMatrix matrix = matrixio_read_augmented(argv[1], argv[2]);
     matrixio_show(matrix.content, matrix.rows, matrix.cols);
 
-    SystemSolution system_solution = solve_lower_triangular_matrix(matrix, __MATRIX_NO_FLAGS__);
+    SystemSolution system_solution = solve_lower_triangular_matrix(matrix, __MATRIX_OPS_NONE_);
     solution_show(system_solution);
 
     matrixio_free(matrix);

@@ -20,7 +20,8 @@ SystemSolution solve_by_cholesky_method(AugmentedMatrix matrix) {
     double **mtxc = matrix.content;
 
     SystemSolution system_solution = matrix_ldlt_decomposition(mtxc, size);
-    if (system_solution.state & __MATRIX_NO_LDLT_DECOMPOSITION__) {
+    if (system_solution.state & __MATRIX_ERR_NO_LDLT_DECOMPOSITION__) {
+        system_solution.state &= __MATRIX_ERR_NO_SOLUTION__;
         return system_solution;
     }
     double determinat = system_solution.determinant;
@@ -32,13 +33,13 @@ SystemSolution solve_by_cholesky_method(AugmentedMatrix matrix) {
         }
     }
     // Solve Ly = b where L has a diagonal with ones
-    system_solution = solve_lower_triangular_matrix(matrix, __MATRIX_NO_FLAGS__);
+    system_solution = solve_lower_triangular_matrix(matrix, __MATRIX_OPS_NONE_);
     // Solve Ux = y
     for (int i = 0; i < size; i++) {
         mtxc[i][size] = system_solution.solution[i];
     }
     solution_free(system_solution);
-    system_solution = solve_upper_triangular_matrix(matrix, __MATRIX_DIAG_HAS_ONES__);
+    system_solution = solve_upper_triangular_matrix(matrix, __MATRIX_OPS_DIAG_HAS_ONES__);
 
     system_solution.determinant = determinat;
     return system_solution;

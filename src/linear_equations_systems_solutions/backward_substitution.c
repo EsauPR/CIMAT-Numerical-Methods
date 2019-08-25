@@ -15,9 +15,9 @@
     Return array with the solution for a lower triangular matrix
     using backward substitution
 
-    Use the flag '__MATRIX_DIAG_HAS_ONES__' to asume that the diagonal is fullfiled with ones
+    Use the flag '__MATRIX_OPS_DIAG_HAS_ONES__' to asume that the diagonal is fullfiled with ones
 */
-SystemSolution solve_lower_triangular_matrix(AugmentedMatrix matrix, __flag_t flags) {
+SystemSolution solve_lower_triangular_matrix(AugmentedMatrix matrix, __flag_ops flags) {
     double **mtxa = matrix.content;
     int size = matrix.rows;
 
@@ -27,7 +27,7 @@ SystemSolution solve_lower_triangular_matrix(AugmentedMatrix matrix, __flag_t fl
     system_solution.determinant = mtxa[0][0];
 
     system_solution.solution[0] = mtxa[0][size];
-    if (!(flags & __MATRIX_DIAG_HAS_ONES__)) {
+    if (!(flags & __MATRIX_OPS_DIAG_HAS_ONES__)) {
         system_solution.solution[0] /= mtxa[0][0];
     }
 
@@ -36,7 +36,7 @@ SystemSolution solve_lower_triangular_matrix(AugmentedMatrix matrix, __flag_t fl
         for (int j = 0; j < i; j++) {
             system_solution.solution[i] -= mtxa[i][j] * system_solution.solution[j];
         }
-        if (!(flags & __MATRIX_DIAG_HAS_ONES__)) {
+        if (!(flags & __MATRIX_OPS_DIAG_HAS_ONES__)) {
             system_solution.solution[i] /= mtxa[i][i];
         }
         system_solution.determinant *= mtxa[i][i];
@@ -49,9 +49,9 @@ SystemSolution solve_lower_triangular_matrix(AugmentedMatrix matrix, __flag_t fl
     Return array with the solution for a upper triangular matrix
     using backward substitution
 
-    Use the flag '__MATRIX_DIAG_HAS_ONES__' to asume that the diagonal is fullfiled with ones
+    Use the flag '__MATRIX_OPS_DIAG_HAS_ONES__' to asume that the diagonal is fullfiled with ones
 */
-SystemSolution solve_upper_triangular_matrix(AugmentedMatrix matrix, __flag_t flags) {
+SystemSolution solve_upper_triangular_matrix(AugmentedMatrix matrix, __flag_ops flags) {
     double **mtxa = matrix.content;
     int size = matrix.rows;
 
@@ -61,7 +61,7 @@ SystemSolution solve_upper_triangular_matrix(AugmentedMatrix matrix, __flag_t fl
     system_solution.determinant = mtxa[0][0];
 
     system_solution.solution[size - 1] = mtxa[size - 1][size];
-    if (!(flags & __MATRIX_DIAG_HAS_ONES__)) {
+    if (!(flags & __MATRIX_OPS_DIAG_HAS_ONES__)) {
         system_solution.solution[size - 1] /= mtxa[size - 1][size - 1];
     }
 
@@ -70,7 +70,7 @@ SystemSolution solve_upper_triangular_matrix(AugmentedMatrix matrix, __flag_t fl
         for (int j = 1; j < i; j++) {
             system_solution.solution[size - i] -= mtxa[size - i][size - j] * system_solution.solution[size - j];
         }
-        if (!(flags & __MATRIX_DIAG_HAS_ONES__)) {
+        if (!(flags & __MATRIX_OPS_DIAG_HAS_ONES__)) {
             system_solution.solution[size - i] /= mtxa[size - i][size - i];
         }
         system_solution.determinant *= mtxa[i - 1][i - 1];

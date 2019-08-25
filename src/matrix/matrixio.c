@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
+#include "matrix.h"
 
 #define MATRIXIO_IMPORT
 #include "matrixio.h"
@@ -90,7 +91,7 @@ void matrixio_show(double **matrix, int rows, int cols) {
 }
 
 /* Read a matrix and put the elements in a especif location range */
-void matrixio_read(FILE *fp, double** matrix, int from_row, int to_row, int from_col, int  to_col){
+static void __matrixio_scan(FILE *fp, double** matrix, int from_row, int to_row, int from_col, int  to_col){
     for (int i = from_row; i < to_row; i++) {
         for (int j = from_col; j < to_col; j++) {
             fscanf(fp ,"%lf", &matrix[i][j]);
@@ -98,18 +99,42 @@ void matrixio_read(FILE *fp, double** matrix, int from_row, int to_row, int from
     }
 }
 
-/* Read two matrices and put the values in a augmented matrix*/
-AugmentedMatrix matrixio_read_augmented_matrix(char *matrix1_fname, char *matrix2_fname){
+/* Read a matrix from a file */
+Matrix matrixio_read(char *file_name) {
+    int rows, cols;
+
+    FILE *fp = fopen(file_name, "r");
+    if(fp == NULL) {
+        perror("fopen()");
+        exit(EXIT_FAILURE);
+    }
+
+    fscanf(fp, "%d %d", &rows, &cols);
+
+    Matrix matrix = matrixio_allocate(rows, cols);
+    if (rows != cols) {
+        matrix.state &= __MATRIX_ERR_NO_SQUARE_MATRIX__;
+    }
+
+    __matrixio_read(fp, matrix.content, 0, rows, 0, cols);
+    fclose(fp);
+
+    return matrix;
+}
+
+
+/* Read two matrices from files and put the values in a augmented matrix*/
+AugmentedMatrix matrixio_read_augmented(char *file1_name, char *file2_name){
     int rows1, cols1;
     int rows2, cols2;
 
-    FILE *fp1 = fopen(matrix1_fname, "r");
+    FILE *fp1 = fopen(file1_name, "r");
     if(fp1 == NULL) {
         perror("fopen()");
         exit(EXIT_FAILURE);
     }
 
-    FILE *fp2 = fopen(matrix2_fname, "r");
+    FILE *fp2 = fopen(file2_name, "r");
     if (fp2 == NULL ) {
         perror("fopen()");
         exit(EXIT_FAILURE);
@@ -119,9 +144,12 @@ AugmentedMatrix matrixio_read_augmented_matrix(char *matrix1_fname, char *matrix
     fscanf(fp2, "%d %d", &rows2, &cols2);
 
     Matrix matrix = matrixio_allocate(rows1, cols1 + cols2);
+    if (rows1 != cols1) {
+        matrix.state &= __MATRIX_ERR_NO_SQUARE_MATRIX__;
+    }
 
-    matrixio_read(fp1, matrix.content, 0, rows1, 0, cols1);
-    matrixio_read(fp2, matrix.content, 0, rows1, cols1, cols1 + cols2);
+    __matrixio_read_scan(fp1, matrix.content, 0, rows1, 0, cols1);
+    __matrixio_read_scan(fp2, matrix.content, 0, rows1, cols1, cols1 + cols2);
 
     fclose(fp1);
     fclose(fp2);

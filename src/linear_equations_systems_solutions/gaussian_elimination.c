@@ -37,9 +37,7 @@ SystemSolution solve_by_simple_gaussian_elimination(AugmentedMatrix matrix) {
     int size = matrix.rows;
 
     SystemSolution system_solution = SystemSolutionDefault;
-    system_solution.solution = NULL;
-    system_solution.size = size;
-    system_solution.determinant = 1.0;
+    double determinant = 1.0;
 
     for (int pivot = 0; pivot < size; pivot++) {
         // Replaze the pivots with value zero
@@ -47,19 +45,22 @@ SystemSolution solve_by_simple_gaussian_elimination(AugmentedMatrix matrix) {
             MatrixElement mp = matrix_find_max_element(mtxa, pivot + 1, size, pivot, pivot + 1);
 
             if (mp.value == 0.0) {
-                return system_solution; // There is not solution
+                system_solution.state &= __MATRIX_ERR_NO_SOLUTION__;
+                return system_solution;
             }
 
             matrix_swap_rows(mtxa, pivot, mp.row);
-            system_solution.determinant *= -1.0;
+            determinant *= -1.0;
         }
 
-        system_solution.determinant *= mtxa[pivot][pivot];
+        determinant *= mtxa[pivot][pivot];
         gaussian_elimination_make_row_pivot(mtxa, size, pivot);
         gaussian_elimination_make_cols_zeros(mtxa, size, pivot);
     }
 
-    system_solution.solution = solve_upper_triangular_matrix(matrix, __MATRIX_NO_FLAGS__).solution;
+    system_solution = solve_upper_triangular_matrix(matrix, __MATRIX_OPS_NONE_);
+    system_solution.determinant = determinant;
+
     return system_solution;
 }
 
@@ -98,14 +99,13 @@ SystemSolution solve_by_gaussian_elimination(AugmentedMatrix matrix) {
     gaussian_elimination_set_positions_map(positions_map, size);
 
     SystemSolution system_solution = SystemSolutionDefault;
-    system_solution.solution = NULL;
-    system_solution.size = size;
-    system_solution.determinant = 1.0;
+    double determinant = 1.0;
 
     for (int pivot = 0; pivot < size; pivot++) {
         MatrixElement mp = matrix_find_max_element(mtxa, pivot, size, pivot, size);
 
-        if (mp.value == 0.0) {
+        if (IS_ZERO(mp.value)) {
+            system_solution.state &= __MATRIX_ERR_NO_SOLUTION__;
             return system_solution;
         }
 
@@ -113,22 +113,23 @@ SystemSolution solve_by_gaussian_elimination(AugmentedMatrix matrix) {
         if (ABS(mtxa[pivot][pivot]) != ABS(mp.value)) {
             if ( pivot != mp.row) {
                 matrix_swap_rows(mtxa, pivot, mp.row);
-                system_solution.determinant *= -1.0;
+                determinant *= -1.0;
             }
 
             if ( pivot != mp.col) {
                 matrix_swap_cols(mtxa, size, pivot, mp.col);
                 SWAP(positions_map[pivot], positions_map[mp.col]);
-                system_solution.determinant *= -1.0;
+                determinant *= -1.0;
             }
         }
 
-        system_solution.determinant *= mtxa[pivot][pivot];
+        determinant *= mtxa[pivot][pivot];
         gaussian_elimination_make_row_pivot(mtxa, size, pivot);
         gaussian_elimination_make_cols_zeros(mtxa, size, pivot);
     }
 
-    system_solution.solution = solve_upper_triangular_matrix(matrix, __MATRIX_NO_FLAGS__).solution;
+    system_solution = solve_upper_triangular_matrix(matrix, __MATRIX_OPS_NONE_);
+    system_solution.determinant = determinant;
     gaussian_elimination_sort_result(system_solution.solution, positions_map, size);
 
     return system_solution;
