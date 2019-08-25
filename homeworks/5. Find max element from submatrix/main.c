@@ -28,16 +28,16 @@ int main(int argc, char *argv[]) {
 
     fscanf(fp, "%d %d", &rows, &cols);
 
-    Matrix matrix = allocate_matrix(rows, cols);
-    read_matrix(fp, matrix.content, 0, rows, 0, cols);
+    Matrix matrix = matrixio_allocate(rows, cols);
+    matrixio_read(fp, matrix.content, 0, rows, 0, cols);
     fclose(fp);
 
-    print_matrix(matrix.content, rows, cols);
+    matrixio_show(matrix.content, rows, cols);
 
-    MatrixElement mp = find_matrix_max_element(matrix.content, 0, rows, 0, cols);
+    MatrixElement mp = matrix_find_max_element(matrix.content, 0, rows, 0, cols);
     printf("El elemento con mayor valor obsoluto es: %lf, en (%d, %d)\n", mp.value, mp.row + 1, mp.col + 1);
 
-    free_matriz(matrix);
+    matrixio_free(matrix);
 
     return 0;
 }

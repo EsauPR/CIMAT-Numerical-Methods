@@ -11,7 +11,7 @@
 #include "matrix.h"
 
 /* Find the max element into a matrix range */
-MatrixElement find_matrix_max_element(double ** matrix, int from_row, int to_row, int from_col, int to_col) {
+MatrixElement matrix_find_max_element(double ** matrix, int from_row, int to_row, int from_col, int to_col) {
     MatrixElement mp;
 
     mp.value = matrix[from_row][from_col];
@@ -32,22 +32,22 @@ MatrixElement find_matrix_max_element(double ** matrix, int from_row, int to_row
 }
 
 /* Swap matrix columns */
-void swap_matrix_cols(double **matrix, int col_size, int col_1, int col_2) {
+void matrix_swap_cols(double **matrix, int col_size, int col_1, int col_2) {
     for (int i = 0; i < col_size; i++){
         SWAP(matrix[i][col_1], matrix[i][col_2]);
     }
 }
 
 /* Swap matrix rows */
-void swap_matrix_rows(double **matrix, int row_1, int row_2) {
+void matrix_swap_rows(double **matrix, int row_1, int row_2) {
     SWAP(matrix[row_1], matrix[row_2]);
 }
 
 /* Multiply matrix a x b and returns the values in a new matrix */
-Matrix multiply_square_matrices(Matrix a, Matrix b) {
+Matrix matrix_multiply_square_matrices(Matrix a, Matrix b) {
     int size = a.rows;
 
-    Matrix result = allocate_matrix(size, size);
+    Matrix result = matrixio_allocate(size, size);
     for (int i = 0; i < size; i++) {
         for (int j = 0; j < size; j++) {
             result.content[i][j] = 0.0;

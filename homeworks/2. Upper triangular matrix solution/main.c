@@ -17,14 +17,14 @@ int main(int argc, char *argv[]) {
         exit(EXIT_FAILURE);
     }
 
-    AugmentedMatrix matrix = read_augmented_matrix(argv[1], argv[2]);
-    print_matrix(matrix.content, matrix.rows, matrix.cols);
+    AugmentedMatrix matrix = matrixio_read_augmented_matrix(argv[1], argv[2]);
+    matrixio_show(matrix.content, matrix.rows, matrix.cols);
 
     SystemSolution system_solution = solve_upper_triangular_matrix(matrix, __MATRIX_NO_FLAGS__);
-    print_system_solution(system_solution);
+    solution_show(system_solution);
 
-    free_matriz(matrix);
-    free_system_solution(system_solution);
+    matrixio_free(matrix);
+    solution_free(system_solution);
 
     return 0;
 }

@@ -1,15 +1,15 @@
 #include <stdlib.h>
-#include "matrixLU.h"
+#include "matrix_lu.h"
 #include "../linear_equations_systems_solutions/backward_substitution.h"
 
 #define MATRIX_INVERSE_IMPORT
 #include "matrix_inverse.h"
 
 /* Compute the matrix inverse with LU factorization */
-Matrix get_matrix_inverse(Matrix matrix) {
+Matrix matrix_inverse_get(Matrix matrix) {
     int size = matrix.rows;
-    Matrix inverse = allocate_matrix(size, size);
-    SystemSolution lu_sol = LU_decomposition(matrix.content, size);
+    Matrix inverse = matrixio_allocate(size, size);
+    SystemSolution lu_sol = matrix_lu_decomposition(matrix.content, size);
 
     if (lu_sol.state & __MATRIX_NO_LU_DECOMPOSITION__) {
         inverse.state &= __MATRIX_NO_INVERSE__ & lu_sol.state;
@@ -29,17 +29,17 @@ Matrix get_matrix_inverse(Matrix matrix) {
         for (int j = 0; j < size; j++) {
             matrix.content[j][size] = ss.solution[j];
         }
-        free_system_solution(ss);
+        solution_free(ss);
         ss = solve_upper_triangular_matrix(matrix, __MATRIX_NO_FLAGS__);
 
         // Copy x to form A^-1[:,i] mapping by positions map array
         for (int j = 0; j < size; j++) {
             inverse.content[j][lu_sol.rows_perm_map[i]] = ss.solution[j];
         }
-        free_system_solution(ss);
+        solution_free(ss);
     }
 
-    free_system_solution(lu_sol);
+    solution_free(lu_sol);
 
     return inverse;
 }

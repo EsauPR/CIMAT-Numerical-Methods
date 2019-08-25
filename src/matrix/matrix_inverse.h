@@ -21,7 +21,7 @@
 
 
 /* Compute the matrix inverse with LU factorization */
-EXTERN Matrix get_matrix_inverse(Matrix matrix);
+EXTERN Matrix matrix_inverse_get(Matrix matrix);
 
 #undef MATRIX_INVERSE_IMPORT
 #undef EXTERN

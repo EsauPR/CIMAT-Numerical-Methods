@@ -16,7 +16,7 @@
 
 
 /*Create the memory for a array*/
-int *allocate_int_array(int size) {
+int *matrixio_allocate_int_array(int size) {
     int * dinmem = (int *)calloc(size, sizeof(int));
     if (dinmem == NULL) {
         printf("ERROR: %s\n", strerror(errno));
@@ -25,7 +25,7 @@ int *allocate_int_array(int size) {
 }
 
 /*Create the memory for a array*/
-double *allocate_double_array(int size) {
+double *matrixio_allocate_double_array(int size) {
     double * dinmem = (double *)calloc(size, sizeof(double));
     if (dinmem == NULL) {
         printf("ERROR: %s\n", strerror(errno));
@@ -34,7 +34,7 @@ double *allocate_double_array(int size) {
 }
 
 /* Create the memory for a matrix */
-Matrix allocate_matrix(int rows, int cols) {
+Matrix matrixio_allocate(int rows, int cols) {
     Matrix matrix = Matrix_Default;
     matrix.content = (double **)calloc(rows, sizeof(double *));
     matrix.rows = rows;
@@ -42,13 +42,13 @@ Matrix allocate_matrix(int rows, int cols) {
     matrix.state = 0;
 
     if (matrix.content == NULL) {
-        perror("allocate_matrix(): ");
+        perror("matrixio_allocate(): ");
         exit(EXIT_FAILURE);
     }
 
-    matrix.pointer_start = allocate_double_array(rows * cols);
+    matrix.pointer_start = matrixio_allocate_double_array(rows * cols);
     if (matrix.pointer_start == NULL) {
-        perror("allocate_matrix(): ");
+        perror("matrixio_allocate(): ");
         exit(EXIT_FAILURE);
     }
 
@@ -60,8 +60,8 @@ Matrix allocate_matrix(int rows, int cols) {
     return matrix;
 }
 
-Matrix copy_matriz(Matrix matrix) {
-    Matrix matrix_copy = allocate_matrix(matrix.rows, matrix.cols);
+Matrix matrixio_copy(Matrix matrix) {
+    Matrix matrix_copy = matrixio_allocate(matrix.rows, matrix.cols);
     memcpy(matrix_copy.content[0], matrix.content[0], matrix.rows * matrix.cols * sizeof(**matrix.content));
     return matrix_copy;
 }
@@ -70,7 +70,7 @@ Matrix copy_matriz(Matrix matrix) {
     Liberate the matrix memory
     Returns the same struct values with NULL on freeded pointers
 */
-Matrix free_matriz(Matrix matrix) {
+Matrix matrixio_free(Matrix matrix) {
     free(matrix.pointer_start);
     matrix.pointer_start = NULL;
     free(matrix.content);
@@ -79,7 +79,7 @@ Matrix free_matriz(Matrix matrix) {
 }
 
 /* Print a matrix*/
-void print_matrix(double **matrix, int rows, int cols) {
+void matrixio_show(double **matrix, int rows, int cols) {
     for (int i = 0; i < rows; i++) {
         for (int j = 0; j < cols; j++) {
             printf("%lf ", matrix[i][j]);
@@ -90,7 +90,7 @@ void print_matrix(double **matrix, int rows, int cols) {
 }
 
 /* Read a matrix and put the elements in a especif location range */
-void read_matrix(FILE *fp, double** matrix, int from_row, int to_row, int from_col, int  to_col){
+void matrixio_read(FILE *fp, double** matrix, int from_row, int to_row, int from_col, int  to_col){
     for (int i = from_row; i < to_row; i++) {
         for (int j = from_col; j < to_col; j++) {
             fscanf(fp ,"%lf", &matrix[i][j]);
@@ -99,7 +99,7 @@ void read_matrix(FILE *fp, double** matrix, int from_row, int to_row, int from_c
 }
 
 /* Read two matrices and put the values in a augmented matrix*/
-AugmentedMatrix read_augmented_matrix(char *matrix1_fname, char *matrix2_fname){
+AugmentedMatrix matrixio_read_augmented_matrix(char *matrix1_fname, char *matrix2_fname){
     int rows1, cols1;
     int rows2, cols2;
 
@@ -118,10 +118,10 @@ AugmentedMatrix read_augmented_matrix(char *matrix1_fname, char *matrix2_fname){
     fscanf(fp1, "%d %d", &rows1, &cols1);
     fscanf(fp2, "%d %d", &rows2, &cols2);
 
-    Matrix matrix = allocate_matrix(rows1, cols1 + cols2);
+    Matrix matrix = matrixio_allocate(rows1, cols1 + cols2);
 
-    read_matrix(fp1, matrix.content, 0, rows1, 0, cols1);
-    read_matrix(fp2, matrix.content, 0, rows1, cols1, cols1 + cols2);
+    matrixio_read(fp1, matrix.content, 0, rows1, 0, cols1);
+    matrixio_read(fp2, matrix.content, 0, rows1, cols1, cols1 + cols2);
 
     fclose(fp1);
     fclose(fp2);

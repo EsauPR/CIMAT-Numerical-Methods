@@ -23,7 +23,7 @@ SystemSolution solve_lower_triangular_matrix(AugmentedMatrix matrix, __flag_t fl
 
     SystemSolution system_solution = SystemSolutionDefault;
     system_solution.size = size;
-    system_solution.solution = allocate_double_array(size);
+    system_solution.solution = matrixio_allocate_double_array(size);
     system_solution.determinant = mtxa[0][0];
 
     system_solution.solution[0] = mtxa[0][size];
@@ -57,7 +57,7 @@ SystemSolution solve_upper_triangular_matrix(AugmentedMatrix matrix, __flag_t fl
 
     SystemSolution system_solution = SystemSolutionDefault;
     system_solution.size = size;
-    system_solution.solution = allocate_double_array(size);
+    system_solution.solution = matrixio_allocate_double_array(size);
     system_solution.determinant = mtxa[0][0];
 
     system_solution.solution[size - 1] = mtxa[size - 1][size];

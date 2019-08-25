@@ -37,7 +37,7 @@ static const struct solution_SystemSolution {
 typedef struct solution_SystemSolution SystemSolution;
 
 /* Return a pointer array to track a permutation mapping */
-EXTERN int* create_permutation_map(int size);
+EXTERN int* solution_create_permutation_map(int size);
 
 // /* Sort a array using the permutation mapping */
 // EXTERN void *sort_array_by_perm_map(int *array, int* permutation_map, int size);
@@ -50,10 +50,10 @@ EXTERN int* create_permutation_map(int size);
     Free the solution struct for a linear equation system
     Returns the same struct values with NULL on freeded pointers
 */
-EXTERN SystemSolution free_system_solution(SystemSolution system_solution);
+EXTERN SystemSolution solution_free(SystemSolution system_solution);
 
 /* Print the solution for a linear equation system*/
-EXTERN void print_system_solution(SystemSolution system_solution);
+EXTERN void solution_show(SystemSolution system_solution);
 
 
 #undef SOLUTION_IMPORT

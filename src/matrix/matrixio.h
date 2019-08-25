@@ -41,31 +41,31 @@ typedef Matrix AugmentedMatrix;
 
 
 /*Create the memory for a array*/
-EXTERN int *allocate_int_array(int size);
+EXTERN int *matrixio_allocate_int_array(int size);
 
 /*Create the memory for a array*/
-EXTERN double *allocate_double_array(int size);
+EXTERN double *matrixio_allocate_double_array(int size);
 
 /* Create the memory for a matrix */
-EXTERN Matrix allocate_matrix(int rows, int cols);
+EXTERN Matrix matrixio_allocate(int rows, int cols);
 
 /* Copy the matrix memory */
-EXTERN Matrix copy_matriz(Matrix matrix);
+EXTERN Matrix matrixio_copy(Matrix matrix);
 
 /*
     Liberate the matrix memory
     Returns the same struct values with NULL on freeded pointers
 */
-EXTERN Matrix free_matriz(Matrix matrix);
+EXTERN Matrix matrixio_free(Matrix matrix);
 
 /* Print a matrix*/
-EXTERN void print_matrix(double **matrix, int rows, int cols);
+EXTERN void matrixio_show(double **matrix, int rows, int cols);
 
 /* Read a matrix and put the elements in a especific location range */
-EXTERN void read_matrix(FILE *fp, double** matrix, int from_row, int to_row, int from_col, int  to_col);
+EXTERN void matrixio_read(FILE *fp, double** matrix, int from_row, int to_row, int from_col, int  to_col);
 
 /* Read two matrices and put the values in a augmented matrix*/
-EXTERN AugmentedMatrix read_augmented_matrix(char* matrix1_fname, char* matrix2_fname);
+EXTERN AugmentedMatrix matrixio_read_augmented_matrix(char* matrix1_fname, char* matrix2_fname);
 
 #undef MATRIXIO_IMPORT
 #undef EXTERN

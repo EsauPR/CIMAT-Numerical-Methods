@@ -44,13 +44,13 @@ SystemSolution solve_by_simple_gaussian_elimination(AugmentedMatrix matrix) {
     for (int pivot = 0; pivot < size; pivot++) {
         // Replaze the pivots with value zero
         if (mtxa[pivot][pivot] == 0) {
-            MatrixElement mp = find_matrix_max_element(mtxa, pivot + 1, size, pivot, pivot + 1);
+            MatrixElement mp = matrix_find_max_element(mtxa, pivot + 1, size, pivot, pivot + 1);
 
             if (mp.value == 0.0) {
                 return system_solution; // There is not solution
             }
 
-            swap_matrix_rows(mtxa, pivot, mp.row);
+            matrix_swap_rows(mtxa, pivot, mp.row);
             system_solution.determinant *= -1.0;
         }
 
@@ -103,7 +103,7 @@ SystemSolution solve_by_gaussian_elimination(AugmentedMatrix matrix) {
     system_solution.determinant = 1.0;
 
     for (int pivot = 0; pivot < size; pivot++) {
-        MatrixElement mp = find_matrix_max_element(mtxa, pivot, size, pivot, size);
+        MatrixElement mp = matrix_find_max_element(mtxa, pivot, size, pivot, size);
 
         if (mp.value == 0.0) {
             return system_solution;
@@ -112,12 +112,12 @@ SystemSolution solve_by_gaussian_elimination(AugmentedMatrix matrix) {
         // Swap rows and columns
         if (ABS(mtxa[pivot][pivot]) != ABS(mp.value)) {
             if ( pivot != mp.row) {
-                swap_matrix_rows(mtxa, pivot, mp.row);
+                matrix_swap_rows(mtxa, pivot, mp.row);
                 system_solution.determinant *= -1.0;
             }
 
             if ( pivot != mp.col) {
-                swap_matrix_cols(mtxa, size, pivot, mp.col);
+                matrix_swap_cols(mtxa, size, pivot, mp.col);
                 SWAP(positions_map[pivot], positions_map[mp.col]);
                 system_solution.determinant *= -1.0;
             }

@@ -17,8 +17,8 @@
 
 
 /* Return a pointer array to track a permutation mapping */
-int *create_permutation_map(int size) {
-    int * map = allocate_int_array(size);
+int *solution_create_permutation_map(int size) {
+    int * map = matrixio_allocate_int_array(size);
     for (int i = 0; i < size; map[i] = i, i++);
     return map;
 }
@@ -27,7 +27,7 @@ int *create_permutation_map(int size) {
     Free the solution struct for a linear equation system
     Returns the same struct values with NULL on freeded pointers
 */
-SystemSolution free_system_solution(SystemSolution system_solution) {
+SystemSolution solution_free(SystemSolution system_solution) {
     if (system_solution.solution != NULL) {
         free(system_solution.solution);
         system_solution.solution = NULL;
@@ -45,7 +45,7 @@ SystemSolution free_system_solution(SystemSolution system_solution) {
 }
 
 /* Print the solution for a linear equation system*/
-void print_system_solution(SystemSolution system_solution) {
+void solution_show(SystemSolution system_solution) {
     for (int i = 0; i < system_solution.size; i++){
         printf("X_%d = %lf\n", i + 1, system_solution.solution[i]);
     }

@@ -18,7 +18,7 @@ OBJS = ../../src/linear_equations_systems_solutions/backward_substitution.o \
 	../../src/linear_equations_systems_solutions/solution.o \
 	../../src/matrix/matrixio.o \
 	../../src/matrix/matrix.o \
-	../../src/matrix/matrixLU.o
+	../../src/matrix/matrix_lu.o
 
 # This default rule compiles the executable program
 $(BIN): $(OBJS) $(BIN).c

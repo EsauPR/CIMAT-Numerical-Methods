@@ -51,16 +51,16 @@ typedef struct matrix_MatrixElement MatrixElement;
 
 
 /* Find the max element into a matrix range */
-EXTERN MatrixElement find_matrix_max_element(double ** matrix, int from_row, int to_row, int from_col, int to_col);
+EXTERN MatrixElement matrix_find_max_element(double ** matrix, int from_row, int to_row, int from_col, int to_col);
 
 /* Swap matrix columns */
-EXTERN void swap_matrix_cols(double **matrix, int col_size, int col_1, int col_2);
+EXTERN void matrix_swap_cols(double **matrix, int col_size, int col_1, int col_2);
 
 /* Swap matrix rows */
-EXTERN void swap_matrix_rows(double **matrix, int row_1, int row_2);
+EXTERN void matrix_swap_rows(double **matrix, int row_1, int row_2);
 
 /* Multiply matrix a x b and returns the values in a new matrix */
-EXTERN Matrix multiply_square_matrices(Matrix a, Matrix b);
+EXTERN Matrix matrix_multiply_square_matrices(Matrix a, Matrix b);
 
 #undef MATRIX_IMPORT
 #undef EXTERN

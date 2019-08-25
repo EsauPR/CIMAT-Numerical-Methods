@@ -8,7 +8,7 @@
 */
 
 #include <stdlib.h>
-#include "../matrix/matrixLDLt.h"
+#include "../matrix/matrix_ldlt.h"
 #include "../linear_equations_systems_solutions/backward_substitution.h"
 
 #define CHOLESKY_IMPORT
@@ -19,7 +19,7 @@ SystemSolution solve_by_cholesky_method(AugmentedMatrix matrix) {
     int size = matrix.rows;
     double **mtxc = matrix.content;
 
-    SystemSolution system_solution = LDLt_decomposition(mtxc, size);
+    SystemSolution system_solution = matrix_ldlt_decomposition(mtxc, size);
     if (system_solution.state & __MATRIX_NO_LDLT_DECOMPOSITION__) {
         return system_solution;
     }
@@ -37,7 +37,7 @@ SystemSolution solve_by_cholesky_method(AugmentedMatrix matrix) {
     for (int i = 0; i < size; i++) {
         mtxc[i][size] = system_solution.solution[i];
     }
-    free_system_solution(system_solution);
+    solution_free(system_solution);
     system_solution = solve_upper_triangular_matrix(matrix, __MATRIX_DIAG_HAS_ONES__);
 
     system_solution.determinant = determinat;

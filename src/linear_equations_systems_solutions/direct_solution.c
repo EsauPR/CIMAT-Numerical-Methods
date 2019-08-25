@@ -17,7 +17,7 @@ SystemSolution solve_diagonal_matrix(AugmentedMatrix matrix) {
     int size = matrix.rows;
 
     SystemSolution system_solution = SystemSolutionDefault;
-    system_solution.solution = allocate_double_array(size);
+    system_solution.solution = matrixio_allocate_double_array(size);
     system_solution.size = size;
     system_solution.determinant = 1.0;
 
