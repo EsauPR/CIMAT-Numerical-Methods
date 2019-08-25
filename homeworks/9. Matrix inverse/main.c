@@ -61,6 +61,8 @@ int main(int argc, char *argv[]) {
         exit(EXIT_FAILURE);
     }
 
+    matrixio_show(inverse.content, inverse.rows, inverse.cols);
+
     Matrix identity = matrix_multiply(matrix, inverse);
     matrixio_show(identity.content, identity.rows, identity.cols);
 
