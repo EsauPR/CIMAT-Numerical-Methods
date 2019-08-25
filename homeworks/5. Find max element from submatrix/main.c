@@ -21,7 +21,7 @@ int main(int argc, char *argv[]) {
     matrixio_show(matrix.content, matrix.rows, matrix.cols);
 
     MatrixElement mp = matrix_find_max_element(matrix.content, 0, matrix.rows, 0, matrix.cols);
-    printf("El elemento con mayor valor obsoluto es: %lf, en (%d, %d)\n", mp.value, mp.row + 1, mp.col + 1);
+    printf("The element with the highest absolute value is: %lf, in (%d, %d)\n", mp.value, mp.row + 1, mp.col + 1);
 
     matrixio_free(matrix);
 
