@@ -42,10 +42,10 @@ SystemSolution matrix_ldlt_decomposition(double ** matrix, int size) {
         }
 
         // Swap rows to avoid division by zero
-        if (matrix[i][i] == 0.0 && i < size) {
+        if (IS_ZERO(matrix[i][i]) && i < size) {
             // No more swaps available
             if (++swap_row >= size) {
-                system_solution.state &= __MATRIX_ERR_NO_LDLT_DECOMPOSITION__;
+                system_solution.err |= __MATRIX_ERR_NO_LDLT_DECOMPOSITION__;
                 return system_solution;
             }
             // Restore current row and swap

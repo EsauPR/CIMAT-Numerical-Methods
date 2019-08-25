@@ -12,32 +12,13 @@
 #define MATRIXIO_H
 
 #include <stdio.h>
+#include "matrix_core.h"
 
 #ifdef MATRIXIO_IMPORT
     #define EXTERN
 #else
     #define EXTERN extern
 #endif
-
-
-/*
-    Flags to know matrix state or information
-*/
-static const unsigned char __NO_STATE__ = 0;
-
-
-/* Struct to represent a linear equation system solution */
-static const struct Matrix{
-    int rows;
-    int cols;
-    double * pointer_start;
-    double ** content;
-    unsigned char state;
-
-} Matrix_Default = {0, 0, NULL, NULL, __NO_STATE__};
-
-typedef struct Matrix Matrix;
-typedef Matrix AugmentedMatrix;
 
 
 /*Create the memory for a array*/
@@ -60,6 +41,9 @@ EXTERN Matrix matrixio_free(Matrix matrix);
 
 /* Print a matrix*/
 EXTERN void matrixio_show(double ** matrix, int rows, int cols);
+
+/* Read a matrix and put the elements in a especif location range */
+EXTERN void matrixio_scan(FILE *fp, double** matrix, int from_row, int to_row, int from_col, int  to_col);
 
 /* Read a matrix from a file */
 Matrix matrixio_read(char * file_name);

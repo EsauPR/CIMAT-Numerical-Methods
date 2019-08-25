@@ -6,13 +6,13 @@
 #include "matrix_inverse.h"
 
 /* Compute the matrix inverse with LU factorization */
-Matrix matrix_inverse_get(Matrix matrix) {
+Matrix matrix_inverse_get(AugmentedMatrix matrix) {
     int size = matrix.rows;
     Matrix inverse = matrixio_allocate(size, size);
     SystemSolution lu_sol = matrix_lu_decomposition(matrix.content, size);
 
-    if (lu_sol.state & __MATRIX_ERR_NO_LU_DECOMPOSITION__) {
-        inverse.state &= __MATRIX_ERR_NO_INVERSE__ & lu_sol.state;
+    if (lu_sol.err & __MATRIX_ERR_NO_LU_DECOMPOSITION__) {
+        inverse.err |= __MATRIX_ERR_NO_INVERSE__ | lu_sol.err;
         return inverse;
     }
 

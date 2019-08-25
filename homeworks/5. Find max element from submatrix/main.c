@@ -12,17 +12,15 @@
 
 
 int main(int argc, char *argv[]) {
-    int rows, cols;
-
     if (argc < 2) {
-        perror("main(): 1 Args missing");
+        perror("main():: 1 Args missing");
         exit(EXIT_FAILURE);
     }
 
     Matrix matrix = matrixio_read(argv[1]);
-    matrixio_show(matrix.content, rows, cols);
+    matrixio_show(matrix.content, matrix.rows, matrix.cols);
 
-    MatrixElement mp = matrix_find_max_element(matrix.content, 0, rows, 0, cols);
+    MatrixElement mp = matrix_find_max_element(matrix.content, 0, matrix.rows, 0, matrix.cols);
     printf("El elemento con mayor valor obsoluto es: %lf, en (%d, %d)\n", mp.value, mp.row + 1, mp.col + 1);
 
     matrixio_free(matrix);

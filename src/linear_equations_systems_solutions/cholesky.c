@@ -20,8 +20,8 @@ SystemSolution solve_by_cholesky_method(AugmentedMatrix matrix) {
     double **mtxc = matrix.content;
 
     SystemSolution system_solution = matrix_ldlt_decomposition(mtxc, size);
-    if (system_solution.state & __MATRIX_ERR_NO_LDLT_DECOMPOSITION__) {
-        system_solution.state &= __MATRIX_ERR_NO_SOLUTION__;
+    if (system_solution.err & __MATRIX_ERR_NO_LDLT_DECOMPOSITION__) {
+        system_solution.err |= __MATRIX_ERR_NO_SOLUTION__;
         return system_solution;
     }
     double determinat = system_solution.determinant;

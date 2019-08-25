@@ -10,6 +10,8 @@
 #ifndef SOLUTION_H
 #define SOLUTION_H
 
+#include "../matrix/matrix.h"
+
 #ifdef SOLUTION_IMPORT
     #define EXTERN
 #else
@@ -20,7 +22,6 @@
 /*
     Flags to know the solution state or information
 */
-static const unsigned char __SOLUTION_NO_STATE__ = 0;
 
 /* Struct to represent a linear equation system solution */
 static const struct solution_SystemSolution {
@@ -29,8 +30,8 @@ static const struct solution_SystemSolution {
     int * cols_perm_map;
     double determinant;
     double * solution;
-    unsigned char state;
-} SystemSolutionDefault = {0, NULL, NULL, 1.0, NULL, __SOLUTION_NO_STATE__};
+    __flag_err err;
+} SystemSolutionDefault = {0, NULL, NULL, 1.0, NULL, __MATRIX_ERR_NONE__};
 
 typedef struct solution_SystemSolution SystemSolution;
 
@@ -50,7 +51,7 @@ EXTERN int* solution_create_permutation_map(int size);
 */
 EXTERN SystemSolution solution_free(SystemSolution system_solution);
 
-/* Print the solution for a linear equation system*/
+/* Print the solution for a linear equation system */
 EXTERN void solution_show(SystemSolution system_solution);
 
 

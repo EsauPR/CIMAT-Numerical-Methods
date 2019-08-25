@@ -44,8 +44,8 @@ SystemSolution solve_by_simple_gaussian_elimination(AugmentedMatrix matrix) {
         if (mtxa[pivot][pivot] == 0) {
             MatrixElement mp = matrix_find_max_element(mtxa, pivot + 1, size, pivot, pivot + 1);
 
-            if (mp.value == 0.0) {
-                system_solution.state &= __MATRIX_ERR_NO_SOLUTION__;
+            if (IS_ZERO(mp.value)) {
+                system_solution.err |= __MATRIX_ERR_NO_SOLUTION__;
                 return system_solution;
             }
 
@@ -105,7 +105,7 @@ SystemSolution solve_by_gaussian_elimination(AugmentedMatrix matrix) {
         MatrixElement mp = matrix_find_max_element(mtxa, pivot, size, pivot, size);
 
         if (IS_ZERO(mp.value)) {
-            system_solution.state &= __MATRIX_ERR_NO_SOLUTION__;
+            system_solution.err |= __MATRIX_ERR_NO_SOLUTION__;
             return system_solution;
         }
 
