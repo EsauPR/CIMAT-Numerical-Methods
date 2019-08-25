@@ -41,18 +41,16 @@ int main(int argc, char *argv[]) {
     }
 
     Matrix matrix = read_matrix(argv[1]);
-
-    Matrix matrix_copy = matrixio_copy(matrix);
-    matrixio_show(matrix_copy.content, matrix_copy.rows, matrix_copy.cols);
+    matrixio_show(matrix.content, matrix.rows, matrix.cols);
 
     __flag_err flags = matrix_check_dimensions(matrix);
     if (flags) {
         pmerror("main():", flags);
         matrixio_free(matrix);
-        matrixio_free(matrix_copy);
         exit(EXIT_FAILURE);
     }
 
+    Matrix matrix_copy = matrixio_copy(matrix);
     Matrix inverse = matrix_inverse_get(matrix_copy);
 
     if (matrix.err) {
