@@ -24,14 +24,9 @@ SystemSolution solve_lower_triangular_matrix(AugmentedMatrix matrix, __flag_ops 
     SystemSolution system_solution = SystemSolutionDefault;
     system_solution.size = size;
     system_solution.solution = matrixio_allocate_double_array(size);
-    system_solution.determinant = mtxa[0][0];
+    system_solution.determinant = 1.0;
 
-    system_solution.solution[0] = mtxa[0][size];
-    if (!(flags & __MATRIX_OPS_DIAG_HAS_ONES__)) {
-        system_solution.solution[0] /= mtxa[0][0];
-    }
-
-    for (int i = 1; i < size; i++) {
+    for (int i = 0; i < size; i++) {
         system_solution.solution[i] = mtxa[i][size];
         for (int j = 0; j < i; j++) {
             system_solution.solution[i] -= mtxa[i][j] * system_solution.solution[j];
@@ -58,22 +53,17 @@ SystemSolution solve_upper_triangular_matrix(AugmentedMatrix matrix, __flag_ops 
     SystemSolution system_solution = SystemSolutionDefault;
     system_solution.size = size;
     system_solution.solution = matrixio_allocate_double_array(size);
-    system_solution.determinant = mtxa[0][0];
+    system_solution.determinant = 1.0;
 
-    system_solution.solution[size - 1] = mtxa[size - 1][size];
-    if (!(flags & __MATRIX_OPS_DIAG_HAS_ONES__)) {
-        system_solution.solution[size - 1] /= mtxa[size - 1][size - 1];
-    }
-
-    for (int i = 2; i <= size; i++) {
-        system_solution.solution[size - i] = mtxa[size - i][size];
-        for (int j = 1; j < i; j++) {
-            system_solution.solution[size - i] -= mtxa[size - i][size - j] * system_solution.solution[size - j];
+    for (int i = size - 1; i >= 0; i--) {
+        system_solution.solution[i] = mtxa[i][size];
+        for (int j = i + 1; j < size; j++) {
+            system_solution.solution[i] -= mtxa[i][j] * system_solution.solution[j];
         }
         if (!(flags & __MATRIX_OPS_DIAG_HAS_ONES__)) {
-            system_solution.solution[size - i] /= mtxa[size - i][size - i];
+            system_solution.solution[i] /= mtxa[i][i];
         }
-        system_solution.determinant *= mtxa[i - 1][i - 1];
+        system_solution.determinant *= mtxa[i][i];
     }
 
     return system_solution;
