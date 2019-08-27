@@ -104,8 +104,9 @@ void matrixio_scan(FILE *fp, double** matrix, int from_row, int to_row, int from
 Matrix matrixio_read(char *file_name) {
     int rows, cols;
 
-    FILE *fp = fopen(file_name, "r");
+    FILE *fp = fopen(file_name, "rb");
     if(fp == NULL) {
+        puts(file_name);
         perror("fopen()");
         exit(EXIT_FAILURE);
     }
@@ -126,14 +127,16 @@ AugmentedMatrix matrixio_read_augmented(char *file1_name, char *file2_name){
     int rows1, cols1;
     int rows2, cols2;
 
-    FILE *fp1 = fopen(file1_name, "r");
+    FILE *fp1 = fopen(file1_name, "rb");
     if(fp1 == NULL) {
+        puts(file1_name);
         perror("fopen()");
         exit(EXIT_FAILURE);
     }
 
-    FILE *fp2 = fopen(file2_name, "r");
+    FILE *fp2 = fopen(file2_name, "rb");
     if (fp2 == NULL ) {
+        puts(file2_name);
         perror("fopen()");
         exit(EXIT_FAILURE);
     }
