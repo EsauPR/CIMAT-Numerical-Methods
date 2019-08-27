@@ -19,7 +19,7 @@ OBJS =  ${SRC}/matrix/matrixio.o \
 
 ## Compiles the executable program by default main.c
 $(BIN): $(OBJS) $(BIN).c
-	$(CC) $(CFLAGS) $(DEFS) $(LIBS) $(OBJS) $(BIN).c -o $(BIN)
+	$(CC) $(CFLAGS) $(DEFS) $(OBJS) $(BIN).c -o $(BIN) $(LIBS)
 
 # This rule compiles each module into its object file
 %.o: %.c %.h
