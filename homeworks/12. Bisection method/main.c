@@ -1,6 +1,6 @@
 /**
     ANSI C standard: c11
-    Purpose: Solve a square matrix by Gauss Seidel method
+    Purpose: Find a root function using the Bisection method
 
     @author Esaú Peralta
     @email esau.opr@gmail.com

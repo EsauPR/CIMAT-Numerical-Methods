@@ -1,6 +1,6 @@
 /**
     ANSI C standard: c11
-    Purpose: Solve a square matrix by Gauss Seidel method
+    Purpose: Find a root funtion using the Newton Raphson method
 
     @author Esaú Peralta
     @email esau.opr@gmail.com
