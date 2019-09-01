@@ -24,6 +24,8 @@
 
 #define ABS(n) (((n) < 0)? -(n):(n))
 
+#define MAX(a,b) (((a) > (b)) ? (a) : (b))
+
 static const int __ARCH_64__ = 64;
 static const int __ARCH_32__ = 32;
 static const int __ARCH__ = sizeof(void *) * 8;
