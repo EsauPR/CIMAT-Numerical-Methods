@@ -53,6 +53,9 @@ SystemSolution jacobi_solver(AugmentedMatrix matrix) {
         }
 
         error = sqrt(error);
+        if (isnan(error)) {
+            printf("Warning:: Step %d, Error is NaN\n", k);
+        }
 
         if (error <= JACOBI_TOLERANCE) break;
 

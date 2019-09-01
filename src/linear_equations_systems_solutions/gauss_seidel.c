@@ -46,9 +46,11 @@ SystemSolution gauss_seidel_solver(AugmentedMatrix matrix) {
         }
 
         error = sqrt(error);
+        if (isnan(error)) {
+            printf("Warning:: Step %d, Error is NaN\n", k);
+        }
 
         if (error <= GAUSS_SEIDEL_TOLERANCE) break;
-        printf("%d\n", k);
     }
 
     ss.solution = x_next;
