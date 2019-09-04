@@ -19,7 +19,7 @@ int main(int argc, char *argv[]) {
     }
 
     Matrix matrix = matrixio_read(argv[1]);
-    // matrixio_show(matrix.content, matrix.rows, matrix.cols);
+    matrixio_show(matrix.content, matrix.rows, matrix.cols);
 
     __flag_err flags = matrix_check_dimensions(matrix);
     if (flags) {
@@ -33,7 +33,7 @@ int main(int argc, char *argv[]) {
     printf("Eigen Value: %lf\n", ev.eigen_value);
     puts("Eigen Vector:");
     for (int i = 0; i < matrix.rows; i++) {
-        printf("%lf ", ev.eigen_vector[i]);
+        printf("%.20lf ", ev.eigen_vector[i]);
     }
     puts("");
 
