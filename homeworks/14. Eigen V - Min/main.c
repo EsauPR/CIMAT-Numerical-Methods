@@ -57,7 +57,7 @@ int main(int argc, char *argv[]) {
     }
 
 
-    printf("Min Eigen Value: %lf\n", ev.eigen_value);
+    printf("Min Eigen Value: %.20lf\n", ev.eigen_value);
     puts("Eigen Vector:");
     for (int i = 0; i < matrix.rows; i++) {
         printf("%.20lf ", ev.eigen_vector[i]);

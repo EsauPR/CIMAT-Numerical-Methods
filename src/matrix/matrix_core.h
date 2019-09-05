@@ -20,7 +20,8 @@
 #endif
 
 /* Generic swap */
-#define SWAP(x, y) do { typeof(x) SWAP = x; x = y; y = SWAP; } while (0)
+// #define SWAP(x, y) do { typeof(x) swap = x; x = y; y = swap; } while (0)
+#define SWAP(x, y, Type)  { Type swap = x; x = y; y = swap; }
 
 #define ABS(n) (((n) < 0)? -(n):(n))
 

@@ -17,7 +17,7 @@
 #define MATRIX_EIGEN_V_IMPORT
 #include "matrix_eigen_v.h"
 
-#define MATRIX_EIGEN_MAX_ITER 1000
+#define MATRIX_EIGEN_MAX_ITER 100
 #define MATRIX_EIGEN_MIN_ITER 50
 
 
@@ -34,6 +34,7 @@ static void matrix_eigen_v_randomnize(double * vector, int size) {
 
     for (int i = 0; i < size; i++) {
         vector[i] = (double) (random() % 100) + 1.0;
+        // vector[i] = i;
     }
 }
 
@@ -74,7 +75,7 @@ static Mesp matrix_eigen_v_multiply(double ** a, double * z, double * y, int siz
 
 /* Compute the max eigen value and their eigen vector */
 Matrix_Eigen_V matrix_potence_method(Matrix matrix) {
-    Matrix_Eigen_V eigen_v = Matrix_Eigen_V_Dafault;
+    Matrix_Eigen_V eigen_v = Matrix_Eigen_V_Default;
     int size = matrix.rows;
     double lambda = 0.0, lambda_prev = 0.0;
 
@@ -91,7 +92,7 @@ Matrix_Eigen_V matrix_potence_method(Matrix matrix) {
         printf("%4d) lambda: %lf\n", iter, lambda);
 
         matrix_eigen_v_normalize(y_vector, size, sqrt(mesp.yy));
-        SWAP(y_vector, z_vector);
+        SWAP(y_vector, z_vector, double *);
 
         if (IS_ZERO(lambda - lambda_prev)) {
             break;
@@ -111,7 +112,7 @@ Matrix_Eigen_V matrix_potence_method(Matrix matrix) {
 
 /* Compute the min eigen value and their eigen vector */
 Matrix_Eigen_V matrix_inverse_potence_method(Matrix matrix) {
-    Matrix_Eigen_V eigen_v = Matrix_Eigen_V_Dafault;
+    Matrix_Eigen_V eigen_v = Matrix_Eigen_V_Default;
     SystemSolution system_solution;
     int size = matrix.rows;
     double lambda = 0.0, lambda_prev = 1 << 31;
@@ -137,12 +138,17 @@ Matrix_Eigen_V matrix_inverse_potence_method(Matrix matrix) {
             matrix.content[i][size] = z_vector[i];
         }
 
-        matrixio_show(matrix.content, matrix.rows, matrix.cols + matrix.cols_extra);
+        // matrixio_show(matrix.content, matrix.rows, matrix.cols + matrix.cols_extra);
         system_solution = doolittle_method_solve_lu(matrix);
-        solution_show(system_solution);
+        if (system_solution.err) {
+            eigen_v.err |= system_solution.err;
+            solution_free(system_solution);
+            return eigen_v;
+        }
+
+        // solution_show(system_solution);
 
         y_vector = system_solution.solution;
-        break;
 
         for (int i = 0; i < size; i++) {
             mesp.yy = y_vector[i] * y_vector[i];
@@ -151,7 +157,7 @@ Matrix_Eigen_V matrix_inverse_potence_method(Matrix matrix) {
 
         lambda = mesp.zy / mesp.yy;
 
-        printf("%4d) lambda: %lf\n", iter, lambda);
+        printf("%4d) lambda: %.20lf\n", iter, lambda);
 
         matrix_eigen_v_normalize(y_vector, size, sqrt(mesp.yy));
 

@@ -84,8 +84,8 @@ static void gaussian_elimination_sort_result(double *result, int *positions_map,
             if (positions_map[pos] == i) break;
         }
 
-        SWAP(result[i], result[pos]);
-        SWAP(positions_map[i], positions_map[pos]);
+        SWAP(result[i], result[pos], double);
+        SWAP(positions_map[i], positions_map[pos], double);
     }
 }
 
@@ -118,7 +118,7 @@ SystemSolution solve_by_gaussian_elimination(AugmentedMatrix matrix) {
 
             if ( pivot != mp.col) {
                 matrix_swap_cols(mtxa, size, pivot, mp.col);
-                SWAP(positions_map[pivot], positions_map[mp.col]);
+                SWAP(positions_map[pivot], positions_map[mp.col], double);
                 determinant *= -1.0;
             }
         }

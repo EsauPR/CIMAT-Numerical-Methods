@@ -59,7 +59,7 @@ SystemSolution jacobi_solver(AugmentedMatrix matrix) {
 
         if (error <= JACOBI_TOLERANCE) break;
 
-        SWAP(x_next, x_prev);
+        SWAP(x_next, x_prev, double *);
     }
 
     ss.solution = x_next;

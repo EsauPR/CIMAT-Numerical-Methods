@@ -49,7 +49,7 @@ SystemSolution matrix_lu_decomposition(double ** matrix, int size) {
                 matrix[i][j] = backup_row[j];
             }
             matrix_swap_rows(matrix, i, swap_row);
-            SWAP(system_solution.rows_perm_map[i], system_solution.rows_perm_map[swap_row]);
+            SWAP(system_solution.rows_perm_map[i], system_solution.rows_perm_map[swap_row], int);
             // Reset computation for the current row
             i--;
             system_solution.determinant *= -1;

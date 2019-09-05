@@ -15,8 +15,12 @@ SRC = ../../src
 
 # Object files from which $BIN depends
 OBJS = ${SRC}/matrix/matrixio.o \
+	${SRC}/matrix/matrix_lu.o \
 	${SRC}/matrix/matrix.o \
-	${SRC}/matrix/matrix_eigen_v.o
+	${SRC}/matrix/matrix_eigen_v.o \
+	${SRC}/linear_equations_systems_solutions/doolittle.o \
+	${SRC}/linear_equations_systems_solutions/backward_substitution.o \
+	${SRC}/linear_equations_systems_solutions/solution.o \
 
 ## Compiles the executable program by default main.c
 $(BIN): $(OBJS) $(BIN).c

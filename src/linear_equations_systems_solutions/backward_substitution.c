@@ -27,6 +27,11 @@ SystemSolution solve_lower_triangular_matrix(AugmentedMatrix matrix, __flag_ops 
     system_solution.determinant = 1.0;
 
     for (int i = 0; i < size; i++) {
+        if (IS_ZERO(mtxa[i][i])) {
+            system_solution.err |= __MATRIX_ERR_HAS_ZERO_ON_DIAG__;
+            return system_solution;
+        }
+
         system_solution.solution[i] = mtxa[i][size];
         for (int j = 0; j < i; j++) {
             system_solution.solution[i] -= mtxa[i][j] * system_solution.solution[j];
@@ -56,6 +61,10 @@ SystemSolution solve_upper_triangular_matrix(AugmentedMatrix matrix, __flag_ops 
     system_solution.determinant = 1.0;
 
     for (int i = size - 1; i >= 0; i--) {
+        if (IS_ZERO(mtxa[i][i])) {
+            system_solution.err |= __MATRIX_ERR_HAS_ZERO_ON_DIAG__;
+            return system_solution;
+        }
         system_solution.solution[i] = mtxa[i][size];
         for (int j = i + 1; j < size; j++) {
             system_solution.solution[i] -= mtxa[i][j] * system_solution.solution[j];

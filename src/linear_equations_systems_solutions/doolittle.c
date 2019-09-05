@@ -21,12 +21,17 @@ SystemSolution doolittle_method_solve_lu(AugmentedMatrix lu_matrix) {
     // Solve Ly = b where L has a diagonal with ones
     SystemSolution system_solution = SystemSolutionDefault;
     system_solution = solve_lower_triangular_matrix(lu_matrix, __MATRIX_OPS_DIAG_HAS_ONES__);
+    if (system_solution.err) {
+        return system_solution;
+    }
     // Solve Ux = y
     for (int i = 0; i < size; i++) {
         lu_matrix.content[i][size] = system_solution.solution[i];
     }
-    solution_free(system_solution);
     system_solution = solve_upper_triangular_matrix(lu_matrix, __MATRIX_OPS_NONE_);
+    if (system_solution.err) {
+        return system_solution;
+    }
 
     return system_solution;
 }
@@ -46,6 +51,10 @@ SystemSolution doolittle_method_solver(AugmentedMatrix matrix) {
     solution_free(system_solution);
 
     system_solution = doolittle_method_solve_lu(matrix);
+    if (system_solution.err) {
+        system_solution.err |= __MATRIX_ERR_NO_SOLUTION__;
+        return system_solution;
+    }
 
     system_solution.determinant = determinant;
     return system_solution;
