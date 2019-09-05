@@ -32,5 +32,8 @@
 *.app
 main
 
+# Debug output
+vgcore.*
+
 # Config Editors
 .vscode
