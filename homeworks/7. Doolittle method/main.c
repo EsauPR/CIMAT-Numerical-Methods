@@ -27,7 +27,7 @@ int main(int argc, char *argv[]) {
         exit(EXIT_FAILURE);
     }
 
-    SystemSolution system_solution = solve_by_doolittle_method(matrix);
+    SystemSolution system_solution = doolittle_method_solver(matrix);
 
     if (system_solution.err) {
         pmerror("main():", system_solution.err);

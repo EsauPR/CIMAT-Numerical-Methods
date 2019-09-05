@@ -38,7 +38,7 @@ SystemSolution matrix_lu_decomposition(double ** matrix, int size) {
         }
 
         // Swap rows to avoid division by zero
-        if (IS_ZERO(matrix[i][i]) && i < size) {
+        if (IS_ZERO(matrix[i][i]) && i < size - 1) {
             // No more swaps available
             if (++swap_row >= size) {
                 system_solution.err |= __MATRIX_ERR_NO_LU_DECOMPOSITION__;

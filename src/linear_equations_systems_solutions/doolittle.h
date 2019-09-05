@@ -19,8 +19,11 @@
     #define EXTERN extern
 #endif
 
+/* Solve a LUx=B, the matrix must be a LU matrix */
+EXTERN SystemSolution doolittle_method_solve_lu(AugmentedMatrix lu_matrix);
+
 /* Solve a square matrix by Doolittle method */
-EXTERN SystemSolution solve_by_doolittle_method(AugmentedMatrix matrix);
+EXTERN SystemSolution doolittle_method_solver(AugmentedMatrix matrix);
 
 #undef DOOLITTLE_IMPORT
 #undef EXTERN

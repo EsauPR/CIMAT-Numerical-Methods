@@ -11,6 +11,8 @@
 #include <time.h>
 #include <stdlib.h>
 #include "matrixio.h"
+#include "matrix_lu.h"
+#include "../linear_equations_systems_solutions/doolittle.h"
 
 #define MATRIX_EIGEN_V_IMPORT
 #include "matrix_eigen_v.h"
@@ -19,11 +21,12 @@
 #define MATRIX_EIGEN_MIN_ITER 50
 
 
-static struct matrix_eigen_scalar_products{
+static const struct matrix_eigen_scalar_products {
     double yy;
     double zy;
 } Mesp_Default = {0.0, 0.0};
 typedef struct matrix_eigen_scalar_products Mesp;
+
 
 /* Randomnize a vector */
 static void matrix_eigen_v_randomnize(double * vector, int size) {
@@ -101,6 +104,69 @@ Matrix_Eigen_V matrix_potence_method(Matrix matrix) {
     eigen_v.eigen_vector = z_vector;
 
     free(y_vector);
+
+    return eigen_v;
+}
+
+
+/* Compute the min eigen value and their eigen vector */
+Matrix_Eigen_V matrix_inverse_potence_method(Matrix matrix) {
+    Matrix_Eigen_V eigen_v = Matrix_Eigen_V_Dafault;
+    SystemSolution system_solution;
+    int size = matrix.rows;
+    double lambda = 0.0, lambda_prev = 1 << 31;
+
+    double * z_vector = matrixio_allocate_double_array(size);
+    double * y_vector = NULL;
+    Mesp mesp = Mesp_Default;
+
+    matrix_eigen_v_randomnize(z_vector, size);
+    matrix_eigen_v_normalize(z_vector, size, 0.0);
+
+    // LU decomposition
+    system_solution = matrix_lu_decomposition(matrix.content, size);
+    if (system_solution.err) {
+        eigen_v.err |= system_solution.err;
+        solution_free(system_solution);
+        return eigen_v;
+    }
+    solution_free(system_solution);
+
+    for (int iter = 0; iter < MATRIX_EIGEN_MAX_ITER; iter++) {
+        for (int i = 0; i < size; i++) {
+            matrix.content[i][size] = z_vector[i];
+        }
+
+        matrixio_show(matrix.content, matrix.rows, matrix.cols + matrix.cols_extra);
+        system_solution = doolittle_method_solve_lu(matrix);
+        solution_show(system_solution);
+
+        y_vector = system_solution.solution;
+        break;
+
+        for (int i = 0; i < size; i++) {
+            mesp.yy = y_vector[i] * y_vector[i];
+            mesp.zy = z_vector[i] * y_vector[i];
+        }
+
+        lambda = mesp.zy / mesp.yy;
+
+        printf("%4d) lambda: %lf\n", iter, lambda);
+
+        matrix_eigen_v_normalize(y_vector, size, sqrt(mesp.yy));
+
+        free(z_vector);
+        z_vector = y_vector;
+
+        if (IS_ZERO(lambda - lambda_prev)) {
+            break;
+        }
+
+        lambda_prev = lambda;
+    }
+
+    eigen_v.eigen_value = lambda;
+    eigen_v.eigen_vector = z_vector;
 
     return eigen_v;
 }

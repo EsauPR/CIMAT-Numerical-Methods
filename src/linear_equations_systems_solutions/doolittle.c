@@ -15,7 +15,25 @@
 #include "doolittle.h"
 
 
-SystemSolution solve_by_doolittle_method(AugmentedMatrix matrix) {
+/* Solve a LUx=B, the matrix must be a LU matrix */
+SystemSolution doolittle_method_solve_lu(AugmentedMatrix lu_matrix) {
+    int size = lu_matrix.rows;
+    // Solve Ly = b where L has a diagonal with ones
+    SystemSolution system_solution = SystemSolutionDefault;
+    system_solution = solve_lower_triangular_matrix(lu_matrix, __MATRIX_OPS_DIAG_HAS_ONES__);
+    // Solve Ux = y
+    for (int i = 0; i < size; i++) {
+        lu_matrix.content[i][size] = system_solution.solution[i];
+    }
+    solution_free(system_solution);
+    system_solution = solve_upper_triangular_matrix(lu_matrix, __MATRIX_OPS_NONE_);
+
+    return system_solution;
+}
+
+
+/* Solve a square matrix by Doolittle method */
+SystemSolution doolittle_method_solver(AugmentedMatrix matrix) {
     int size = matrix.rows;
     double **mtxc = matrix.content;
 
@@ -27,15 +45,7 @@ SystemSolution solve_by_doolittle_method(AugmentedMatrix matrix) {
     double determinant = system_solution.determinant;
     solution_free(system_solution);
 
-    // Solve Ly = b where L has a diagonal with ones
-    system_solution = solve_lower_triangular_matrix(matrix, __MATRIX_OPS_DIAG_HAS_ONES__);
-
-    // Solve Ux = y
-    for (int i = 0; i < size; i++) {
-        mtxc[i][size] = system_solution.solution[i];
-    }
-    solution_free(system_solution);
-    system_solution = solve_upper_triangular_matrix(matrix, __MATRIX_OPS_NONE_);
+    system_solution = doolittle_method_solve_lu(matrix);
 
     system_solution.determinant = determinant;
     return system_solution;

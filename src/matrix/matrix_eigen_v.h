@@ -24,13 +24,15 @@ static const struct matrix_eigen_v{
     double eigen_value;
     double * eigen_vector;
     __flag_err err;
-
 } Matrix_Eigen_V_Dafault = {0, NULL, __MATRIX_ERR_NONE__};
 
 typedef struct matrix_eigen_v Matrix_Eigen_V;
 
 /* Compute the max eigen value and their eigen vector */
 EXTERN Matrix_Eigen_V matrix_potence_method(Matrix matrix);
+
+/* Compute the min eigen value and their eigen vector */
+EXTERN Matrix_Eigen_V matrix_inverse_potence_method(Matrix matrix);
 
 
 #undef MATRIX_EIGEN_V_IMPORT
