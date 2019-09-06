@@ -9,9 +9,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <errno.h>
-#include "../../src/matrix/matrixio.h"
-#include "../../src/matrix/matrix.h"
-#include "../../src/linear_equations_systems_solutions/direct_solution.h"
+#include "numsys/matrix/matrixio.h"
+#include "numsys/matrix/matrix.h"
+#include "numsys/solvers/direct_solution.h"
 
 int main(int argc, char *argv[]) {
     if (argc < 3) {

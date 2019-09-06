@@ -1,7 +1,9 @@
-.PHONY: build
+.PHONY: build clean depend
 
 # Headers
 IDIR = ./include/
+
+CC = gcc
 
 # Compiler flags: all warnings + debugger meta-data
 CFLAGS = -Wall -Wextra -Werror -Wpedantic -g -I${IDIR}
