@@ -11,7 +11,7 @@ DEFS = -DDEBUG_FLAG -DEXPERIMENTAL=0
 BIN = main
 
 # Source code
-SRC = ../../src
+SRC = ../../src/
 
 # Object files from which $BIN depends
 OBJS = ${SRC}/linear_equations_systems_solutions/direct_solution.o \

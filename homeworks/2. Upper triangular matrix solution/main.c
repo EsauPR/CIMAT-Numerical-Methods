@@ -8,7 +8,7 @@
 
 
 #include <stdlib.h>
-#include "../../src/linear_equations_systems_solutions/backward_substitution.h"
+#include "../../src/linear_equations_systems_solutions/bwfw_substitution.h"
 
 
 int main(int argc, char *argv[]) {
