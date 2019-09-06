@@ -60,28 +60,34 @@ static const __flag_err __MATRIX_ERR_NO_SQUARE_MATRIX__ = 1 << 8;
 static const __flag_err __MATRIX_ERR_NO_INVERSE__ = 1 << 9;
 
 
+static const struct numsys_Vector{
+    int size;
+    double ** items;
+} NSVector_Default = {0, NULL};
+typedef struct numsys_Vector NSVector;
+
 /* Struct to represent a linear equation system solution */
-static const struct matrix_Matrix{
+static const struct numsys_Matrix{
     int rows;
     int cols;
-    int cols_extra; // Extra cols to form a augmented matrix
     double * pointer_start;
-    double ** content;
+    double ** items;
     __flag_err err;
-
-} Matrix_Default = {0, 0, 0, NULL, NULL, __MATRIX_ERR_NONE__};
-
-typedef struct matrix_Matrix Matrix;
-typedef Matrix AugmentedMatrix;
+} NSMatrixDefault = {0, 0, NULL, NULL, __MATRIX_ERR_NONE__};
+typedef struct numsys_Matrix NSMatrix;
 
 /* Represent a matrix element with the positions i,j */
-static const struct matrix_MatrixElement {
+static const struct numsys_Matrix_Element {
     double value;
     int row;
     int col;
-} MatrixElementDefault = {0.0, 0, 0};
+} NSMatrixElemDefault = {0.0, 0, 0};
+typedef struct numsys_Matrix_Element NSMatrixElem;
 
-typedef struct matrix_MatrixElement MatrixElement;
+static const struct numsys_system
+{
+
+};
 
 #undef MATRIX_CORE_IMPORT
 #undef EXTERN

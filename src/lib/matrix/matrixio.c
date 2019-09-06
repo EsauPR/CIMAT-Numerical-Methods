@@ -35,7 +35,7 @@ double *matrixio_allocate_double_array(int size) {
 
 /* Create the memory for a matrix */
 Matrix matrixio_allocate(int rows, int cols) {
-    Matrix matrix = Matrix_Default;
+    Matrix matrix = NSMatrixDefault;
     matrix.content = (double **)calloc(rows, sizeof(double *));
     matrix.rows = rows;
     matrix.cols = cols;
