@@ -6,40 +6,43 @@
 #include "numsys/matrix_op/matrix_inverse.h"
 
 /* Compute the matrix inverse with LU factorization */
-Matrix matrix_inverse_get(AugmentedMatrix matrix) {
-    int size = matrix.rows;
-    Matrix inverse = matrixio_allocate_matrix(size, size);
-    SystemSolution lu_sol = matrix_lu_decomposition(matrix.items, size);
+NSMatrix matrix_inverse_get(NSMatrix * matrix) {
+    int size = matrix->rows;
+    NSMatrix inverse = matrixio_allocate_matrix(size, size);
 
-    if (lu_sol.err & NS__MATRIX_ERR_NO_LU_DECOMPOSITION__) {
-        inverse.err |= NS__MATRIX_ERR_NO_INVERSE__ | lu_sol.err;
+    int * rows_perm_map = matrix_lu_decomposition(matrix);
+    if (matrix->err & NS__MATRIX_ERR_NO_LU_DECOMPOSITION__) {
+        inverse.err = matrix->err = NS__MATRIX_ERR_NO_INVERSE__ | matrix->err;
+        free(rows_perm_map);
         return inverse;
     }
+
+    NSMatrixSystem msystem = NSMatrixSystemDefault;
+    msystem.a = *matrix;
+    msystem.x = matrixio_allocate_vector(size);
+    msystem.b = matrixio_allocate_vector(size);
 
     for (int i = 0; i < size; i++) {
         // Copy the column i to make Ax=I[:,i]
         for (int j = 0; j < size; j++) {
-            matrix.items[j][size] = (j==i)? 1.0: 0.0;
+            msystem.b.items[j] = (j==i)? 1.0: 0.0;
         }
-
         // Solve Ly = I[:,i]
-        SystemSolution ss = solver_forward_substitution(matrix, NS__MATRIX_OPS_DIAG_HAS_ONES__);
+        solver_forward_substitution(&msystem, NS__MATRIX_OPS_DIAG_HAS_ONES__);
 
         // Solve Ux = y
-        for (int j = 0; j < size; j++) {
-            matrix.items[j][size] = ss.solution[j];
-        }
-        solution_free(ss);
-        ss = solver_backward_substitution(matrix, NS__MATRIX_OPS_NONE_);
+        NS_SWAP(msystem.x.items, msystem.b.items, double *)
+        solver_backward_substitution(&msystem, NS__MATRIX_OPS_NONE_);
 
         // Copy x to form A^-1[:,i] mapping by positions map array
         for (int j = 0; j < size; j++) {
-            inverse.items[j][lu_sol.rows_perm_map[i]] = ss.solution[j];
+            inverse.items[j][rows_perm_map[i]] = msystem.x.items[j];
         }
-        solution_free(ss);
     }
 
-    solution_free(lu_sol);
+    free(rows_perm_map);
+    matrixio_free_vector(&(msystem.x));
+    matrixio_free_vector(&(msystem.b));
 
     return inverse;
 }

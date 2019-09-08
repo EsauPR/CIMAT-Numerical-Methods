@@ -26,7 +26,7 @@ int main(int argc, char *argv[]) {
         exit(EXIT_FAILURE);
     }
 
-    solver_foreward_substitution(&msystem, NS__MATRIX_OPS_NONE_);
+    solver_forward_substitution(&msystem, NS__MATRIX_OPS_NONE_);
     matrixio_show_matrix_system(msystem, NS__MATRIXIO_SHOW_SOL);
 
     matrixio_free_matrix_system(&msystem);

@@ -11,7 +11,6 @@
 #define GAUSS_SEIDEL_H
 
 #include "numsys/matrix/matrixio.h"
-#include "numsys/solvers/solution.h"
 
 #ifdef GAUSS_SEIDEL_IMPORT
     #define EXTERN
@@ -20,7 +19,7 @@
 #endif
 
 /* Solve a square matrix by Gauss Seidel iterative method */
-EXTERN SystemSolution gauss_seidel_solver(AugmentedMatrix matrix);
+EXTERN void gauss_seidel_solver(NSMatrixSystem * msystem);
 
 #undef GAUSS_SEIDEL_IMPORT
 #undef EXTERN

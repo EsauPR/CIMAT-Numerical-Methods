@@ -1,3 +1,5 @@
+.PHONY: build buildlib clean depend run valgrind help
+
 # Compiler flags: all warnings + debugger meta-data
 CFLAGS = -Wall -Wextra -Werror -Wpedantic -g
 
@@ -7,27 +9,29 @@ LIBS = -lm
 # Pre-defined macros for conditional compilation
 DEFS = -DDEBUG_FLAG -DEXPERIMENTAL=0
 
+# Lib Location
+IDIR = ../../src/include/
+
 # Executable name
 BIN = main
 
 # Source code
-SRC = ../../src
+SRC = ../../src/target/build
+CC = gcc
 
 # Object files from which $BIN depends
-OBJS = ${SRC}/linear_equations_systems_solutions/backward_substitution.o \
-	${SRC}/linear_equations_systems_solutions/doolittle.o \
-	${SRC}/linear_equations_systems_solutions/solution.o \
-	${SRC}/matrix/matrixio.o \
-	${SRC}/matrix/matrix.o \
-	${SRC}/matrix/matrix_lu.o
+OBJS = ${SRC}/bwfw_substitution.o \
+	${SRC}/doolittle.o \
+	${SRC}/matrixio.o \
+	${SRC}/matrix.o \
+	${SRC}/matrix_lu.o
 
 ## Compiles the executable program by default main.c
-$(BIN): $(OBJS) $(BIN).c
-	$(CC) $(CFLAGS) $(DEFS) $(OBJS) $(BIN).c -o $(BIN) $(LIBS)
+$(BIN): $(BIN).c buildlib
+	$(CC) $(CFLAGS) $(DEFS) $(BIN).c ${OBJS} -o $(BIN) -I${IDIR} $(LIBS)
 
-# This rule compiles each module into its object file
-%.o: %.c %.h
-	$(CC) -c $(CFLAGS) $(DEFS) $< -o $@
+buildlib:
+	cd ../../src && make && cd -
 
 ## Remove binaries and objects
 clean:

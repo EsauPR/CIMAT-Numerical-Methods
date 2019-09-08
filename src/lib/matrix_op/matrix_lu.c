@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include <stddef.h>
 #include "numsys/matrix/matrix.h"
 
@@ -19,6 +20,12 @@ int * matrix_lu_decomposition(NSMatrix * matrix) {
     double * row_backup = matrixio_allocate_array_double(size);
 
     matrix->determinant = 1.0;
+
+    // Set permutation map positions
+    int * iter = rows_perm_map;
+    for (int i = 0; i < size; i++, iter++) {
+        *iter = i;
+    }
 
     for (int i = 0, swap_row = i; i < size; i++) {
         for (int j = 0; j < size; j++) {

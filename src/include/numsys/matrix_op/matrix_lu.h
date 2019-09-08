@@ -11,7 +11,7 @@
 #ifndef MATRIX_LU_H
 #define MATRIX_LU_H
 
-#include "numsys/matrix/matrix_core.h">
+#include "numsys/matrix/matrix_core.h"
 
 #ifdef MATRIX_LU_IMPORT
     #define EXTERN

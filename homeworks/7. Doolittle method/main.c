@@ -8,6 +8,7 @@
 
 
 #include <stdlib.h>
+#include "numsys/matrix/matrix.h"
 #include "numsys/solvers/doolittle.h"
 
 

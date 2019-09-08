@@ -67,9 +67,9 @@ NSMatrix matrixio_allocate_matrix(int rows, int cols) {
     return matrix;
 }
 
-NSMatrix matrixio_copy(NSMatrix matrix) {
+NSMatrix matrixio_copy_matrix(NSMatrix matrix) {
     int rows = matrix.rows;
-    int cols = matrix.cols + matrix.cols;
+    int cols = matrix.cols;
     NSMatrix matrix_copy = matrixio_allocate_matrix(rows, cols);
     memcpy(matrix_copy.items[0], matrix.items[0], rows * cols * sizeof(**matrix.items));
     return matrix_copy;
@@ -116,7 +116,7 @@ void matrixio_free_matrix_system(NSMatrixSystem * msystem) {
 void matrixio_show_matrix(NSMatrix matrix) {
     for (int i = 0; i < matrix.rows; i++) {
         for (int j = 0; j < matrix.cols; j++) {
-            printf("%.__MATRIXIO_NDECIMALSlf ", matrix.items[i][j]);
+            printf("%.10lf ", matrix.items[i][j]);
         }
         puts("");
     }
@@ -126,7 +126,7 @@ void matrixio_show_matrix(NSMatrix matrix) {
 /* Print a vector*/
 void matrixio_show_vector(NSVector vector) {
     for (int i = 0; i < vector.size; i++) {
-        printf("%.__MATRIXIO_NDECIMALSlf\n", vector.items[i]);
+        printf("%.10lf\n", vector.items[i]);
     }
     puts("");
 }
@@ -135,14 +135,14 @@ void matrixio_show_vector(NSVector vector) {
 void matrixio_show_matrix_system(NSMatrixSystem msystem, NS__flag_ops ops) {
     if (ops & NS__MATRIXIO_SHOW_SOL) {
         for (int i = 0; i < msystem.x.size; i++) {
-            printf("x_%d: %.__MATRIXIO_NDECIMALSlf\n", msystem.x.items[i]);
+            printf("x_%d: %.10lf\n", i, msystem.x.items[i]);
         }
     } else {
         for (int i = 0; i < msystem.a.rows; i++) {
             for (int j = 0; j < msystem.a.cols; j++) {
                 printf("%lf ", msystem.a.items[i][j]);
             }
-            printf("%.__MATRIXIO_NDECIMALSlf\n", msystem.b.items[i]);
+            printf("%.10lf\n", msystem.b.items[i]);
         }
     }
 }

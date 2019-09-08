@@ -51,9 +51,9 @@ int main(int argc, char *argv[]) {
         exit(EXIT_FAILURE);
     }
 
-    Matrix_Eigen_V ev = matrix_inverse_potence_method(matrix);
+    Matrix_Eigen_V ev = matrix_eigen_potence_method_inverse(matrix);
     if (ev.err) {
-        nsperror("matrix_inverse_potence_method():", ev.err);
+        nsperror("matrix_eigen_potence_method_inverse():", ev.err);
     }
 
 

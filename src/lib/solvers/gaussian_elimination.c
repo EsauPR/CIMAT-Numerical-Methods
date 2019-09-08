@@ -14,18 +14,20 @@
 
 
 /* Create the row pivot */
-static void gaussian_elimination_make_row_pivot(double **matrix, int size, int pivot) {
-    for (int k = size; k >= pivot; k--) {
-        matrix[pivot][k] /=  matrix[pivot][pivot];
+static void gaussian_elimination_make_row_pivot(double **a, double * b, int size, int pivot) {
+    b[pivot] /= a[pivot][pivot];
+    for (int k = size - 1; k >= pivot; k--) {
+        a[pivot][k] /=  a[pivot][pivot];
     }
 }
 
 
 /* Make zeros all the elements under of the col pivot */
-static void gaussian_elimination_make_cols_zeros(double **matrix, int size, int pivot) {
+static void gaussian_elimination_make_cols_zeros(double ** a, double * b, int size, int pivot) {
     for (int i = pivot + 1; i < size; i++) {
-        for (int k = size; k >= pivot; k--) {
-            matrix[i][k] =  matrix[i][k] - matrix[pivot][k] * matrix[i][pivot];
+        b[i] -= a[i][pivot] * b[pivot];
+        for (int k = size - 1; k >= pivot; k--) {
+            a[i][k] -= a[pivot][k] * a[i][pivot];
         }
     }
 }
@@ -34,6 +36,7 @@ static void gaussian_elimination_make_cols_zeros(double **matrix, int size, int 
 /* Solve a square matrix by gaussian elimination without pivot */
 void solver_gaussian_elimination_simple(NSMatrixSystem * msystem) {
     double **matrix = msystem->a.items;
+    double * b = msystem->b.items;
     int size = msystem->a.rows;
 
     msystem->a.determinant = 1.0;
@@ -54,8 +57,8 @@ void solver_gaussian_elimination_simple(NSMatrixSystem * msystem) {
         }
 
         msystem->a.determinant *= matrix[pivot][pivot];
-        gaussian_elimination_make_row_pivot(matrix, size, pivot);
-        gaussian_elimination_make_cols_zeros(matrix, size, pivot);
+        gaussian_elimination_make_row_pivot(matrix, b, size, pivot);
+        gaussian_elimination_make_cols_zeros(matrix, b, size, pivot);
     }
 
     solver_backward_substitution(msystem, NS__MATRIX_OPS_NONE_);
@@ -90,6 +93,7 @@ static void gaussian_elimination_sort_result(double *result, int *positions_map,
 /* Solve a square matrix by gaussian elimination with pivot */
 void solver_gaussian_elimination(NSMatrixSystem * msystem) {
     double **matrix = msystem->a.items;
+    double * b = msystem->b.items;
     int size = msystem->a.rows;
 
     int * positions_map = matrixio_allocate_array_int(size);
@@ -122,8 +126,8 @@ void solver_gaussian_elimination(NSMatrixSystem * msystem) {
         }
 
         msystem->a.determinant *= matrix[pivot][pivot];
-        gaussian_elimination_make_row_pivot(matrix, size, pivot);
-        gaussian_elimination_make_cols_zeros(matrix, size, pivot);
+        gaussian_elimination_make_row_pivot(matrix, b, size, pivot);
+        gaussian_elimination_make_cols_zeros(matrix, b, size, pivot);
     }
 
     solver_backward_substitution(msystem, NS__MATRIX_OPS_NONE_);

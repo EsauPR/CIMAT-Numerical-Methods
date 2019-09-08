@@ -15,11 +15,23 @@
 #include "numsys/solvers/cholesky.h"
 
 
+/* Sort b by permutaution mapping */
+static void solver_cholesky_make_perm(double * b, int * row_perm_map, int size) {
+    for (int i = 0; i < size - 1; i++) {
+        if (row_perm_map[i] == i) continue;
+        NS_SWAP(b[i], b[row_perm_map[i]], double);
+    }
+}
+
+
 void solver_cholesky_method(NSMatrixSystem * msystem) {
     int size = msystem->a.rows;
     double **matrix = msystem->a.items;
 
-    matrix_ldlt_decomposition(&(msystem->a));
+    int * row_perm_map = matrix_ldlt_decomposition(&(msystem->a));
+    solver_cholesky_make_perm(msystem->b.items, row_perm_map, msystem->b.size);
+    free(row_perm_map);
+
     if (msystem->a.err) {
         msystem->err |= msystem->a.err | NS__MATRIX_ERR_NO_SOLUTION__;
         return;

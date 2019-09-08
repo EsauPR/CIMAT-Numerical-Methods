@@ -11,7 +11,6 @@
 #define JACOBI_H
 
 #include "numsys/matrix/matrixio.h"
-#include "numsys/solvers/solution.h"
 
 #ifdef JACOBI_IMPORT
     #define EXTERN
@@ -20,7 +19,7 @@
 #endif
 
 /* Solve a square matrix by Jacobi iterative method */
-EXTERN SystemSolution jacobi_solver(AugmentedMatrix matrix);
+EXTERN void jacobi_solver(NSMatrixSystem * msystem);
 
 #undef JACOBI_IMPORT
 #undef EXTERN

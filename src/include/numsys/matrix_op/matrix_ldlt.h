@@ -26,9 +26,9 @@
 
     You must asume that the diagonal is ones for L and the values already computed for D
 
-    Returns the determinant for U
+    Returns the rows permutation mapping
 */
-EXTERN void matrix_ldlt_decomposition(NSMatrix * matrix);
+EXTERN int * matrix_ldlt_decomposition(NSMatrix * matrix);
 
 #undef MATRIX_LDLT_IMPORT
 #undef EXTERN

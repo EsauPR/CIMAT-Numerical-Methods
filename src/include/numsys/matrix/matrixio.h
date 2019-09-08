@@ -20,7 +20,6 @@
     #define EXTERN extern
 #endif
 
-#define __MATRIXIO_NDECIMALS 20
 #define NS__MATRIXIO_SHOW_SOL 1
 
 /*Create the memory for a array*/
@@ -36,7 +35,7 @@ EXTERN NSMatrix matrixio_allocate_matrix(int rows, int cols);
 EXTERN NSVector matrixio_allocate_vector(int size);
 
 /* Copy the matrix memory */
-EXTERN NSMatrix matrixio_copy(NSMatrix matrix);
+EXTERN NSMatrix matrixio_copy_matrix(NSMatrix matrix);
 
 /* Liberate the matrix memory */
 EXTERN void matrixio_free_matrix(NSMatrix * matrix);

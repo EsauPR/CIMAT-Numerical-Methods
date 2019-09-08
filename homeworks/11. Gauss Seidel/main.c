@@ -8,7 +8,7 @@
 
 
 #include <stdlib.h>
-#include "../../src/linear_equations_systems_solutions/gauss_seidel.h"
+#include "numsys/solvers/gauss_seidel.h"
 
 int main(int argc, char *argv[]) {
     if (argc < 3) {
@@ -16,29 +16,26 @@ int main(int argc, char *argv[]) {
         exit(EXIT_FAILURE);
     }
 
-    Matrix matrix = matrixio_fread_matrix_system(argv[1], argv[2]);
-    matrixio_show_matrix(matrix.items, matrix.rows, matrix.cols + matrix.cols_extra);
+    NSMatrixSystem msystem = matrixio_fread_matrix_system(argv[1], argv[2]);
+    matrixio_show_matrix_system(msystem, !NS__MATRIXIO_SHOW_SOL);
 
-    NS__flag_err flags = matrix_check_dimensions(matrix);
+    NS__flag_err flags = matrix_check_dimensions(msystem.a);
     if (flags) {
         nsperror("main():", flags);
         matrixio_free_matrix_system(&msystem);
         exit(EXIT_FAILURE);
     }
 
-    SystemSolution ss = gauss_seidel_solver(matrix);
+    gauss_seidel_solver(&msystem);
 
-    if (ss.err) {
-        nsperror("main():", ss.err);
-        matrixio_free_matrix(matrix);
-        solution_free(ss);
+    if (msystem.err) {
+        nsperror("main():", msystem.err);
+        matrixio_free_matrix_system(&msystem);
         exit(EXIT_FAILURE);
     }
 
-    solution_show(ss);
-
-    matrixio_free_matrix(matrix);
-    solution_free(ss);
+    matrixio_show_matrix_system(msystem, NS__MATRIXIO_SHOW_SOL);
+    matrixio_free_matrix_system(&msystem);
 
     return 0;
 }

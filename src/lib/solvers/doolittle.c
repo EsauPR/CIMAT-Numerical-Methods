@@ -17,7 +17,6 @@
 
 /* Solve a LUx=B, the matrix must be a LU matrix */
 void solver_doolittle_method_lu(NSMatrixSystem * msystem) {
-    int size = msystem->a.rows;
     // Solve Ly = b where L has a diagonal with ones
     solver_forward_substitution(msystem, NS__MATRIX_OPS_DIAG_HAS_ONES__);
     if (msystem->err) {
@@ -28,13 +27,19 @@ void solver_doolittle_method_lu(NSMatrixSystem * msystem) {
     solver_backward_substitution(msystem, NS__MATRIX_OPS_NONE_);
 }
 
+/* Sort b by permutaution mapping */
+static void solver_doolittle_make_perm(double * b, int * row_perm_map, int size) {
+    for (int i = 0; i < size - 1; i++) {
+        if (row_perm_map[i] == i) continue;
+        NS_SWAP(b[i], b[row_perm_map[i]], double);
+    }
+}
 
 /* Solve a square matrix by Doolittle method */
 void solver_doolittle_method(NSMatrixSystem * msystem) {
-    int size = msystem->a.rows;
-
     int * row_perm_map = matrix_lu_decomposition(&(msystem->a));
-    free(row_perm_map); // Unnecessary perm map
+    solver_doolittle_make_perm(msystem->b.items, row_perm_map, msystem->b.size);
+    free(row_perm_map);
 
     if (msystem->a.err) {
         msystem->err |= msystem->a.err | NS__MATRIX_ERR_NO_SOLUTION__;

@@ -12,6 +12,11 @@
 
 
 int main(int argc, char *argv[]) {
+    if (argc < 3) {
+        perror("main():: 2 Args missing");
+        exit(EXIT_FAILURE);
+    }
+
     NSMatrixSystem msystem = matrixio_fread_matrix_system(argv[1], argv[2]);
     matrixio_show_matrix_system(msystem, !NS__MATRIXIO_SHOW_SOL);
 

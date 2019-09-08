@@ -29,11 +29,10 @@ void solver_forward_substitution(NSMatrixSystem * msystem, NS__flag_ops flags) {
             return;
         }
 
-        tmp = matrix[i][size];
+        tmp = msystem->b.items[i];
         for (int j = 0; j < i; j++) {
             tmp -= matrix[i][j] * msystem->x.items[j];
         }
-
         if (!(flags & NS__MATRIX_OPS_DIAG_HAS_ONES__)) {
             tmp /= matrix[i][i];
         }
@@ -60,13 +59,15 @@ void solver_backward_substitution(NSMatrixSystem * msystem, NS__flag_ops flags) 
             msystem->err |= NS__MATRIX_ERR_HAS_ZERO_ON_DIAG__;
             return;
         }
-        tmp = matrix[i][size];
+
+        tmp = msystem->b.items[i];
         for (int j = i + 1; j < size; j++) {
             tmp -= matrix[i][j] * msystem->x.items[j];
         }
         if (!(flags & NS__MATRIX_OPS_DIAG_HAS_ONES__)) {
             tmp /= matrix[i][i];
         }
+
         msystem->x.items[i] = tmp;
         msystem->a.determinant *= matrix[i][i];
     }

@@ -1,4 +1,5 @@
 #include <stddef.h>
+#include <stdlib.h>
 #include "numsys/matrix/matrix.h"
 #include "numsys/matrix/matrixio.h"
 
@@ -11,14 +12,20 @@
 
     You must asume that the diagonal is ones for L and the values already computed for D
 
-    Returns a struct type SystemSolution
-
-    If the decomposition is not possible SystemSolution.size is equal to -1
+    Returns the rows permutation mapping
 */
 
-void matrix_ldlt_decomposition(NSMatrix * matrix) {
+int * matrix_ldlt_decomposition(NSMatrix * matrix) {
     int size = matrix->rows;
+    int * rows_perm_map = matrixio_allocate_array_int(size);
+
     matrix->determinant = 1.0;
+
+    // Set permutation map positions
+    int * iter = rows_perm_map;
+    for (int i = 0; i < size; i++, iter++) {
+        *iter = i;
+    }
 
     double * backup_row = matrixio_allocate_array_double(size);
 
@@ -51,13 +58,15 @@ void matrix_ldlt_decomposition(NSMatrix * matrix) {
             // No more swaps available
             if (++swap_row >= size) {
                 matrix->err |= NS__MATRIX_ERR_NO_LDLT_DECOMPOSITION__;
-                return;
+                free(backup_row);
+                return rows_perm_map;
             }
             // Restore current row and swap
             for (int j = 0; j < size; j++) {
                 row_i[j] = backup_row[j];
             }
             matrix_swap_rows(*matrix, i, swap_row);
+            NS_SWAP(rows_perm_map[i], rows_perm_map[swap_row], int);
             // Reset computation for the current row
             i--;
             matrix->determinant *= -1;
@@ -67,4 +76,7 @@ void matrix_ldlt_decomposition(NSMatrix * matrix) {
         swap_row = i + 1;
         matrix->determinant *= diag_value;
     }
+
+    free(backup_row);
+    return rows_perm_map;
 }

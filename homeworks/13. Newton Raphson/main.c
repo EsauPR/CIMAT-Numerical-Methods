@@ -9,7 +9,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include "../../src/root_search/newton_raphson.h"
+#include "numsys/root_funct/newton_raphson.h"
 
 /* f(x) = x^2 */
 double f1(double x) {

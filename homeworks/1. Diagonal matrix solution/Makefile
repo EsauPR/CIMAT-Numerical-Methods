@@ -3,11 +3,12 @@
 # Compiler flags: all warnings + debugger meta-data
 CFLAGS = -Wall -Wextra -Werror -Wpedantic -g
 
-# External libraries
-LIBS = -lm
-
 # Pre-defined macros for conditional compilation
 DEFS = -DDEBUG_FLAG -DEXPERIMENTAL=0
+CC = gcc
+
+# External libraries
+LIBS = -lm
 
 # Lib Location
 IDIR = ../../src/include/
@@ -17,10 +18,8 @@ BIN = main
 
 # Source code
 SRC = ../../src/target/build
-CC = gcc
 
 OBJS = ${SRC}/direct_solution.o \
-	${SRC}/solution.o \
 	${SRC}/matrixio.o \
 	${SRC}/matrix.o
 
