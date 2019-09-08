@@ -19,8 +19,8 @@
 
 SystemSolution gauss_seidel_solver(AugmentedMatrix matrix) {
     int size = matrix.rows;
-    double **mtxc = matrix.content;
-    double * x_next = matrixio_allocate_double_array(matrix.rows);
+    double **mtxc = matrix.items;
+    double * x_next = matrixio_allocate_array_double(matrix.rows);
     SystemSolution ss = SystemSolutionDefault;
 
     for (int i = 0; i < size; i++) {
@@ -30,8 +30,8 @@ SystemSolution gauss_seidel_solver(AugmentedMatrix matrix) {
     for (int k = 0; k < GAUSS_SEIDEL_MAX_ITER; k++) {
         double error = 0.0;
         for (int i = 0; i < size; i++) {
-            if (IS_ZERO(mtxc[i][i])) {
-                ss.err |= __MATRIX_ERR_NO_SOLUTION__ | __MATRIX_ERR_HAS_ZERO_ON_DIAG__;
+            if (NS_IS_ZERO(mtxc[i][i])) {
+                ss.err |= NS__MATRIX_ERR_NO_SOLUTION__ | NS__MATRIX_ERR_HAS_ZERO_ON_DIAG__;
                 return ss;
             }
             double err_x_prev = x_next[i];

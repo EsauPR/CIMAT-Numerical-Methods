@@ -11,7 +11,6 @@
 #define CHOLESKY_H
 
 #include "numsys/matrix/matrixio.h"
-#include "numsys/solvers/solution.h"
 
 #ifdef CHOLESKY_IMPORT
     #define EXTERN
@@ -20,7 +19,7 @@
 #endif
 
 /* Solve a square matrix by Cholesky method */
-EXTERN SystemSolution solve_by_cholesky_method(AugmentedMatrix matrix);
+EXTERN void solver_cholesky_method(NSMatrixSystem * msystem);
 
 #undef CHOLESKY_IMPORT
 #undef EXTERN

@@ -11,20 +11,15 @@
 #define DIRECT_SOLUTION_IMPORT
 #include "numsys/solvers/direct_solution.h"
 
-/* Return array with the solution for a diagonal matrix */
-SystemSolution solve_diagonal_matrix(AugmentedMatrix matrix) {
-    double ** mtx = matrix.content;
-    int size = matrix.rows;
+/* solver for a diagonal matrix */
+void solver_diagonal_matrix(NSMatrixSystem * msystem) {
+    double ** matrix = msystem->a.items;
+    int size = msystem->a.rows;
 
-    SystemSolution system_solution = SystemSolutionDefault;
-    system_solution.solution = matrixio_allocate_double_array(size);
-    system_solution.size = size;
-    system_solution.determinant = 1.0;
+    msystem->a.determinant = 1.0;
 
     for (int i = 0; i < size; i++) {
-        system_solution.solution[i] = mtx[i][size] / mtx[i][i];
-        system_solution.determinant *= mtx[i][i];
+        msystem->x.items[i] = matrix[i][size] / matrix[i][i];
+        msystem->a.determinant *= matrix[i][i];
     }
-
-    return system_solution;
 }

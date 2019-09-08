@@ -15,65 +15,59 @@
     Return array with the solution for a lower triangular matrix
     using backward substitution
 
-    Use the flag '__MATRIX_OPS_DIAG_HAS_ONES__' to asume that the diagonal is fullfiled with ones
+    Use the flag 'NS__MATRIX_OPS_DIAG_HAS_ONES__' to asume that the diagonal is fullfiled with ones
 */
-SystemSolution solve_lower_triangular_matrix(AugmentedMatrix matrix, __flag_ops flags) {
-    double **mtxa = matrix.content;
-    int size = matrix.rows;
-
-    SystemSolution system_solution = SystemSolutionDefault;
-    system_solution.size = size;
-    system_solution.solution = matrixio_allocate_double_array(size);
-    system_solution.determinant = 1.0;
+void solver_forward_substitution(NSMatrixSystem * msystem, NS__flag_ops flags) {
+    double **matrix = msystem->a.items;
+    double tmp;
+    int size = msystem->a.rows;
+    msystem->a.determinant = 1.0;
 
     for (int i = 0; i < size; i++) {
-        if (IS_ZERO(mtxa[i][i])) {
-            system_solution.err |= __MATRIX_ERR_HAS_ZERO_ON_DIAG__;
-            return system_solution;
+        if (NS_IS_ZERO(matrix[i][i])) {
+            msystem->err |= NS__MATRIX_ERR_HAS_ZERO_ON_DIAG__;
+            return;
         }
 
-        system_solution.solution[i] = mtxa[i][size];
+        tmp = matrix[i][size];
         for (int j = 0; j < i; j++) {
-            system_solution.solution[i] -= mtxa[i][j] * system_solution.solution[j];
+            tmp -= matrix[i][j] * msystem->x.items[j];
         }
-        if (!(flags & __MATRIX_OPS_DIAG_HAS_ONES__)) {
-            system_solution.solution[i] /= mtxa[i][i];
-        }
-        system_solution.determinant *= mtxa[i][i];
-    }
 
-    return system_solution;
+        if (!(flags & NS__MATRIX_OPS_DIAG_HAS_ONES__)) {
+            tmp /= matrix[i][i];
+        }
+
+        msystem->x.items[i] = tmp;
+        msystem->a.determinant *= matrix[i][i];
+    }
 }
 
 /*
     Return array with the solution for a upper triangular matrix
     using backward substitution
 
-    Use the flag '__MATRIX_OPS_DIAG_HAS_ONES__' to asume that the diagonal is fullfiled with ones
+    Use the flag 'NS__MATRIX_OPS_DIAG_HAS_ONES__' to asume that the diagonal is fullfiled with ones
 */
-SystemSolution solve_upper_triangular_matrix(AugmentedMatrix matrix, __flag_ops flags) {
-    double **mtxa = matrix.content;
-    int size = matrix.rows;
-
-    SystemSolution system_solution = SystemSolutionDefault;
-    system_solution.size = size;
-    system_solution.solution = matrixio_allocate_double_array(size);
-    system_solution.determinant = 1.0;
+void solver_backward_substitution(NSMatrixSystem * msystem, NS__flag_ops flags) {
+    double **matrix = msystem->a.items;
+    double tmp;
+    int size = msystem->a.rows;
+    msystem->a.determinant = 1.0;
 
     for (int i = size - 1; i >= 0; i--) {
-        if (IS_ZERO(mtxa[i][i])) {
-            system_solution.err |= __MATRIX_ERR_HAS_ZERO_ON_DIAG__;
-            return system_solution;
+        if (NS_IS_ZERO(matrix[i][i])) {
+            msystem->err |= NS__MATRIX_ERR_HAS_ZERO_ON_DIAG__;
+            return;
         }
-        system_solution.solution[i] = mtxa[i][size];
+        tmp = matrix[i][size];
         for (int j = i + 1; j < size; j++) {
-            system_solution.solution[i] -= mtxa[i][j] * system_solution.solution[j];
+            tmp -= matrix[i][j] * msystem->x.items[j];
         }
-        if (!(flags & __MATRIX_OPS_DIAG_HAS_ONES__)) {
-            system_solution.solution[i] /= mtxa[i][i];
+        if (!(flags & NS__MATRIX_OPS_DIAG_HAS_ONES__)) {
+            tmp /= matrix[i][i];
         }
-        system_solution.determinant *= mtxa[i][i];
+        msystem->x.items[i] = tmp;
+        msystem->a.determinant *= matrix[i][i];
     }
-
-    return system_solution;
 }

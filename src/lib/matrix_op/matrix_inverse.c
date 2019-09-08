@@ -8,33 +8,33 @@
 /* Compute the matrix inverse with LU factorization */
 Matrix matrix_inverse_get(AugmentedMatrix matrix) {
     int size = matrix.rows;
-    Matrix inverse = matrixio_allocate(size, size);
-    SystemSolution lu_sol = matrix_lu_decomposition(matrix.content, size);
+    Matrix inverse = matrixio_allocate_matrix(size, size);
+    SystemSolution lu_sol = matrix_lu_decomposition(matrix.items, size);
 
-    if (lu_sol.err & __MATRIX_ERR_NO_LU_DECOMPOSITION__) {
-        inverse.err |= __MATRIX_ERR_NO_INVERSE__ | lu_sol.err;
+    if (lu_sol.err & NS__MATRIX_ERR_NO_LU_DECOMPOSITION__) {
+        inverse.err |= NS__MATRIX_ERR_NO_INVERSE__ | lu_sol.err;
         return inverse;
     }
 
     for (int i = 0; i < size; i++) {
         // Copy the column i to make Ax=I[:,i]
         for (int j = 0; j < size; j++) {
-            matrix.content[j][size] = (j==i)? 1.0: 0.0;
+            matrix.items[j][size] = (j==i)? 1.0: 0.0;
         }
 
         // Solve Ly = I[:,i]
-        SystemSolution ss = solve_lower_triangular_matrix(matrix, __MATRIX_OPS_DIAG_HAS_ONES__);
+        SystemSolution ss = solver_forward_substitution(matrix, NS__MATRIX_OPS_DIAG_HAS_ONES__);
 
         // Solve Ux = y
         for (int j = 0; j < size; j++) {
-            matrix.content[j][size] = ss.solution[j];
+            matrix.items[j][size] = ss.solution[j];
         }
         solution_free(ss);
-        ss = solve_upper_triangular_matrix(matrix, __MATRIX_OPS_NONE_);
+        ss = solver_backward_substitution(matrix, NS__MATRIX_OPS_NONE_);
 
         // Copy x to form A^-1[:,i] mapping by positions map array
         for (int j = 0; j < size; j++) {
-            inverse.content[j][lu_sol.rows_perm_map[i]] = ss.solution[j];
+            inverse.items[j][lu_sol.rows_perm_map[i]] = ss.solution[j];
         }
         solution_free(ss);
     }

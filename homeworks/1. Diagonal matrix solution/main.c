@@ -19,21 +19,20 @@ int main(int argc, char *argv[]) {
         exit(EXIT_FAILURE);
     }
 
-    AugmentedMatrix matrix = matrixio_read_augmented(argv[1], argv[2]);
-    matrixio_show(matrix.content, matrix.rows, matrix.cols + matrix.cols_extra);
+    NSMatrixSystem msystem = matrixio_fread_matrix_system(argv[1], argv[2]);
+    matrixio_show_matrix_system(msystem, !NS__MATRIXIO_SHOW_SOL);
 
-    __flag_err flags = matrix_check_dimensions(matrix) | matrix_verify_diagonal(matrix);
+    NS__flag_err flags = matrix_check_dimensions(msystem.a) | matrix_verify_diagonal(msystem.a);
     if (flags) {
-        pmerror("main():", flags);
-        matrixio_free(matrix);
+        nsperror("main():", flags);
+        matrixio_free_matrix_system(&msystem);
         exit(EXIT_FAILURE);
     }
 
-    SystemSolution system_solution = solve_diagonal_matrix(matrix);
-    solution_show(system_solution);
+    solver_diagonal_matrix(&msystem);
+    matrixio_show_matrix_system(msystem, NS__MATRIXIO_SHOW_SOL);
 
-    matrixio_free(matrix);
-    solution_free(system_solution);
+    matrixio_free_matrix_system(&msystem);
 
     return EXIT_SUCCESS;
 }

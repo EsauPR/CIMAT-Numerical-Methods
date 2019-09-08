@@ -32,36 +32,33 @@ static void gaussian_elimination_make_cols_zeros(double **matrix, int size, int 
 
 
 /* Solve a square matrix by gaussian elimination without pivot */
-SystemSolution solve_by_simple_gaussian_elimination(AugmentedMatrix matrix) {
-    double **mtxa = matrix.content;
-    int size = matrix.rows;
+void solver_gaussian_elimination_simple(NSMatrixSystem * msystem) {
+    double **matrix = msystem->a.items;
+    int size = msystem->a.rows;
 
-    SystemSolution system_solution = SystemSolutionDefault;
-    double determinant = 1.0;
+    msystem->a.determinant = 1.0;
 
     for (int pivot = 0; pivot < size; pivot++) {
         // Replaze the pivots with value zero
-        if (mtxa[pivot][pivot] == 0) {
-            MatrixElement mp = matrix_find_max_element(mtxa, pivot + 1, size, pivot, pivot + 1);
+        if (matrix[pivot][pivot] == 0) {
+            NSMatrixElem mp = matrix_find_max_element(matrix, pivot + 1, size, pivot, pivot + 1);
 
-            if (IS_ZERO(mp.value)) {
-                system_solution.err |= __MATRIX_ERR_NO_SOLUTION__;
-                return system_solution;
+            if (NS_IS_ZERO(mp.value)) {
+                msystem->err |= NS__MATRIX_ERR_NO_SOLUTION__;
+                return;
             }
 
-            matrix_swap_rows(mtxa, pivot, mp.row);
-            determinant *= -1.0;
+            matrix_swap_rows(msystem->a, pivot, mp.row);
+            NS_SWAP(msystem->b.items[pivot], msystem->b.items[mp.row], double);
+            msystem->a.determinant *= -1.0;
         }
 
-        determinant *= mtxa[pivot][pivot];
-        gaussian_elimination_make_row_pivot(mtxa, size, pivot);
-        gaussian_elimination_make_cols_zeros(mtxa, size, pivot);
+        msystem->a.determinant *= matrix[pivot][pivot];
+        gaussian_elimination_make_row_pivot(matrix, size, pivot);
+        gaussian_elimination_make_cols_zeros(matrix, size, pivot);
     }
 
-    system_solution = solve_upper_triangular_matrix(matrix, __MATRIX_OPS_NONE_);
-    system_solution.determinant = determinant;
-
-    return system_solution;
+    solver_backward_substitution(msystem, NS__MATRIX_OPS_NONE_);
 }
 
 
@@ -84,53 +81,51 @@ static void gaussian_elimination_sort_result(double *result, int *positions_map,
             if (positions_map[pos] == i) break;
         }
 
-        SWAP(result[i], result[pos], double);
-        SWAP(positions_map[i], positions_map[pos], double);
+        NS_SWAP(result[i], result[pos], double);
+        NS_SWAP(positions_map[i], positions_map[pos], double);
     }
 }
 
 
 /* Solve a square matrix by gaussian elimination with pivot */
-SystemSolution solve_by_gaussian_elimination(AugmentedMatrix matrix) {
-    double **mtxa = matrix.content;
-    int size = matrix.rows;
+void solver_gaussian_elimination(NSMatrixSystem * msystem) {
+    double **matrix = msystem->a.items;
+    int size = msystem->a.rows;
 
-    int positions_map[size];
+    int * positions_map = matrixio_allocate_array_int(size);
     gaussian_elimination_set_positions_map(positions_map, size);
+    msystem->cols_perm_map = positions_map;
 
-    SystemSolution system_solution = SystemSolutionDefault;
-    double determinant = 1.0;
+    msystem->a.determinant = 1.0;
 
     for (int pivot = 0; pivot < size; pivot++) {
-        MatrixElement mp = matrix_find_max_element(mtxa, pivot, size, pivot, size);
+        NSMatrixElem mp = matrix_find_max_element(matrix, pivot, size, pivot, size);
 
-        if (IS_ZERO(mp.value)) {
-            system_solution.err |= __MATRIX_ERR_NO_SOLUTION__;
-            return system_solution;
+        if (NS_IS_ZERO(mp.value)) {
+            msystem->err |= NS__MATRIX_ERR_NO_SOLUTION__;
+            return;
         }
 
         // Swap rows and columns
-        if (ABS(mtxa[pivot][pivot]) != ABS(mp.value)) {
+        if (NS_ABS(matrix[pivot][pivot]) != NS_ABS(mp.value)) {
             if ( pivot != mp.row) {
-                matrix_swap_rows(mtxa, pivot, mp.row);
-                determinant *= -1.0;
+                matrix_swap_rows(msystem->a, pivot, mp.row);
+                NS_SWAP(msystem->b.items[pivot], msystem->b.items[mp.row], double);
+                msystem->a.determinant *= -1.0;
             }
 
             if ( pivot != mp.col) {
-                matrix_swap_cols(mtxa, size, pivot, mp.col);
-                SWAP(positions_map[pivot], positions_map[mp.col], double);
-                determinant *= -1.0;
+                matrix_swap_cols(msystem->a, pivot, mp.col);
+                NS_SWAP(positions_map[pivot], positions_map[mp.col], int);
+                msystem->a.determinant *= -1.0;
             }
         }
 
-        determinant *= mtxa[pivot][pivot];
-        gaussian_elimination_make_row_pivot(mtxa, size, pivot);
-        gaussian_elimination_make_cols_zeros(mtxa, size, pivot);
+        msystem->a.determinant *= matrix[pivot][pivot];
+        gaussian_elimination_make_row_pivot(matrix, size, pivot);
+        gaussian_elimination_make_cols_zeros(matrix, size, pivot);
     }
 
-    system_solution = solve_upper_triangular_matrix(matrix, __MATRIX_OPS_NONE_);
-    system_solution.determinant = determinant;
-    gaussian_elimination_sort_result(system_solution.solution, positions_map, size);
-
-    return system_solution;
+    solver_backward_substitution(msystem, NS__MATRIX_OPS_NONE_);
+    gaussian_elimination_sort_result(msystem->x.items, positions_map, size);
 }

@@ -11,7 +11,6 @@
 #define DOOLITTLE_H
 
 #include "numsys/matrix/matrixio.h"
-#include "numsys/solvers/solution.h"
 
 #ifdef DOOLITTLE_IMPORT
     #define EXTERN
@@ -20,10 +19,10 @@
 #endif
 
 /* Solve a LUx=B, the matrix must be a LU matrix */
-EXTERN SystemSolution doolittle_method_solve_lu(AugmentedMatrix lu_matrix);
+EXTERN void solver_doolittle_method_lu(NSMatrixSystem * msystem);
 
 /* Solve a square matrix by Doolittle method */
-EXTERN SystemSolution doolittle_method_solver(AugmentedMatrix matrix);
+EXTERN void solver_doolittle_method(NSMatrixSystem * msystem);
 
 #undef DOOLITTLE_IMPORT
 #undef EXTERN

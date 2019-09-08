@@ -14,9 +14,8 @@
 #define MATRIXIO_IMPORT
 #include "numsys/matrix/matrixio.h"
 
-
 /*Create the memory for a array*/
-int *matrixio_allocate_int_array(int size) {
+int * matrixio_allocate_array_int(int size) {
     int * dinmem = (int *)calloc(size, sizeof(int));
     if (dinmem == NULL) {
         printf("ERROR: %s\n", strerror(errno));
@@ -25,7 +24,7 @@ int *matrixio_allocate_int_array(int size) {
 }
 
 /*Create the memory for a array*/
-double *matrixio_allocate_double_array(int size) {
+double * matrixio_allocate_array_double(int size) {
     double * dinmem = (double *)calloc(size, sizeof(double));
     if (dinmem == NULL) {
         printf("ERROR: %s\n", strerror(errno));
@@ -33,75 +32,139 @@ double *matrixio_allocate_double_array(int size) {
     return dinmem;
 }
 
+/* Create the memory for a Vector */
+NSVector matrixio_allocate_vector(int size) {
+    NSVector vector = NSVectorDefault;
+    vector.items = matrixio_allocate_array_double(size);
+    vector.size = size;
+    return vector;
+}
+
 /* Create the memory for a matrix */
-Matrix matrixio_allocate(int rows, int cols) {
-    Matrix matrix = NSMatrixDefault;
-    matrix.content = (double **)calloc(rows, sizeof(double *));
+NSMatrix matrixio_allocate_matrix(int rows, int cols) {
+    NSMatrix matrix = NSMatrixDefault;
+    matrix.items = (double **)calloc(rows, sizeof(double *));
     matrix.rows = rows;
     matrix.cols = cols;
     matrix.err = 0;
 
-    if (matrix.content == NULL) {
-        perror("matrixio_allocate(): ");
+    if (matrix.items == NULL) {
+        perror("matrixio_allocate_matrix(): ");
         exit(EXIT_FAILURE);
     }
 
-    matrix.pointer_start = matrixio_allocate_double_array(rows * cols);
+    matrix.pointer_start = matrixio_allocate_array_double(rows * cols);
     if (matrix.pointer_start == NULL) {
-        perror("matrixio_allocate(): ");
+        perror("matrixio_allocate_matrix(): ");
         exit(EXIT_FAILURE);
     }
 
-    matrix.content[0] = matrix.pointer_start;
+    matrix.items[0] = matrix.pointer_start;
     for (int i = 1; i < rows; i++){
-        matrix.content[i] = matrix.content[0] + i * cols;
+        matrix.items[i] = matrix.items[0] + i * cols;
     }
 
     return matrix;
 }
 
-Matrix matrixio_copy(Matrix matrix) {
+NSMatrix matrixio_copy(NSMatrix matrix) {
     int rows = matrix.rows;
-    int cols = matrix.cols + matrix.cols_extra;
-    Matrix matrix_copy = matrixio_allocate(rows, cols);
-    memcpy(matrix_copy.content[0], matrix.content[0], rows * cols * sizeof(**matrix.content));
+    int cols = matrix.cols + matrix.cols;
+    NSMatrix matrix_copy = matrixio_allocate_matrix(rows, cols);
+    memcpy(matrix_copy.items[0], matrix.items[0], rows * cols * sizeof(**matrix.items));
     return matrix_copy;
 }
 
-/*
-    Liberate the matrix memory
-    Returns the same struct values with NULL on freeded pointers
-*/
-Matrix matrixio_free(Matrix matrix) {
-    free(matrix.pointer_start);
-    matrix.pointer_start = NULL;
-    free(matrix.content);
-    matrix.content = NULL;
-    return matrix;
+/* Liberate the matrix memory Returns the same struct values with NULL on freeded pointers */
+void matrixio_free_matrix(NSMatrix * matrix) {
+    if (matrix->pointer_start) {
+        free(matrix->pointer_start);
+        matrix->pointer_start = NULL;
+    }
+    if (matrix->items) {
+        free(matrix->items);
+        matrix->items = NULL;
+    }
+}
+
+/* Liberate the vector memory */
+void matrixio_free_vector(NSVector * vector) {
+    if (vector->items) {
+        free(vector->items);
+        vector->items = NULL;
+    }
+}
+
+/* Liberate the vector memory */
+void matrixio_free_matrix_system(NSMatrixSystem * msystem) {
+    matrixio_free_matrix(&(msystem->a));
+    matrixio_free_vector(&(msystem->b));
+    matrixio_free_vector(&(msystem->x));
+
+    if (msystem->cols_perm_map) {
+        free(msystem->cols_perm_map);
+        msystem->cols_perm_map = NULL;
+    }
+
+    if(msystem->rows_perm_map) {
+        free(msystem->rows_perm_map);
+        msystem->rows_perm_map = NULL;
+    }
 }
 
 /* Print a matrix*/
-void matrixio_show(double **matrix, int rows, int cols) {
-    for (int i = 0; i < rows; i++) {
-        for (int j = 0; j < cols; j++) {
-            printf("%lf ", matrix[i][j]);
+void matrixio_show_matrix(NSMatrix matrix) {
+    for (int i = 0; i < matrix.rows; i++) {
+        for (int j = 0; j < matrix.cols; j++) {
+            printf("%.__MATRIXIO_NDECIMALSlf ", matrix.items[i][j]);
         }
         puts("");
     }
     puts("");
 }
 
+/* Print a vector*/
+void matrixio_show_vector(NSVector vector) {
+    for (int i = 0; i < vector.size; i++) {
+        printf("%.__MATRIXIO_NDECIMALSlf\n", vector.items[i]);
+    }
+    puts("");
+}
+
+/* Print a matrix system*/
+void matrixio_show_matrix_system(NSMatrixSystem msystem, NS__flag_ops ops) {
+    if (ops & NS__MATRIXIO_SHOW_SOL) {
+        for (int i = 0; i < msystem.x.size; i++) {
+            printf("x_%d: %.__MATRIXIO_NDECIMALSlf\n", msystem.x.items[i]);
+        }
+    } else {
+        for (int i = 0; i < msystem.a.rows; i++) {
+            for (int j = 0; j < msystem.a.cols; j++) {
+                printf("%lf ", msystem.a.items[i][j]);
+            }
+            printf("%.__MATRIXIO_NDECIMALSlf\n", msystem.b.items[i]);
+        }
+    }
+}
+
 /* Read a matrix and put the elements in a especif location range */
-void matrixio_scan(FILE *fp, double** matrix, int from_row, int to_row, int from_col, int  to_col){
-    for (int i = from_row; i < to_row; i++) {
-        for (int j = from_col; j < to_col; j++) {
+void matrixio_scan_matrix(FILE *fp, double** matrix, int rows, int cols){
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
             fscanf(fp ,"%lf", &matrix[i][j]);
         }
     }
 }
 
+/* Read a vector */
+void matrixio_scan_vector(FILE *fp, double* vector, int size) {
+    for (int i = 0; i < size; i++) {
+        fscanf(fp ,"%lf", &vector[i]);
+    }
+}
+
 /* Read a matrix from a file */
-Matrix matrixio_read(char *file_name) {
+NSMatrix matrixio_fread_matrix(char *file_name) {
     int rows, cols;
 
     FILE *fp = fopen(file_name, "rb");
@@ -113,53 +176,42 @@ Matrix matrixio_read(char *file_name) {
 
     fscanf(fp, "%d %d", &rows, &cols);
 
-    Matrix matrix = matrixio_allocate(rows, cols);
+    NSMatrix matrix = matrixio_allocate_matrix(rows, cols);
+    matrixio_scan_matrix(fp, matrix.items, rows, cols);
 
-    matrixio_scan(fp, matrix.content, 0, rows, 0, cols);
     fclose(fp);
 
     return matrix;
 }
 
+/* Read a matrix from a file */
+NSVector matrixio_fread_vector(char *file_name) {
+    int rows, cols;
+
+    FILE *fp = fopen(file_name, "rb");
+    if(fp == NULL) {
+        puts(file_name);
+        perror("fopen()");
+        exit(EXIT_FAILURE);
+    }
+
+    fscanf(fp, "%d %d", &rows, &cols);
+
+    // Vector is a matrix with dimensions rows x 1
+    NSVector vector = matrixio_allocate_vector(rows);
+    matrixio_scan_vector(fp, vector.items, vector.size);
+
+    fclose(fp);
+
+    return vector;
+}
 
 /* Read two matrices from files and put the values in a augmented matrix*/
-AugmentedMatrix matrixio_read_augmented(char *file1_name, char *file2_name){
-    int rows1, cols1;
-    int rows2, cols2;
+NSMatrixSystem matrixio_fread_matrix_system(char *file1_name, char *file2_name){
+    NSMatrixSystem msystem = NSMatrixSystemDefault;
+    msystem.a = matrixio_fread_matrix(file1_name);
+    msystem.b = matrixio_fread_vector(file2_name);
+    msystem.x = matrixio_allocate_vector(msystem.b.size);
 
-    FILE *fp1 = fopen(file1_name, "rb");
-    if(fp1 == NULL) {
-        puts(file1_name);
-        perror("fopen()");
-        exit(EXIT_FAILURE);
-    }
-
-    FILE *fp2 = fopen(file2_name, "rb");
-    if (fp2 == NULL ) {
-        puts(file2_name);
-        perror("fopen()");
-        exit(EXIT_FAILURE);
-    }
-
-    fscanf(fp1, "%d %d", &rows1, &cols1);
-    fscanf(fp2, "%d %d", &rows2, &cols2);
-
-    if (cols1 != rows2) {
-        perror("matrixio_read_augmented(): Invalid matrices sizes");
-        fclose(fp1);
-        fclose(fp2);
-        exit(EXIT_FAILURE);
-    }
-
-    Matrix matrix = matrixio_allocate(rows1, cols1 + cols2);
-    matrix.cols = cols1;
-    matrix.cols_extra = cols2;
-
-    matrixio_scan(fp1, matrix.content, 0, rows1, 0, cols1);
-    matrixio_scan(fp2, matrix.content, 0, rows1, cols1, cols1 + cols2);
-
-    fclose(fp1);
-    fclose(fp2);
-
-    return matrix;
+    return msystem;
 }

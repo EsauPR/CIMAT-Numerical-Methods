@@ -24,11 +24,11 @@ Matrix read_matrix(char* file_name) {
     fscanf(fp, "%d %d", &rows, &cols);
 
     // Add a extra col to make compatible with solvers
-    Matrix matrix = matrixio_allocate(rows, cols + 1);
+    Matrix matrix = matrixio_allocate_matrix(rows, cols + 1);
     matrix.cols = cols;
     matrix.cols_extra = 1;
 
-    matrixio_scan(fp, matrix.content, 0, rows, 0, cols);
+    matrixio_scan_matrix(fp, matrix.items, 0, rows, 0, cols);
     fclose(fp);
 
     return matrix;
@@ -41,12 +41,12 @@ int main(int argc, char *argv[]) {
     }
 
     Matrix matrix = read_matrix(argv[1]);
-    matrixio_show(matrix.content, matrix.rows, matrix.cols);
+    matrixio_show_matrix(matrix.items, matrix.rows, matrix.cols);
 
-    __flag_err flags = matrix_check_dimensions(matrix);
+    NS__flag_err flags = matrix_check_dimensions(matrix);
     if (flags) {
-        pmerror("main():", flags);
-        matrixio_free(matrix);
+        nsperror("main():", flags);
+        matrixio_free_matrix_system(&msystem);
         exit(EXIT_FAILURE);
     }
 
@@ -54,22 +54,22 @@ int main(int argc, char *argv[]) {
     Matrix inverse = matrix_inverse_get(matrix_copy);
 
     if (matrix.err) {
-        pmerror("main():", matrix.err);
-        matrixio_free(matrix);
-        matrixio_free(matrix_copy);
-        matrixio_free(inverse);
+        nsperror("main():", matrix.err);
+        matrixio_free_matrix(matrix);
+        matrixio_free_matrix(matrix_copy);
+        matrixio_free_matrix(inverse);
         exit(EXIT_FAILURE);
     }
 
-    matrixio_show(inverse.content, inverse.rows, inverse.cols);
+    matrixio_show_matrix(inverse.items, inverse.rows, inverse.cols);
 
     Matrix identity = matrix_multiply(matrix, inverse);
-    matrixio_show(identity.content, identity.rows, identity.cols);
+    matrixio_show_matrix(identity.items, identity.rows, identity.cols);
 
-    matrixio_free(matrix);
-    matrixio_free(matrix_copy);
-    matrixio_free(inverse);
-    matrixio_free(identity);
+    matrixio_free_matrix(matrix);
+    matrixio_free_matrix(matrix_copy);
+    matrixio_free_matrix(inverse);
+    matrixio_free_matrix(identity);
 
     return 0;
 }

@@ -18,13 +18,13 @@ int main(int argc, char *argv[]) {
         exit(EXIT_FAILURE);
     }
 
-    Matrix matrix = matrixio_read(argv[1]);
-    matrixio_show(matrix.content, matrix.rows, matrix.cols);
+    Matrix matrix = matrixio_fread_matrix(argv[1]);
+    matrixio_show_matrix(matrix.items, matrix.rows, matrix.cols);
 
-    __flag_err flags = matrix_check_dimensions(matrix);
+    NS__flag_err flags = matrix_check_dimensions(matrix);
     if (flags) {
-        pmerror("main():", flags);
-        matrixio_free(matrix);
+        nsperror("main():", flags);
+        matrixio_free_matrix_system(&msystem);
         exit(EXIT_FAILURE);
     }
 
@@ -37,7 +37,7 @@ int main(int argc, char *argv[]) {
     }
     puts("");
 
-    matrixio_free(matrix);
+    matrixio_free_matrix(matrix);
     free(ev.eigen_vector);
 
     return 0;

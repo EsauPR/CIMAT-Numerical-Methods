@@ -11,7 +11,6 @@
 #define GAUSSIAN_ELIMINATION_H
 
 #include "numsys/matrix/matrixio.h"
-#include "numsys/solvers/solution.h"
 
 #ifdef GAUSSIAN_ELIMINATION_IMPORT
     #define EXTERN
@@ -20,10 +19,10 @@
 #endif
 
 /* Solve a square matrix by gaussian elimination without pivot */
-EXTERN SystemSolution solve_by_simple_gaussian_elimination(AugmentedMatrix matrix);
+EXTERN void solver_gaussian_elimination_simple(NSMatrixSystem * msystem);
 
 /* Solve a square matrix by gaussian elimination with pivot */
-EXTERN SystemSolution solve_by_gaussian_elimination(AugmentedMatrix matrix);
+EXTERN void solver_gaussian_elimination(NSMatrixSystem * msystem);
 
 
 #endif

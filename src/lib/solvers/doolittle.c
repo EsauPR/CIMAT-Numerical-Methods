@@ -16,46 +16,39 @@
 
 
 /* Solve a LUx=B, the matrix must be a LU matrix */
-SystemSolution doolittle_method_solve_lu(AugmentedMatrix lu_matrix) {
-    int size = lu_matrix.rows;
+void solver_doolittle_method_lu(NSMatrixSystem * msystem) {
+    int size = msystem->a.rows;
     // Solve Ly = b where L has a diagonal with ones
-    SystemSolution system_solution = SystemSolutionDefault;
-    system_solution = solve_lower_triangular_matrix(lu_matrix, __MATRIX_OPS_DIAG_HAS_ONES__);
-    if (system_solution.err) {
-        return system_solution;
+    solver_forward_substitution(msystem, NS__MATRIX_OPS_DIAG_HAS_ONES__);
+    if (msystem->err) {
+        return;
     }
     // Solve Ux = y
-    for (int i = 0; i < size; i++) {
-        lu_matrix.content[i][size] = system_solution.solution[i];
-    }
-    system_solution = solve_upper_triangular_matrix(lu_matrix, __MATRIX_OPS_NONE_);
-    if (system_solution.err) {
-        return system_solution;
-    }
-
-    return system_solution;
+    NS_SWAP(msystem->x.items, msystem->b.items, double *)
+    solver_backward_substitution(msystem, NS__MATRIX_OPS_NONE_);
 }
 
 
 /* Solve a square matrix by Doolittle method */
-SystemSolution doolittle_method_solver(AugmentedMatrix matrix) {
-    int size = matrix.rows;
-    double **mtxc = matrix.content;
+void solver_doolittle_method(NSMatrixSystem * msystem) {
+    int size = msystem->a.rows;
 
-    SystemSolution system_solution = matrix_lu_decomposition(mtxc, size);
-    if (system_solution.err) {
-        system_solution.err |= __MATRIX_ERR_NO_SOLUTION__;
-        return system_solution;
-    }
-    double determinant = system_solution.determinant;
-    solution_free(system_solution);
+    int * row_perm_map = matrix_lu_decomposition(&(msystem->a));
+    free(row_perm_map); // Unnecessary perm map
 
-    system_solution = doolittle_method_solve_lu(matrix);
-    if (system_solution.err) {
-        system_solution.err |= __MATRIX_ERR_NO_SOLUTION__;
-        return system_solution;
+    if (msystem->a.err) {
+        msystem->err |= msystem->a.err | NS__MATRIX_ERR_NO_SOLUTION__;
+        return;
     }
 
-    system_solution.determinant = determinant;
-    return system_solution;
+    // Backup the determinant this is modified by other solvers
+    double determinant = msystem->a.determinant;
+
+    solver_doolittle_method_lu(msystem);
+    if (msystem->err) {
+        msystem->err |= NS__MATRIX_ERR_NO_SOLUTION__;
+        return;
+    }
+
+    msystem->a.determinant = determinant;
 }

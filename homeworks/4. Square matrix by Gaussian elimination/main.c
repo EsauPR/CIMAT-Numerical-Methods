@@ -7,39 +7,30 @@
 */
 
 #include <stdlib.h>
-#include "../../src/matrix/matrix.h"
-#include "../../src/linear_equations_systems_solutions/gaussian_elimination.h"
+#include "numsys/matrix/matrix.h"
+#include "numsys/solvers/gaussian_elimination.h"
 
 
 int main(int argc, char *argv[]) {
-    if (argc < 3) {
-        perror("main():: 2 Args missing");
-        exit(EXIT_FAILURE);
-    }
+    NSMatrixSystem msystem = matrixio_fread_matrix_system(argv[1], argv[2]);
+    matrixio_show_matrix_system(msystem, !NS__MATRIXIO_SHOW_SOL);
 
-    AugmentedMatrix matrix = matrixio_read_augmented(argv[1], argv[2]);
-    matrixio_show(matrix.content, matrix.rows, matrix.cols + matrix.cols_extra);
-
-    __flag_err flags = matrix_check_dimensions(matrix);
+    NS__flag_err flags = matrix_check_dimensions(msystem.a);
     if (flags) {
-        pmerror("main():", flags);
-        matrixio_free(matrix);
+        nsperror("main():", flags);
+        matrixio_free_matrix_system(&msystem);
         exit(EXIT_FAILURE);
     }
 
-    SystemSolution system_solution = solve_by_simple_gaussian_elimination(matrix);
-
-    if (system_solution.err) {
-        pmerror("main():", system_solution.err);
-        matrixio_free(matrix);
-        solution_free(system_solution);
+    solver_gaussian_elimination_simple(&msystem);
+    if (msystem.err) {
+        nsperror("main():", msystem.err);
+        matrixio_free_matrix_system(&msystem);
         exit(EXIT_FAILURE);
     }
 
-    solution_show(system_solution);
-
-    matrixio_free(matrix);
-    solution_free(system_solution);
+    matrixio_show_matrix_system(msystem, NS__MATRIXIO_SHOW_SOL);
+    matrixio_free_matrix_system(&msystem);
 
     return 0;
 }

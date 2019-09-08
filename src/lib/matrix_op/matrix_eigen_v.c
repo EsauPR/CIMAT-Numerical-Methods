@@ -79,22 +79,22 @@ Matrix_Eigen_V matrix_potence_method(Matrix matrix) {
     int size = matrix.rows;
     double lambda = 0.0, lambda_prev = 0.0;
 
-    double * z_vector = matrixio_allocate_double_array(size);
-    double * y_vector = matrixio_allocate_double_array(size);
+    double * z_vector = matrixio_allocate_array_double(size);
+    double * y_vector = matrixio_allocate_array_double(size);
 
     matrix_eigen_v_randomnize(z_vector, size);
     matrix_eigen_v_normalize(z_vector, size, 0.0);
 
     for (int iter = 0; iter < MATRIX_EIGEN_MAX_ITER; iter++) {
-        Mesp mesp = matrix_eigen_v_multiply(matrix.content, z_vector, y_vector, size);
+        Mesp mesp = matrix_eigen_v_multiply(matrix.items, z_vector, y_vector, size);
         lambda = mesp.yy / mesp.zy;
 
         printf("%4d) lambda: %lf\n", iter, lambda);
 
         matrix_eigen_v_normalize(y_vector, size, sqrt(mesp.yy));
-        SWAP(y_vector, z_vector, double *);
+        NS_SWAP(y_vector, z_vector, double *);
 
-        if (IS_ZERO(lambda - lambda_prev)) {
+        if (NS_IS_ZERO(lambda - lambda_prev)) {
             break;
         }
 
@@ -117,7 +117,7 @@ Matrix_Eigen_V matrix_inverse_potence_method(Matrix matrix) {
     int size = matrix.rows;
     double lambda = 0.0, lambda_prev = 1 << 31;
 
-    double * z_vector = matrixio_allocate_double_array(size);
+    double * z_vector = matrixio_allocate_array_double(size);
     double * y_vector = NULL;
     Mesp mesp = Mesp_Default;
 
@@ -125,7 +125,7 @@ Matrix_Eigen_V matrix_inverse_potence_method(Matrix matrix) {
     matrix_eigen_v_normalize(z_vector, size, 0.0);
 
     // LU decomposition
-    system_solution = matrix_lu_decomposition(matrix.content, size);
+    system_solution = matrix_lu_decomposition(matrix.items, size);
     if (system_solution.err) {
         eigen_v.err |= system_solution.err;
         solution_free(system_solution);
@@ -135,11 +135,11 @@ Matrix_Eigen_V matrix_inverse_potence_method(Matrix matrix) {
 
     for (int iter = 0; iter < MATRIX_EIGEN_MAX_ITER; iter++) {
         for (int i = 0; i < size; i++) {
-            matrix.content[i][size] = z_vector[i];
+            matrix.items[i][size] = z_vector[i];
         }
 
-        // matrixio_show(matrix.content, matrix.rows, matrix.cols + matrix.cols_extra);
-        system_solution = doolittle_method_solve_lu(matrix);
+        // matrixio_show_matrix(matrix.items, matrix.rows, matrix.cols + matrix.cols_extra);
+        system_solution = solver_doolittle_method_lu(matrix);
         if (system_solution.err) {
             eigen_v.err |= system_solution.err;
             solution_free(system_solution);
@@ -164,7 +164,7 @@ Matrix_Eigen_V matrix_inverse_potence_method(Matrix matrix) {
         free(z_vector);
         z_vector = y_vector;
 
-        if (IS_ZERO(lambda - lambda_prev)) {
+        if (NS_IS_ZERO(lambda - lambda_prev)) {
             break;
         }
 

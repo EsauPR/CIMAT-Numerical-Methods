@@ -12,7 +12,6 @@
 #define DIRECT_SOLUTION_H
 
 #include "numsys/matrix/matrixio.h"
-#include "numsys/solvers/solution.h"
 
 #ifdef DIRECT_SOLUTION_IMPORT
     #define EXTERN
@@ -21,8 +20,8 @@
 #endif
 
 
-/* Return array with the solution for a diagonal matrix */
-EXTERN SystemSolution solve_diagonal_matrix(AugmentedMatrix matrix);
+/* Solver for a diagonal matrix */
+EXTERN void solver_diagonal_matrix(NSMatrixSystem * msystem);
 
 #undef DIRECT_SOLUTION_IMPORT
 #undef EXTERN

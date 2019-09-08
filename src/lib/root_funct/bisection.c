@@ -36,7 +36,7 @@ double bisection_find_root(double (*function)(double), double x_min, double x_ma
     while(1) {
         x_middle = (x_min + x_max) / 2.0;
 
-        if (IS_ZERO(function(x_middle)) || IS_ZERO(x_min - x_max)) {
+        if (NS_IS_ZERO(function(x_middle)) || NS_IS_ZERO(x_min - x_max)) {
             return x_middle;
         }
 

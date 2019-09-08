@@ -11,7 +11,7 @@
 #ifndef MATRIX_LDLT_H
 #define MATRIX_LDLT_H
 
-#include "numsys/solvers/solution.h"
+#include "numsys/matrix/matrix_core.h"
 
 #ifdef MATRIX_LDLT_IMPORT
     #define EXTERN
@@ -28,7 +28,7 @@
 
     Returns the determinant for U
 */
-EXTERN SystemSolution matrix_ldlt_decomposition(double ** matrix, int size);
+EXTERN void matrix_ldlt_decomposition(NSMatrix * matrix);
 
 #undef MATRIX_LDLT_IMPORT
 #undef EXTERN

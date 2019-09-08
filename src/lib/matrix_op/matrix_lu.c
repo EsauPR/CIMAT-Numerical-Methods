@@ -11,54 +11,57 @@
 
     You must asume that the diagonal is ones for L and the values already computed for U
 
-    Returns a struct type SystemSolution
-
-    If the decomposition is not possible SystemSolution.size is equal to -1
+    Returns a vector with the mapping for rows permutations with size matrix.rows
 */
-SystemSolution matrix_lu_decomposition(double ** matrix, int size) {
-    SystemSolution system_solution = SystemSolutionDefault;
-    system_solution.size = size;
-    system_solution.rows_perm_map = solution_create_permutation_map(size);
-    system_solution.determinant = 1.0;
+int * matrix_lu_decomposition(NSMatrix * matrix) {
+    int size = matrix->rows;
+    int * rows_perm_map = matrixio_allocate_array_int(size);
+    double * row_backup = matrixio_allocate_array_double(size);
 
-    double backup_row[size + 1];
+    matrix->determinant = 1.0;
 
     for (int i = 0, swap_row = i; i < size; i++) {
         for (int j = 0; j < size; j++) {
-            backup_row[j] = matrix[i][j];
+            row_backup[j] = matrix->items[i][j];
 
+            double tmp = 0.0;
             int limit = (j < i) ? j:i;
             for (int k = 0; k < limit; k++) {
-                matrix[i][j] -= matrix[i][k] * matrix[k][j];
+                tmp += matrix->items[i][k] * matrix->items[k][j];
             }
+            matrix->items[i][j] -= tmp;
 
             if (j < i) {
-                matrix[i][j] /= matrix[j][j];
+                matrix->items[i][j] /= matrix->items[j][j];
             }
         }
 
         // Swap rows to avoid division by zero
-        if (IS_ZERO(matrix[i][i]) && i < size - 1) {
+        double diag_value = matrix->items[i][i];
+        if (NS_IS_ZERO(diag_value) && i < size - 1) {
             // No more swaps available
             if (++swap_row >= size) {
-                system_solution.err |= __MATRIX_ERR_NO_LU_DECOMPOSITION__;
-                return system_solution;
+                matrix->err |= NS__MATRIX_ERR_NO_LU_DECOMPOSITION__;
+                return rows_perm_map;
             }
             // Restore current row and swap
+            double * row_i = matrix->items[i];
             for (int j = 0; j < size; j++) {
-                matrix[i][j] = backup_row[j];
+                row_i[j] = row_backup[j];
             }
-            matrix_swap_rows(matrix, i, swap_row);
-            SWAP(system_solution.rows_perm_map[i], system_solution.rows_perm_map[swap_row], int);
+            matrix_swap_rows(*matrix, i, swap_row);
+            NS_SWAP(rows_perm_map[i], rows_perm_map[swap_row], int);
             // Reset computation for the current row
             i--;
-            system_solution.determinant *= -1;
+            matrix->determinant *= -1;
             continue;
         }
 
         swap_row = i + 1;
-        system_solution.determinant *= matrix[i][i];
+        matrix->determinant *= diag_value;
     }
 
-    return system_solution;
+    free(row_backup);
+
+    return rows_perm_map;
 }

@@ -33,7 +33,7 @@ double newton_raphson_solver(double (*f)(double), double x_start) {
             return x;
         }
 
-        if (IS_ZERO(x - x_next)) {
+        if (NS_IS_ZERO(x - x_next)) {
             return x_next;
         }
 

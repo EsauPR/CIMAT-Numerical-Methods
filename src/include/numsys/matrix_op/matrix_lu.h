@@ -11,7 +11,7 @@
 #ifndef MATRIX_LU_H
 #define MATRIX_LU_H
 
-#include "numsys/solvers/solution.h"
+#include "numsys/matrix/matrix_core.h">
 
 #ifdef MATRIX_LU_IMPORT
     #define EXTERN
@@ -24,11 +24,11 @@
     Make a LU decomposition over the same matrix. L is a lower trangular matrix
     with ones over the diagonal.
 
-    You must asume that the diagonal is ones for L and the values already computed for U
+    You must asume that the diagonal is ones for L and the values already computed for
 
-    Returns the determinant for U
+    Returns a vector with the mapping for rows permutations with size matrix.rows
 */
-EXTERN SystemSolution matrix_lu_decomposition(double ** matrix, int size);
+EXTERN int * matrix_lu_decomposition(NSMatrix * matrix);
 
 #undef MATRIX_LU_IMPORT
 #undef EXTERN

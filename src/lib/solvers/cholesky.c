@@ -15,32 +15,29 @@
 #include "numsys/solvers/cholesky.h"
 
 
-SystemSolution solve_by_cholesky_method(AugmentedMatrix matrix) {
-    int size = matrix.rows;
-    double **mtxc = matrix.content;
+void solver_cholesky_method(NSMatrixSystem * msystem) {
+    int size = msystem->a.rows;
+    double **matrix = msystem->a.items;
 
-    SystemSolution system_solution = matrix_ldlt_decomposition(mtxc, size);
-    if (system_solution.err) {
-        system_solution.err |= __MATRIX_ERR_NO_SOLUTION__;
-        return system_solution;
+    matrix_ldlt_decomposition(&(msystem->a));
+    if (msystem->a.err) {
+        msystem->err |= msystem->a.err | NS__MATRIX_ERR_NO_SOLUTION__;
+        return;
     }
-    double determinat = system_solution.determinant;
+    // Backup the determinant
+    double determinat = msystem->a.determinant;
 
     // Multiply L x D in the same matrix, this LD is matriz is a lower traingular matrix
     for (int i = 1; i < size; i++) {
         for (int j = 0; j < i; j++){
-            mtxc[i][j] *= mtxc[j][j];
+            matrix[i][j] *= matrix[j][j];
         }
     }
     // Solve Ly = b where L has a diagonal with ones
-    system_solution = solve_lower_triangular_matrix(matrix, __MATRIX_OPS_NONE_);
+    solver_forward_substitution(msystem, NS__MATRIX_OPS_NONE_);
     // Solve Ux = y
-    for (int i = 0; i < size; i++) {
-        mtxc[i][size] = system_solution.solution[i];
-    }
-    solution_free(system_solution);
-    system_solution = solve_upper_triangular_matrix(matrix, __MATRIX_OPS_DIAG_HAS_ONES__);
+    NS_SWAP(msystem->x.items, msystem->b.items, double *);
+    solver_backward_substitution(msystem, NS__MATRIX_OPS_DIAG_HAS_ONES__);
 
-    system_solution.determinant = determinat;
-    return system_solution;
+    msystem->a.determinant = determinat;
 }
