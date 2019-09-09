@@ -8,6 +8,7 @@
 */
 
 #include <stdlib.h>
+#include <string.h>
 #include <math.h>
 
 #define JACOBI_IMPORT
@@ -23,6 +24,8 @@ void jacobi_solver(NSMatrixSystem * msystem) {
     double * b = msystem->b.items;
     double * x_next = matrixio_allocate_array_double(size);
     double * x_prev = msystem->x.items;
+
+    memcpy(x_prev, b, size * sizeof(double));
 
     for (int k = 0; k < JACOBI_MAX_ITER; k++) {
         double error = 0.0;
@@ -42,7 +45,7 @@ void jacobi_solver(NSMatrixSystem * msystem) {
             }
 
             double * a_ij = *a_i; // Avoid to reference a[i][j] each time
-            double * x_prev_j = x_prev; // Avoid to reference x_prev_j[j] each time
+            double * x_prev_j = x_prev; // Avoid to reference x_prev[j] each time
 
             *x_next_i = *b_i;
             for (int j = 0; j < size; j++, a_ij++, x_prev_j++){
