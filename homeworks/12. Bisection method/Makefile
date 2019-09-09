@@ -1,3 +1,5 @@
+.PHONY: build buildlib clean depend run valgrind help
+
 # Compiler flags: all warnings + debugger meta-data
 CFLAGS = -Wall -Wextra -Werror -Wpedantic -g
 
@@ -7,22 +9,24 @@ LIBS = -lm
 # Pre-defined macros for conditional compilation
 DEFS = -DDEBUG_FLAG -DEXPERIMENTAL=0
 
+# Lib Location
+IDIR = ../../src/include/
+
 # Executable name
 BIN = main
 
 # Source code
-SRC = ../../src
+SRC = ../../src/target/build
+CC = gcc
 
-# Object files from which $BIN depends
-OBJS = ${SRC}/root_search/bisection.o
+OBJS = ${SRC}/bisection.o
 
 ## Compiles the executable program by default main.c
-$(BIN): $(OBJS) $(BIN).c
-	$(CC) $(CFLAGS) $(DEFS) $(OBJS) $(BIN).c -o $(BIN) $(LIBS)
+$(BIN): $(BIN).c buildlib
+	$(CC) $(CFLAGS) $(DEFS) $(BIN).c ${OBJS} -o $(BIN) -I${IDIR} $(LIBS)
 
-# This rule compiles each module into its object file
-%.o: %.c %.h
-	$(CC) -c $(CFLAGS) $(DEFS) $< -o $@
+buildlib:
+	cd ../../src && make && cd -
 
 ## Remove binaries and objects
 clean:
