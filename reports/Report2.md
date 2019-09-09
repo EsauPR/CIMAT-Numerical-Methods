@@ -82,8 +82,7 @@ $$
 x^{(k)}_i = \frac{1}{a_{ii}}(b_i - \sum_{j=1, j \neq i}^{n} a_{ij}x_{j}^{(k-1)}), i = 1,2,...,n
 $$
 
-
-### Pseudocódigo
+### Algoritmo
 
 ```pseudocode
 n -> Tamaño de la matrix
@@ -219,7 +218,7 @@ $$
 x^{(k)}_i = \frac{1}{a_{ii}}(b_i - \sum_{j=1}^{i-1} a_{ij}x_{j}^{(k)} - \sum_{j=i+1}^{n} a_{ij}x_{j}^{(k-1)}), i = 1,2,...,n
 $$
 
-### Pseudocódigo
+### Algoritmo
 
 Observando la formula de arriba podemos notar que solo se necesitan los $x_i$ previos a la iteración $i$ actual, así que podemos usar solo vector para almacenarlos.
 
@@ -273,12 +272,72 @@ Matrix B;
 #### Salida
 
 ```
-x_0: 1.0000004768
-x_1: 2.0000002384
-x_2: 1.0000004768
+x_0: 1.0000000596
+x_1: 2.0000000298
+x_2: 1.0000000075
 ```
 
 ### Observaciones y mejoras
 
 - Debido a la división en la fórmula podemos tener problemas si existe un cero sobre la diagonal, así que antes de empezar a implementar el algoritmo podemos realizar un pivoteo sobre las filas para evitar la existencia de ceros sobre la diagonal.
-- En las primera iteraciones usando el como entrada la matriz *M_BIG.txt*  hay un overflow sobre el cálculo del error debido a que se divide sobre números muy pequeños, pero en las iteraciones sucesivas el error se corrige al aproximarse los valores de los vectores $xprev$ y $xnext$.
+- Con la entrada la matriz *M_BIG.txt* no hubo error un overflow sobre el cálculo del error y convergió más rápido.
+
+## Algoritmo de Bisección para encontrar raíces de funciones.
+
+Es un método basado en el Teorema del Valor Intermedio, el cual nos indica que para cualquier función continua $f$ en el intervalo $[a,b]$ $f$ toma todos los valores que hay entre $f(a)$ y $f(b)$. Así bajo este teorema fácilmente podemos notar que si $f(a) > 0$ y $f(b) < 0$ existe un $f(c) = 0$ con $c \in [a,b]$.
+
+### Algoritmo
+
+```pseudocode
+x_min -> Valor de rango de búsqueda inicial
+x_max -> Valor de rango de búsqueda final
+EPSILON -> Valor de error máximo
+f() -> Función de evaluación
+
+error = EPSILON + 1
+while error > EPSILON:
+	x_middle = (x_min + x_max) / 2.0;
+	if f(x_middle) == 0:
+		break
+	if sign(f(x_middle)) == sign(f(x_min)):
+		x_min = x_middle
+	else if sign(f(x_middle)) == sign(f(x_max)):
+		x_max = x_middle
+	error = abs(x_min - x_max)
+
+x_middle <- Contiene el valor aproximado
+```
+
+Cabe destacar los siguientes puntos:
+
+- *x_min* y *x_max* deber ser forzosamente tal que el signo de $f(x\_min)$ es diferente del signo de  $f(x\_max)$.
+-  $x\_min < x\_max$
+
+### Ejemplo de prueba
+
+#### Entrada
+
+```
+Choose a function:
+        0) Quit
+        1) f(x) = x^2
+        2) f(x) = x^2 - 2
+        3) f(x) = sin(x)
+        4) f(x) = 1 / (x^2)
+        5) f(x) = x^3 + 3x^2
+        6) f(x) = (x-3)^2 - 2
+Option: 6
+```
+
+#### Salida
+
+
+
+
+
+### Observaciones y mejoras
+
+- Se implementaron las validaciones correspondientes al algoritmo para cubrir los puntos mencionados arriba.
+- Por tanto estamos atados a conocer muy bien la función y el intervalo a evaluar.
+- Si la función contiene más de un cero en el rango dado solo se obtendrá uno de ellos.
+
