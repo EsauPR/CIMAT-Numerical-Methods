@@ -8,7 +8,8 @@
 
 
 #include <stdlib.h>
-#include "../../src/linear_equations_systems_solutions/jacobi.h"
+#include <numsys/matrix/matrix.h>
+#include "numsys/solvers/jacobi.h"
 
 int main(int argc, char *argv[]) {
     if (argc < 3) {
@@ -16,29 +17,26 @@ int main(int argc, char *argv[]) {
         exit(EXIT_FAILURE);
     }
 
-    Matrix matrix = matrixio_read_augmented(argv[1], argv[2]);
-    matrixio_show(matrix.content, matrix.rows, matrix.cols + matrix.cols_extra);
+    NSMatrixSystem msystem = matrixio_fread_matrix_system(argv[1], argv[2]);
+    matrixio_show_matrix_system(msystem, !NS__MATRIXIO_SHOW_SOL);
 
-    __flag_err flags = matrix_check_dimensions(matrix);
+    NS__flag_err flags = matrix_check_dimensions(msystem.a);
     if (flags) {
-        pmerror("main():", flags);
-        matrixio_free(matrix);
+        nsperror("main():", flags);
+        matrixio_free_matrix_system(&msystem);
         exit(EXIT_FAILURE);
     }
 
-    SystemSolution ss = jacobi_solver(matrix);
+    jacobi_solver(&msystem);
 
-    if (ss.err) {
-        pmerror("main():", ss.err);
-        matrixio_free(matrix);
-        solution_free(ss);
+    if (msystem.err) {
+        nsperror("main():", msystem.err);
+        matrixio_free_matrix_system(&msystem);
         exit(EXIT_FAILURE);
     }
 
-    solution_show(ss);
-
-    matrixio_free(matrix);
-    solution_free(ss);
+    matrixio_show_matrix_system(msystem, NS__MATRIXIO_SHOW_SOL);
+    matrixio_free_matrix_system(&msystem);
 
     return 0;
 }

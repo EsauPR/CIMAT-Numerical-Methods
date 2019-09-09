@@ -8,8 +8,8 @@
 
 
 #include <stdlib.h>
-#include "../../src/matrix/matrix.h"
-#include "../../src/linear_equations_systems_solutions/cholesky.h"
+#include "numsys/matrix/matrix.h"
+#include "numsys/solvers/cholesky.h"
 
 
 int main(int argc, char *argv[]) {
@@ -18,29 +18,26 @@ int main(int argc, char *argv[]) {
         exit(EXIT_FAILURE);
     }
 
-    AugmentedMatrix matrix = matrixio_read_augmented(argv[1], argv[2]);
-    matrixio_show(matrix.content, matrix.rows, matrix.cols + matrix.cols_extra);
+    NSMatrixSystem msystem = matrixio_fread_matrix_system(argv[1], argv[2]);
+    matrixio_show_matrix_system(msystem, !NS__MATRIXIO_SHOW_SOL);
 
-    __flag_err flags = matrix_check_dimensions(matrix) | matrix_verify_symmetry(matrix);
+    NS__flag_err flags = matrix_check_dimensions(msystem.a) | matrix_verify_symmetry(msystem.a);
     if (flags) {
-        pmerror("main():", flags);
-        matrixio_free(matrix);
+        nsperror("main():", flags);
+        matrixio_free_matrix_system(&msystem);
         exit(EXIT_FAILURE);
     }
 
-    SystemSolution system_solution = solve_by_cholesky_method(matrix);
+    solver_cholesky_method(&msystem);
 
-    if (system_solution.err) {
-        pmerror("main():", system_solution.err);
-        matrixio_free(matrix);
-        solution_free(system_solution);
+    if (msystem.err) {
+        nsperror("main():", msystem.err);
+        matrixio_free_matrix_system(&msystem);
         exit(EXIT_FAILURE);
     }
 
-    solution_show(system_solution);
-
-    matrixio_free(matrix);
-    solution_free(system_solution);
+    matrixio_show_matrix_system(msystem, NS__MATRIXIO_SHOW_SOL);
+    matrixio_free_matrix_system(&msystem);
 
     return 0;
 }

@@ -28,14 +28,14 @@ Notemos que para todos los casos anteriores las matrices usadas son cuadradas.
 
 Dada un sistema  de la forma $Ax = b$ con una Matriz Diagonal $A$:
 $$
-\begin{pmatrix} 
+\begin{pmatrix}
 	a_{0,0} & 0 & 0 & \dots & 0 \\
 	0 & a_{1,1} & 0 & \dots & 0 \\
 	0 & 0 & a_{2,2} & \dots & 0 \\
 	\vdots & \vdots & \vdots & \vdots & \vdots \\
 	0 & 0 & 0 & \dots & a_{n,n} \\
 \end{pmatrix}
-\begin{pmatrix} 
+\begin{pmatrix}
 	x_{0} \\
 	x_{1} \\
 	x_{2} \\
@@ -43,7 +43,7 @@ $$
 	x_{n} \\
 \end{pmatrix}
 =
-\begin{pmatrix} 
+\begin{pmatrix}
 	b_{0} \\
 	b_{1} \\
 	b_{2} \\
@@ -120,14 +120,14 @@ Determinant: 24.000000
 
 Dada el sistema $Ax = b$ y una matriz triangular superior $A$ de la forma:
 $$
-\begin{pmatrix} 
+\begin{pmatrix}
 	a_{0,0} & a_{0,1} & a_{0,2} & ... & a_{0,n} \\
 	0 & a_{1,1} & a_{1,2} & ... & a_{1,n} \\
 	0 & 0 & a_{2,2} & ... & a_{1,n} \\
 	\vdots & \vdots & \vdots & \vdots & \vdots \\
 	0 & 0 & 0 & ... & a_{n,n} \\
 \end{pmatrix}
-\begin{pmatrix} 
+\begin{pmatrix}
 	x_{0} \\
 	x_{1} \\
 	x_{2} \\
@@ -135,7 +135,7 @@ $$
 	x_{n} \\
 \end{pmatrix}
 =
-\begin{pmatrix} 
+\begin{pmatrix}
 	b_{0} \\
 	b_{1} \\
 	b_{2} \\
@@ -213,14 +213,14 @@ Determinant: 400.000000
 
   Dada una matriz triangular inferior de la forma $Ax = b$:
   $$
-  \begin{pmatrix} 
+  \begin{pmatrix}
   	a_{0,0} & 0 & 0 & ... & 0 \\
   	a_{1,0} & a_{1,1} & 0 & ... & 0 \\
   	a_{2,0} & a_{2,1} & a_{2,2} & ... & 0 \\
   	\vdots & \vdots & \vdots & \vdots & \vdots \\
   	a_{n,0} & a_{n,1} & a_{n,2} & ... & a_{n,n} \\
   \end{pmatrix}
-  \begin{pmatrix} 
+  \begin{pmatrix}
   	x_{0} \\
   	x_{1} \\
   	x_{2} \\
@@ -228,7 +228,7 @@ Determinant: 400.000000
   	x_{n} \\
   \end{pmatrix}
   =
-  \begin{pmatrix} 
+  \begin{pmatrix}
   	b_{0} \\
   	b_{1} \\
   	b_{2} \\
@@ -236,7 +236,7 @@ Determinant: 400.000000
   	b_{n} \\
   \end{pmatrix}
   $$
-  
+
 
 La solución para cada $x_i$ está dada por:
 $$
@@ -311,14 +311,14 @@ Dado que solo se usa la mitad de la matriz, en vez de usar un una matriz de tama
 Dada una matriz triangular superior $A$ y sistema de la forma $Ax = b$:
 
 $$
-\begin{pmatrix} 
+\begin{pmatrix}
 	a_{0,0} & a_{0,1} & a_{0,2} & ... & a_{0,n} \\
 	a_{1,0} & a_{1,1} & a_{1,2} & ... & a_{1,n} \\
 	a_{2,0} & a_{2,1} & a_{2,2} & ... & a_{1,n} \\
 	\vdots & \vdots & \vdots & \vdots & \vdots \\
 	a_{n,0} & a_{n,1} & a_{n,2} & ... & a_{n,n} \\
 \end{pmatrix}
-\begin{pmatrix} 
+\begin{pmatrix}
 	x_{0} \\
 	x_{1} \\
 	x_{2} \\
@@ -326,7 +326,7 @@ $$
 	x_{n} \\
 \end{pmatrix}
 =
-\begin{pmatrix} 
+\begin{pmatrix}
 	b_{0} \\
 	b_{1} \\
 	b_{2} \\
@@ -406,14 +406,14 @@ X_4 = 1025431.999682
 Dada una matriz triangular superior $A$ y un sistema de la forma $Ax = b$:
 
 $$
-\begin{pmatrix} 
+\begin{pmatrix}
 	a_{0,0} & a_{0,1} & a_{0,2} & ... & a_{0,n} \\
 	a_{1,0} & a_{1,1} & a_{1,2} & ... & a_{1,n} \\
 	a_{2,0} & a_{2,1} & a_{2,2} & ... & a_{1,n} \\
 	\vdots & \vdots & \vdots & \vdots & \vdots \\
 	a_{n,0} & a_{n,1} & a_{n,2} & ... & a_{n,n} \\
 \end{pmatrix}
-\begin{pmatrix} 
+\begin{pmatrix}
 	x_{0} \\
 	x_{1} \\
 	x_{2} \\
@@ -421,7 +421,7 @@ $$
 	x_{n} \\
 \end{pmatrix}
 =
-\begin{pmatrix} 
+\begin{pmatrix}
 	b_{0} \\
 	b_{1} \\
 	b_{2} \\
@@ -441,7 +441,7 @@ b[n] -> Vector b
 x[n] -> Vector solución de tamaño n
 
 - Desde pivote=0 hasta n:
-	- Encontrar fila i y columna j, con i,j > pivote tal que ABS(a[i][j]) 
+	- Encontrar fila i y columna j, con i,j > pivote tal que NS_ABS(a[i][j])
 	sea el máximo distinto de cero.
 	- Si no se encontró un máximo no hay solución única, terminar.
 	- Intercambiar fila pivote con fila i
@@ -502,14 +502,14 @@ X_4 = 1025431.999682
 Dada una matriz triangular superior $A$ y un sistema de la forma $Ax = b$:
 
 $$
-\begin{pmatrix} 
+\begin{pmatrix}
 	a_{0,0} & a_{0,1} & a_{0,2} & ... & a_{0,n} \\
 	a_{1,0} & a_{1,1} & a_{1,2} & ... & a_{1,n} \\
 	a_{2,0} & a_{2,1} & a_{2,2} & ... & a_{1,n} \\
 	\vdots & \vdots & \vdots & \vdots & \vdots \\
 	a_{n,0} & a_{n,1} & a_{n,2} & ... & a_{n,n} \\
 \end{pmatrix}
-\begin{pmatrix} 
+\begin{pmatrix}
 	x_{0} \\
 	x_{1} \\
 	x_{2} \\
@@ -517,7 +517,7 @@ $$
 	x_{n} \\
 \end{pmatrix}
 =
-\begin{pmatrix} 
+\begin{pmatrix}
 	b_{0} \\
 	b_{1} \\
 	b_{2} \\
@@ -528,7 +528,7 @@ $$
 
 La matriz $A$ puede ser escrita como producto de dos matrices triangulares inferior y superior $L$ y $U$ respectivamente y $L$ con una diagonal de unos.
 $$
-\begin{pmatrix} 
+\begin{pmatrix}
 	a_{0,0} & a_{0,1} & a_{0,2} & ... & a_{0,n} \\
 	a_{1,0} & a_{1,1} & a_{1,2} & ... & a_{1,n} \\
 	a_{2,0} & a_{2,1} & a_{2,2} & ... & a_{1,n} \\
@@ -536,14 +536,14 @@ $$
 	a_{n,0} & a_{n,1} & a_{n,2} & ... & a_{n,n} \\
 \end{pmatrix}
 =
-\begin{pmatrix} 
+\begin{pmatrix}
 	1 & 0 & 0 & ... & 0 \\
 	L_{1,0} & 1 & 0 & ... & 0 \\
 	L_{2,0} & L_{2,1} & 1 & ... & 0 \\
 	\vdots & \vdots & \vdots & \vdots & \vdots \\
 	L_{n,0} & L_{n,1} & L_{n,2} & ... & 1 \\
 \end{pmatrix}
-\begin{pmatrix} 
+\begin{pmatrix}
 	U_{0,0} & U_{0,1} & U_{0,2} & ... & U_{0,n} \\
 	0 & U_{1,1} & U_{1,2} & ... & U_{1,n} \\
 	0 & 0 & U_{2,2} & ... & U_{2,n} \\
@@ -577,7 +577,7 @@ x[n] -> Vector solución de tamaño n
 
 - Desde i=0 hasta n:
 	- Desde j=0 hasta n:
-		lu[i][j] = a[i][j]	
+		lu[i][j] = a[i][j]
 		limite = i-1 Si i <= j de lo contrario j-1
 		- Desde k=0 hasta limite:
 			lu[i][j] -= lu[i][k] * lu[k][j]
@@ -586,7 +586,7 @@ x[n] -> Vector solución de tamaño n
 	- Si lu[i][i] == 0:
 		- Cambiar renglon a[i][:] con algún renglón a[r][:] tal que r > i
 		i = i - 1
-		- Si ya se cambió con todos los renglones posibles, 
+		- Si ya se cambió con todos los renglones posibles,
 		no existe solución única, terminar.
 
 - Resolver Ly = b
@@ -644,14 +644,14 @@ Determinant: 0.000001
 Dada una matriz triangular superior $A$ un sistema de la forma $Ax = b$:
 
 $$
-\begin{pmatrix} 
+\begin{pmatrix}
 	a_{0,0} & a_{0,1} & a_{0,2} & ... & a_{0,n} \\
 	a_{1,0} & a_{1,1} & a_{1,2} & ... & a_{1,n} \\
 	a_{2,0} & a_{2,1} & a_{2,2} & ... & a_{1,n} \\
 	\vdots & \vdots & \vdots & \vdots & \vdots \\
 	a_{n,0} & a_{n,1} & a_{n,2} & ... & a_{n,n} \\
 \end{pmatrix}
-\begin{pmatrix} 
+\begin{pmatrix}
 	x_{0} \\
 	x_{1} \\
 	x_{2} \\
@@ -659,7 +659,7 @@ $$
 	x_{n} \\
 \end{pmatrix}
 =
-\begin{pmatrix} 
+\begin{pmatrix}
 	b_{0} \\
 	b_{1} \\
 	b_{2} \\
@@ -670,7 +670,7 @@ $$
 
 La matriz $A$ puede ser escrita como producto de tres matrices $LDL^{t}$ triangular inferior, diagonal y triangular superior respectivamente,  y $L$ con unos en la diagonal.
 $$
-\begin{pmatrix} 
+\begin{pmatrix}
 	a_{0,0} & a_{0,1} & a_{0,2} & ... & a_{0,n} \\
 	a_{1,0} & a_{1,1} & a_{1,2} & ... & a_{1,n} \\
 	a_{2,0} & a_{2,1} & a_{2,2} & ... & a_{1,n} \\
@@ -684,21 +684,21 @@ $$
 $$
 
 $$
-\begin{pmatrix} 
+\begin{pmatrix}
 	1 & 0 & 0 & ... & 0 \\
 	L_{1,0} & 1 & 0 & ... & 0 \\
 	L_{2,0} & L_{2,1} & 1 & ... & 0 \\
 	\vdots & \vdots & \vdots & \vdots & \vdots \\
 	L_{n,0} & L_{n,1} & L_{n,2} & ... & 1 \\
 \end{pmatrix}
-\begin{pmatrix} 
+\begin{pmatrix}
 	D_{0,0} & 0 & 0 & ... & 0 \\
 	0 & D_{1,1} & 0 & ... & 0 \\
 	0 & 0 & D_{2,2} & ... & 0 \\
 	\vdots & \vdots & \vdots & \vdots & \vdots \\
 	0 & 0 & 0 & ... & D_{n,n} \\
 \end{pmatrix}
-\begin{pmatrix} 
+\begin{pmatrix}
 	1 & L_{1,0} & L_{2,0} & ... & U_{n,0} \\
 	0 & 1 & U_{2,1} & ... & U_{n,1} \\
 	0 & 0 & 1 & ... & U_{n,1} \\
@@ -715,7 +715,7 @@ $$
 L_{i,i} = a_{i,i} - \sum_{k=0}^{i-i} L_{i,k}^2 D_{k,k}
 $$
 
-Así podemos reescribir $Ax=b$ como $LDL^{-1}x=b$. 
+Así podemos reescribir $Ax=b$ como $LDL^{-1}x=b$.
 
 Notemos que la multiplicación de $LD$ también es una matriz triangular inferior, y la multiplicación de $L^{t}x=y$ es una matriz de $n x 1$.
 
@@ -736,7 +736,7 @@ x[n] -> Vector solución de tamaño n
 
 - Desde i=0 hasta n:
 	- Desde j=0 hasta n:
-		ldlt[i][j] = a[i][j]	
+		ldlt[i][j] = a[i][j]
 		limite = i-1 Si i == j de lo contrario j-1
 		- Desde k=0 hasta limite:
 			ldlt[i][j] -= ldlt[i][k] * ldlt[k][j]
@@ -745,7 +745,7 @@ x[n] -> Vector solución de tamaño n
 	- Si ldlt[i][i] == 0:
 		- Cambiar renglon a[i][:] con algún renglón a[r][:] tal que r > i
 		i = i - 1
-		- Si ya se cambió con todos los renglones posibles, 
+		- Si ya se cambió con todos los renglones posibles,
 		no existe solución única, terminar.
 
 - Resolver LDy = b
@@ -827,7 +827,7 @@ Determinant: 48749394839768796131856744448.000000
 Dada una matriz cuadrada $A$ de la forma:
 
 $$
-\begin{pmatrix} 
+\begin{pmatrix}
 	a_{0,0} & a_{0,1} & a_{0,2} & ... & a_{0,n} \\
 	a_{1,0} & a_{1,1} & a_{1,2} & ... & a_{1,n} \\
 	a_{2,0} & a_{2,1} & a_{2,2} & ... & a_{1,n} \\
