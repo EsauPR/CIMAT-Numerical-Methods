@@ -7,9 +7,10 @@
     @email esau.opr@gmail.com
 */
 
+#include <stdlib.h>
 #include <math.h>
 #include <time.h>
-#include <stdlib.h>
+#include <string.h>
 #include "numsys/matrix/matrixio.h"
 #include "numsys/matrix_op/matrix_lu.h"
 #include "numsys/solvers/doolittle.h"
@@ -24,8 +25,8 @@
 static const struct matrix_eigen_scalar_products {
     double yy;
     double zy;
-} MESPDefault = {0.0, 0.0};
-typedef struct matrix_eigen_scalar_products Mesp;
+} NS_MESPDefault = {0.0, 0.0};
+typedef struct matrix_eigen_scalar_products NS_MESP;
 
 
 /* Randomnize a vector */
@@ -56,8 +57,8 @@ static void matrix_eigen_v_normalize(double * vector, int size, double norm) {
 
 
 /* Multiply y = a*z and return the scalars products of yy and zy */
-static Mesp matrix_eigen_v_multiply(double ** a, double * z, double * y, int size) {
-    Mesp mesp = MESPDefault;
+static NS_MESP matrix_eigen_v_multiply(double ** a, double * z, double * y, int size) {
+    NS_MESP mesp = NS_MESPDefault;
     double ** a_i = a;
     double * z_i = z;
     double * y_i = y;
@@ -80,6 +81,15 @@ static Mesp matrix_eigen_v_multiply(double ** a, double * z, double * y, int siz
     return mesp;
 }
 
+/* Return the scalar product from z and y: y.y, z.z and z.y */
+static NS_MESP matrix_eigen_compute_scalar_product(double * y, double * z, int size) {
+    NS_MESP mesp = NS_MESPDefault;
+    for (int i = 0; i < size; i++, y++, z++) {
+        mesp.yy += (*y) * (*y);
+        mesp.zy += (*z) * (*y);
+    }
+    return mesp;
+}
 
 /* Compute the max eigen value and their eigen vector */
 Matrix_Eigen_V matrix_eigen_potence_method(NSMatrix * matrix) {
@@ -94,11 +104,9 @@ Matrix_Eigen_V matrix_eigen_potence_method(NSMatrix * matrix) {
     matrix_eigen_v_normalize(z_vector, size, 0.0);
 
     for (int iter = 0; iter < MATRIX_EIGEN_MAX_ITER; iter++) {
-        Mesp mesp = matrix_eigen_v_multiply(matrix->items, z_vector, y_vector, size);
+        NS_MESP mesp = matrix_eigen_v_multiply(matrix->items, z_vector, y_vector, size);
         lambda = mesp.yy / mesp.zy;
-
         // printf("%4d) lambda: %lf\n", iter, lambda);
-
         matrix_eigen_v_normalize(y_vector, size, sqrt(mesp.yy));
         NS_SWAP(y_vector, z_vector, double *);
 
@@ -117,10 +125,10 @@ Matrix_Eigen_V matrix_eigen_potence_method(NSMatrix * matrix) {
     return eigen_v;
 }
 
-
 /* Compute the min eigen value and their eigen vector */
 Matrix_Eigen_V matrix_eigen_potence_method_inverse(NSMatrix * matrix) {
     Matrix_Eigen_V eigen_v = Matrix_Eigen_V_Default;
+    NS_MESP mesp = NS_MESPDefault;
     int size = matrix->rows;
     double lambda = 0.0, lambda_prev = 1 << 31;
 
@@ -131,13 +139,14 @@ Matrix_Eigen_V matrix_eigen_potence_method_inverse(NSMatrix * matrix) {
     msystem.b = matrixio_allocate_vector(size);
 
     // Initial vectors
-    double * x_vector = msystem.x.items;
-    double * b_vector = msystem.b.items;
-    matrix_eigen_v_randomnize(b_vector, size);
-    matrix_eigen_v_normalize(b_vector, size, 0.0);
+    double * y_vector = matrixio_allocate_array_double(size);
+    double * z_vector = matrixio_allocate_array_double(size);
+    matrix_eigen_v_randomnize(z_vector, size);
+    matrix_eigen_v_normalize(z_vector, size, 0.0);
 
     // LU decomposition
-    matrix_lu_decomposition(matrix);
+    int * row_maping = matrix_lu_decomposition(matrix);
+    free(row_maping);
     if (matrix->err) {
         matrixio_free_vector(&(msystem.b));
         matrixio_free_vector(&(msystem.x));
@@ -146,29 +155,25 @@ Matrix_Eigen_V matrix_eigen_potence_method_inverse(NSMatrix * matrix) {
     }
 
     for (int iter = 0; iter < MATRIX_EIGEN_MAX_ITER; iter++) {
+        // Solve Ay=z
+        matrix_eigen_v_normalize(z_vector, size, sqrt(mesp.yy));
+        memcpy(msystem.b.items, z_vector, size * sizeof(double));
         solver_doolittle_method_lu(&msystem);
         if (msystem.err) {
             eigen_v.err |= msystem.err;
+            free(y_vector);
+            free(z_vector);
             matrixio_free_vector(&(msystem.b));
             matrixio_free_vector(&(msystem.x));
-            eigen_v.eigen_vector = NULL;
             return eigen_v;
         }
+        // Move solution to y_vector
+        NS_SWAP(y_vector, msystem.x.items, double *);
 
-        Mesp mesp = MESPDefault;
-        double * x_i = x_vector;
-        double * b_i = b_vector;
-        for (int i = 0; i < size; i++, x_i++, b_i++) {
-            mesp.yy = (*x_i) * (*x_i);
-            mesp.zy = (*b_i) * (*x_i);
-        }
-
+        NS_MESP mesp = matrix_eigen_compute_scalar_product(y_vector, z_vector, size);
         lambda = mesp.zy / mesp.yy;
-
-        printf("%d) lambda: %.20lf\n", iter, lambda);
-
-        matrix_eigen_v_normalize(x_vector, size, sqrt(mesp.yy));
-        NS_SWAP(x_vector, b_vector, double *);
+        // printf("%d) lambda: %.20lf\n", iter, lambda);
+        NS_SWAP(y_vector, z_vector, double *);
 
         if (NS_IS_ZERO(lambda - lambda_prev)) {
             break;
@@ -177,8 +182,13 @@ Matrix_Eigen_V matrix_eigen_potence_method_inverse(NSMatrix * matrix) {
         lambda_prev = lambda;
     }
 
+    matrix_eigen_v_normalize(y_vector, size, sqrt(mesp.yy));
+    eigen_v.eigen_vector = y_vector;
     eigen_v.eigen_value = lambda;
-    eigen_v.eigen_vector = b_vector;
+
+    free(z_vector);
+    matrixio_free_vector(&(msystem.b));
+    matrixio_free_vector(&(msystem.x));
 
     return eigen_v;
 }
