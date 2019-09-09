@@ -8,6 +8,7 @@
 */
 
 #include <stdlib.h>
+#include <string.h>
 #include <math.h>
 
 #define GAUSS_SEIDEL_IMPORT
@@ -19,6 +20,8 @@
 
 void gauss_seidel_solver(NSMatrixSystem * msystem) {
     int size = msystem->a.rows;
+
+    memcpy(msystem->x.items, msystem->b.items, size * sizeof(double));
 
     for (int k = 0; k < GAUSS_SEIDEL_MAX_ITER; k++) {
         double error = 0.0;
@@ -37,7 +40,7 @@ void gauss_seidel_solver(NSMatrixSystem * msystem) {
             double err_prev = *x_i;
 
             double * a_ij = *a_i; // Reference to a[i][j]
-            double * x_j = msystem->b.items; // Reference to x[j]
+            double * x_j = msystem->x.items; // Reference to x[j]
 
             *x_i = *b_i;
             for (int j = 0; j < size; j++, a_ij++, x_j++){
