@@ -8,6 +8,7 @@
 
 
 #include <stdlib.h>
+#include <numsys/matrix/matrix.h>
 #include "numsys/solvers/gauss_seidel.h"
 
 int main(int argc, char *argv[]) {
