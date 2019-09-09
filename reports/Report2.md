@@ -124,7 +124,7 @@ Matriz A:
 0.000000 -1.000000 4.000000 
 ```
 
-Matrix B;
+Matriz B:
 
 ```
 2.0000000000
@@ -220,7 +220,7 @@ $$
 
 ### Algoritmo
 
-Observando la formula de arriba podemos notar que solo se necesitan los $x_i$ previos a la iteración $i$ actual, así que podemos usar solo vector para almacenarlos.
+Observando la fórmula de arriba podemos notar que solo se necesitan los $x_i$ previos a la iteración $i$ actual, así que podemos usar solo vector para almacenarlos.
 
 ```pseudocode
 n -> Tamaño de la matrix
@@ -261,7 +261,7 @@ Matriz A:
 0.000000 -1.000000 4.000000 
 ```
 
-Matrix B;
+Matriz B:
 
 ```
 2.0000000000
@@ -327,13 +327,14 @@ Choose a function:
         5) f(x) = x^3 + 3x^2
         6) f(x) = (x-3)^2 - 2
 Option: 6
+Search range: -3 4.3
 ```
 
 #### Salida
 
-
-
-
+```
+Estimated zero at: 1.585786
+```
 
 ### Observaciones y mejoras
 
@@ -341,3 +342,132 @@ Option: 6
 - Por tanto estamos atados a conocer muy bien la función y el intervalo a evaluar.
 - Si la función contiene más de un cero en el rango dado solo se obtendrá uno de ellos.
 
+## Algoritmo de Newton-Raphson para encontrar raíces de funciones.
+
+Es un método basado en el uso de la pendiente para acercarse a un cero de la función. Aproxima el siguiente punto a evaluar usando la recta punto pendiente del punto actual.
+
+![1568003783329](/home/esau/.config/Typora/typora-user-images/1568003783329.png)
+
+El siguiente punto está dado por
+$$
+x_{i+i} = x_{0} - \frac {f(x_o)}{f_{x}'}
+$$
+
+
+### Algoritmo
+
+```pseudocode
+x -> Valor de rango de búsqueda inicial
+EPSILON -> Valor de error máximo
+f() -> Función de evaluación
+fp() -> Derivada de f
+MAX_ITER -> Número máximo de iteraciones
+
+while MAX_ITER--:
+	x_next = x - f(x) / fp(f, x);
+	if f(x_middle) == 0:
+		break
+	
+	if x - x_next == 0:
+        break;
+    x = x_next;
+
+x_next <- Contiene el valor aproximado
+```
+
+Cabe destacar los siguientes puntos:
+
+- La convergencia no está garantizada para todas las funciones.
+- La implementación de la derivada de  la función $f$ se puede realizar mediante una aproximación usando la definición de la derivada.
+
+### Ejemplo de prueba
+
+#### Entrada
+
+```
+Choose a function:
+        0) Quit
+        1) f(x) = x^2
+        2) f(x) = x^2 - 2
+        3) f(x) = sin(x)
+        4) f(x) = 1 / (x^2)
+        5) f(x) = x^3 + 3x^2
+        6) f(x) = (x-3)^2 - 2
+Option: 6
+Search range: -3 4.3
+```
+
+#### Salida
+
+```
+Estimated zero at: 1.585786
+```
+
+### Observaciones y mejoras
+
+- Dado que la convergencia no está garantizada para todas las funciones hay que tener cuidado en su uso.
+
+
+
+## Algoritmo Método de Potencia para encontrar el valor y vector propio más grande de una matriz.
+
+El Método de la Potencia sirve para calcular el valor propio más grande de una matriz . Sólo es válido (converge) cuando dicho valor propio de módulo más grande es real y es simple, o, en caso de ser múltiple, tiene asociados tantos vectores propios independientes como indique su multiplicidad.
+
+Sea $A$ una matriz de tamaño $nxn$, luego se toma cualquier vector  $x_0$ y en cada paso $k$ se calcula:
+$$
+x_{k+1} = \frac{Ax_k}{\left|\left| Ax_k \right|\right|}
+$$
+Dónde $x_{k+1}$ es la convergencia al vector propio, cuyo valor propio está dado por el cociente del producto punto de los vectores.
+$$
+\lambda = \frac{x_{k+1} . x_{k+1}}{x_{k+1} . x_{k}}
+$$
+
+### Algoritmo
+
+```pseudocode
+n -> Tamaño de la matriz
+a[n][n] -> Matriz a
+xprev -> Vector de tamaño n inicializado con valores aleatoreos
+xnext -> Vector de tamaño n
+MAX_ITER -> Número máximo de iteraciones
+lambda -> Valor propio
+
+normalizar(xprev)
+
+while MAX_ITER --:
+	xnext = a * nprev
+	lambda = xnext * xnext / xnext * xprev
+	normalizar(xnext)
+	xprev = xnext
+
+xnext <- Contiene el vector propio
+lambda <- Contiene valor propio
+```
+
+
+
+### Ejemplo de prueba
+
+#### Entrada
+
+```
+4 4
+6.0000000000 -1.0000000000 -1.0000000000 4.0000000000 
+1.0000000000 -10.0000000000 2.0000000000 -1.0000000000 
+3.0000000000 -2.0000000000 8.0000000000 -1.0000000000 
+1.0000000000 1.0000000000 1.0000000000 -5.0000000000
+```
+
+
+
+#### Salida
+
+```
+Eigen Value: -9.435770
+Eigen Vector:
+0.13406326835450824153 0.95326676624072981259 0.07129840114863986167 -0.26120116855155278701
+```
+
+### Observaciones y mejoras
+
+Durante las pruebas se obtuvieron los resultados esperados excepto para la matriz contenida en el archivo *M_BIG.txt*. A pesar de obtener el valor propio correcto no se obtuvo la convergencia del vector propio. La convergencia hacia el valor propio fue rápida. hecho que le atribuyo a los pequeños valores de la matriz de entrada.
