@@ -8,64 +8,37 @@
 
 
 #include <stdlib.h>
-#include "../../src/matrix/matrix.h"
-#include "../../src/matrix/matrix_eigen_v.h"
-
-
-Matrix read_matrix(char* file_name) {
-    int rows, cols;
-
-    FILE *fp = fopen(file_name, "r");
-    if(fp == NULL) {
-        perror("fopen()");
-        exit(EXIT_FAILURE);
-    }
-
-    fscanf(fp, "%d %d", &rows, &cols);
-
-    // Add a extra col to make compatible with solvers
-    Matrix matrix = matrixio_allocate_matrix(rows, cols + 1);
-    matrix.cols = cols;
-    matrix.cols_extra = 1;
-
-    matrixio_scan_matrix(fp, matrix.items, 0, rows, 0, cols);
-    fclose(fp);
-
-    return matrix;
-}
+#include "numsys/matrix/matrix.h"
+#include "numsys/matrix_op/matrix_eigen_v.h"
 
 
 int main(int argc, char *argv[]) {
-    if (argc < 2) {
-        perror("main():: 1 Args missing");
+    if (argc < 1) {
+        perror("main():: 2 Args missing");
         exit(EXIT_FAILURE);
     }
 
-    Matrix matrix = read_matrix(argv[1]);
-    matrixio_show_matrix(matrix.items, matrix.rows, matrix.cols);
+    NSMatrix matrix = matrixio_fread_matrix(argv[1]);
+    matrixio_show_matrix(matrix);
 
     NS__flag_err flags = matrix_check_dimensions(matrix);
     if (flags) {
         nsperror("main():", flags);
-        matrixio_free_matrix_system(&msystem);
+        matrixio_free_matrix(&matrix);
         exit(EXIT_FAILURE);
     }
 
-    Matrix_Eigen_V ev = matrix_eigen_potence_method_inverse(matrix);
-    if (ev.err) {
-        nsperror("matrix_eigen_potence_method_inverse():", ev.err);
-    }
+    Matrix_Eigen_V ev = matrix_eigen_potence_method_inverse(& matrix);
 
-
-    printf("Min Eigen Value: %.20lf\n", ev.eigen_value);
+    printf("Eigen Value: %lf\n", ev.eigen_value);
     puts("Eigen Vector:");
     for (int i = 0; i < matrix.rows; i++) {
         printf("%.20lf ", ev.eigen_vector[i]);
     }
     puts("");
 
-    matrixio_free_matrix(matrix);
-    free(ev.eigen_vector);
+    matrixio_free_matrix(&matrix);
+    matrix_eigen_free(&ev);
 
     return 0;
 }
