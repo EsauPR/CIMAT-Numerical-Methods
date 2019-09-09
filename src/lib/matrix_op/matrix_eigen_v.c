@@ -97,7 +97,7 @@ Matrix_Eigen_V matrix_eigen_potence_method(NSMatrix * matrix) {
         Mesp mesp = matrix_eigen_v_multiply(matrix->items, z_vector, y_vector, size);
         lambda = mesp.yy / mesp.zy;
 
-        printf("%4d) lambda: %lf\n", iter, lambda);
+        // printf("%4d) lambda: %lf\n", iter, lambda);
 
         matrix_eigen_v_normalize(y_vector, size, sqrt(mesp.yy));
         NS_SWAP(y_vector, z_vector, double *);
