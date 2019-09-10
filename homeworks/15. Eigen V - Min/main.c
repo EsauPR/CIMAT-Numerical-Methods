@@ -28,7 +28,7 @@ int main(int argc, char *argv[]) {
         exit(EXIT_FAILURE);
     }
 
-    Matrix_Eigen_V ev = matrix_eigen_potence_method_inverse(& matrix);
+    Matrix_Eigen_V ev = matrix_eigen_pow_method_inverse(& matrix);
 
     printf("Eigen Value: %.10lf\n", ev.eigen_value);
     puts("Eigen Vector:");

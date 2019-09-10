@@ -116,15 +116,15 @@ static void matrix_eigen_deflation(Matrix_Eigen_V * eigenvs, int neigen, double 
 }
 
 /* Compute the max eigen value and their eigen vector */
-Matrix_Eigen_V matrix_eigen_potence_method(NSMatrix * matrix) {
-    Matrix_Eigen_V * eigenvs = matrix_eigen_potence_method_deflation(matrix, 1);
+Matrix_Eigen_V matrix_eigen_pow_method(NSMatrix * matrix) {
+    Matrix_Eigen_V * eigenvs = matrix_eigen_pow_method_deflation(matrix, 1);
     Matrix_Eigen_V eigen_v = eigenvs[0];
     free(eigenvs);
     return eigen_v;
 }
 
 /* Compute the min eigen value and their eigen vector */
-Matrix_Eigen_V matrix_eigen_potence_method_inverse(NSMatrix * matrix) {
+Matrix_Eigen_V matrix_eigen_pow_method_inverse(NSMatrix * matrix) {
     Matrix_Eigen_V eigen_v = Matrix_Eigen_V_Default;
     NS_MESP mesp = NS_MESPDefault;
     int size = matrix->rows;
@@ -190,14 +190,14 @@ Matrix_Eigen_V matrix_eigen_potence_method_inverse(NSMatrix * matrix) {
 }
 
 /* Compute the n eigen values and their eigen vectors trough defaltion process*/
-Matrix_Eigen_V * matrix_eigen_potence_method_deflation(NSMatrix * matrix, const int neigen) {
+Matrix_Eigen_V * matrix_eigen_pow_method_deflation(NSMatrix * matrix, const int neigen) {
     int size = matrix->rows;
     NS_MESP mesp = NS_MESPDefault;
 
     // Array for eigen vectors and eigen values
     Matrix_Eigen_V * eigenvs = (Matrix_Eigen_V *) malloc(neigen * sizeof(Matrix_Eigen_V));
     if (eigenvs == NULL) {
-        perror("matrix_eigen_potence_method_deflation()");
+        perror("matrix_eigen_pow_method_deflation()");
         return eigenvs;
     }
 
