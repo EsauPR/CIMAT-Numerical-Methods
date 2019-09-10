@@ -56,6 +56,7 @@ NSMatrix matrixio_allocate_matrix(int rows, int cols) {
     matrix.pointer_start = matrixio_allocate_array_double(rows * cols);
     if (matrix.pointer_start == NULL) {
         perror("matrixio_allocate_matrix(): ");
+        free(matrix.items);
         exit(EXIT_FAILURE);
     }
 
