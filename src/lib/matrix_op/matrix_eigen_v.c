@@ -142,7 +142,6 @@ Matrix_Eigen_V matrix_eigen_potence_method_inverse(NSMatrix * matrix) {
     double * y_vector = matrixio_allocate_array_double(size);
     double * z_vector = matrixio_allocate_array_double(size);
     matrix_eigen_v_randomnize(z_vector, size);
-    matrix_eigen_v_normalize(z_vector, size, 0.0);
 
     // LU decomposition
     int * row_maping = matrix_lu_decomposition(matrix);
@@ -170,7 +169,7 @@ Matrix_Eigen_V matrix_eigen_potence_method_inverse(NSMatrix * matrix) {
         // Move solution to y_vector
         NS_SWAP(y_vector, msystem.x.items, double *);
 
-        NS_MESP mesp = matrix_eigen_compute_scalar_product(y_vector, z_vector, size);
+        mesp = matrix_eigen_compute_scalar_product(y_vector, z_vector, size);
         lambda = mesp.zy / mesp.yy;
         // printf("%d) lambda: %.20lf\n", iter, lambda);
         NS_SWAP(y_vector, z_vector, double *);
@@ -178,15 +177,14 @@ Matrix_Eigen_V matrix_eigen_potence_method_inverse(NSMatrix * matrix) {
         if (NS_IS_ZERO(lambda - lambda_prev)) {
             break;
         }
-
         lambda_prev = lambda;
     }
 
-    matrix_eigen_v_normalize(y_vector, size, sqrt(mesp.yy));
-    eigen_v.eigen_vector = y_vector;
+    matrix_eigen_v_normalize(z_vector, size, sqrt(mesp.yy));
+    eigen_v.eigen_vector = z_vector;
     eigen_v.eigen_value = lambda;
 
-    free(z_vector);
+    free(y_vector);
     matrixio_free_vector(&(msystem.b));
     matrixio_free_vector(&(msystem.x));
 

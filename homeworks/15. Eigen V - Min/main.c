@@ -30,10 +30,10 @@ int main(int argc, char *argv[]) {
 
     Matrix_Eigen_V ev = matrix_eigen_potence_method_inverse(& matrix);
 
-    printf("Eigen Value: %lf\n", ev.eigen_value);
+    printf("Eigen Value: %.10lf\n", ev.eigen_value);
     puts("Eigen Vector:");
     for (int i = 0; i < matrix.rows; i++) {
-        printf("%.20lf ", ev.eigen_vector[i]);
+        printf("%.10lf ", ev.eigen_vector[i]);
     }
     puts("");
 
