@@ -29,7 +29,7 @@ int main(int argc, char *argv[]) {
     }
 
     int neigen = matrix.rows;
-    Matrix_Eigen_V * evs = matrix_eigen_pow_method_dfl(& matrix, neigen);
+    Matrix_Eigen_V * evs = matrix_eigen_pow_method_inv_dfl(& matrix, neigen);
 
     for (int k = 0; k < neigen; k++)
     {

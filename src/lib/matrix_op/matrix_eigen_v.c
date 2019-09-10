@@ -12,6 +12,7 @@
 #include <time.h>
 #include <string.h>
 #include "numsys/matrix/matrixio.h"
+#include "numsys/matrix/matrix.h"
 #include "numsys/matrix_op/matrix_lu.h"
 #include "numsys/solvers/doolittle.h"
 
@@ -117,96 +118,41 @@ static void matrix_eigen_deflation(Matrix_Eigen_V * eigenvs, int neigen, double 
 
 /* Compute the max eigen value and their eigen vector */
 Matrix_Eigen_V matrix_eigen_pow_method(NSMatrix * matrix) {
-    Matrix_Eigen_V * eigenvs = matrix_eigen_pow_method_deflation(matrix, 1);
+    Matrix_Eigen_V * eigenvs = matrix_eigen_pow_method_dfl(matrix, 1);
     Matrix_Eigen_V eigen_v = eigenvs[0];
     free(eigenvs);
     return eigen_v;
 }
 
 /* Compute the min eigen value and their eigen vector */
-Matrix_Eigen_V matrix_eigen_pow_method_inverse(NSMatrix * matrix) {
-    Matrix_Eigen_V eigen_v = Matrix_Eigen_V_Default;
-    NS_MESP mesp = NS_MESPDefault;
-    int size = matrix->rows;
-    double lambda = 0.0, lambda_prev = 1 << 31;
-
-    // System to solve with doolittle method
-    NSMatrixSystem msystem = NSMatrixSystemDefault;
-    msystem.a = *matrix;
-    msystem.x = matrixio_allocate_vector(size);
-    msystem.b = matrixio_allocate_vector(size);
-
-    // Initial vectors
-    double * y_vector = matrixio_allocate_array_double(size);
-    double * z_vector = matrixio_allocate_array_double(size);
-    matrix_eigen_v_randomnize(z_vector, size);
-
-    // LU decomposition
-    int * row_maping = matrix_lu_decomposition(matrix);
-    free(row_maping);
-    if (matrix->err) {
-        matrixio_free_vector(&(msystem.b));
-        matrixio_free_vector(&(msystem.x));
-        eigen_v.err |= matrix->err;
-        return eigen_v;
-    }
-
-    for (int iter = 0; iter < MATRIX_EIGEN_MAX_ITER; iter++) {
-        // Solve Ay=z
-        matrix_eigen_v_normalize(z_vector, size, sqrt(mesp.yy));
-        memcpy(msystem.b.items, z_vector, size * sizeof(double));
-        solver_doolittle_method_lu(&msystem);
-        if (msystem.err) {
-            eigen_v.err |= msystem.err;
-            free(y_vector);
-            free(z_vector);
-            matrixio_free_vector(&(msystem.b));
-            matrixio_free_vector(&(msystem.x));
-            return eigen_v;
-        }
-        // Move solution to y_vector
-        NS_SWAP(y_vector, msystem.x.items, double *);
-
-        mesp = matrix_eigen_compute_scalar_product(y_vector, z_vector, size);
-        lambda = mesp.zy / mesp.yy;
-        // printf("%d) lambda: %.20lf\n", iter, lambda);
-        NS_SWAP(y_vector, z_vector, double *);
-
-        if (NS_IS_ZERO(lambda - lambda_prev)) {
-            break;
-        }
-        lambda_prev = lambda;
-    }
-
-    matrix_eigen_v_normalize(z_vector, size, sqrt(mesp.yy));
-    eigen_v.eigen_vector = z_vector;
-    eigen_v.eigen_value = lambda;
-
-    free(y_vector);
-    matrixio_free_vector(&(msystem.b));
-    matrixio_free_vector(&(msystem.x));
-
+Matrix_Eigen_V matrix_eigen_pow_method_inv(NSMatrix * matrix) {
+    Matrix_Eigen_V * eigenvs = matrix_eigen_pow_method_inv_dfl(matrix, 1);
+    Matrix_Eigen_V eigen_v = eigenvs[0];
+    free(eigenvs);
     return eigen_v;
 }
 
-/* Compute the n eigen values and their eigen vectors trough defaltion process*/
-Matrix_Eigen_V * matrix_eigen_pow_method_deflation(NSMatrix * matrix, const int neigen) {
+/*
+    Compute the n eigen values and their eigen vectors through
+    deflation process with the pow method
+*/
+Matrix_Eigen_V * matrix_eigen_pow_method_dfl(NSMatrix * matrix, const int neigen) {
     int size = matrix->rows;
     NS_MESP mesp = NS_MESPDefault;
 
     // Array for eigen vectors and eigen values
     Matrix_Eigen_V * eigenvs = (Matrix_Eigen_V *) malloc(neigen * sizeof(Matrix_Eigen_V));
     if (eigenvs == NULL) {
-        perror("matrix_eigen_pow_method_deflation()");
+        perror("matrix_eigen_pow_method_dfl()");
         return eigenvs;
     }
 
     double * y_vector = matrixio_allocate_array_double(size);
 
     for (int eiter = 0; eiter < neigen; eiter++) {
+        // mesp = NS_MESPDefault;
         eigenvs[eiter] = Matrix_Eigen_V_Default;
         double lambda = 0.0, lambda_prev = 0.0;
-
         double * z_vector = matrixio_allocate_array_double(size);
         matrix_eigen_v_randomnize(z_vector, size);
 
@@ -230,6 +176,87 @@ Matrix_Eigen_V * matrix_eigen_pow_method_deflation(NSMatrix * matrix, const int 
     }
 
     free(y_vector);
+
+    return eigenvs;
+}
+
+
+/*
+    Compute the n eigen values and their eigen vectors through
+    deflation process with the inverse pow method
+*/
+Matrix_Eigen_V * matrix_eigen_pow_method_inv_dfl(NSMatrix * matrix, const int neigen) {
+    int size = matrix->rows;
+    NS_MESP mesp = NS_MESPDefault;
+
+    // Array for eigen vectors and eigen values
+    Matrix_Eigen_V * eigenvs = (Matrix_Eigen_V *) malloc(neigen * sizeof(Matrix_Eigen_V));
+    if (eigenvs == NULL) {
+        perror("matrix_eigen_pow_method_dfl()");
+        return NULL;
+    }
+
+    // System to solve with doolittle method
+    NSMatrixSystem msystem = NSMatrixSystemDefault;
+    msystem.a = *matrix;
+    msystem.x = matrixio_allocate_vector(size);
+    msystem.b = matrixio_allocate_vector(size);
+
+    double * y_vector = matrixio_allocate_array_double(size);
+
+    // LU decomposition
+    int * row_maping = matrix_lu_decomposition(matrix);
+    free(row_maping);
+    if (matrix->err) {
+        matrixio_free_vector(&(msystem.b));
+        matrixio_free_vector(&(msystem.x));
+        nsperror("matrix_lu_decomposition():", matrix->err);
+        return NULL;
+    }
+
+    for (int eiter = 0; eiter < neigen; eiter++) {
+        eigenvs[eiter] = Matrix_Eigen_V_Default;
+        mesp = NS_MESPDefault;
+        double lambda = 0.0, lambda_prev = 0.0;
+        double * z_vector = matrixio_allocate_array_double(size);
+        matrix_eigen_v_randomnize(z_vector, size);
+
+        for (int iter = 0; iter < MATRIX_EIGEN_MAX_ITER; iter++) {
+            matrix_eigen_deflation(eigenvs, eiter, z_vector, size);
+            matrix_eigen_v_normalize(z_vector, size, sqrt(mesp.yy));
+            // Solve Ay=z
+            memcpy(msystem.b.items, z_vector, size * sizeof(double));
+            solver_doolittle_method_lu(&msystem);
+            if (msystem.err) {
+                nsperror("solver_doolittle_method_lu():", msystem.err);
+                free(y_vector);
+                free(z_vector);
+                matrixio_free_vector(&(msystem.b));
+                matrixio_free_vector(&(msystem.x));
+                return eigenvs;
+            }
+            // Move solution to y_vector
+            NS_SWAP(y_vector, msystem.x.items, double *);
+
+            mesp = matrix_eigen_compute_scalar_product(y_vector, z_vector, size);
+            lambda = mesp.zy / mesp.yy;
+            // printf("%d) lambda: %.20lf\n", iter, lambda);
+            NS_SWAP(y_vector, z_vector, double *);
+
+            if (NS_IS_ZERO(lambda - lambda_prev)) {
+                break;
+            }
+            lambda_prev = lambda;
+        }
+        // Normalize and save eigen value/vector
+        matrix_eigen_v_normalize(z_vector, size, sqrt(mesp.yy));;
+        eigenvs[eiter].eigen_vector = z_vector;
+        eigenvs[eiter].eigen_value = lambda;
+    }
+
+    free(y_vector);
+    matrixio_free_vector(&(msystem.b));
+    matrixio_free_vector(&(msystem.x));
 
     return eigenvs;
 }

@@ -28,14 +28,23 @@ static const struct matrix_eigen_v{
 
 typedef struct matrix_eigen_v Matrix_Eigen_V;
 
-/* Compute the max eigen value and their eigen vector */
+/* Compute the min eigen value and their eigen vector through the pow method*/
 EXTERN Matrix_Eigen_V matrix_eigen_pow_method(NSMatrix * matrix);
 
-/* Compute the min eigen value and their eigen vector */
-EXTERN Matrix_Eigen_V matrix_eigen_pow_method_inverse(NSMatrix * matrix);
+/* Compute the min eigen value and their eigen vector through the inverse pow method*/
+EXTERN Matrix_Eigen_V matrix_eigen_pow_method_inv(NSMatrix * matrix);
 
-/* Compute the n eigen values and their eigen vectors trough defaltion process*/
-EXTERN Matrix_Eigen_V * matrix_eigen_pow_method_deflation(NSMatrix * matrix, const int neigen);
+/*
+    Compute the n eigen values and their eigen vectors through
+    deflation process with the pow method
+*/
+EXTERN Matrix_Eigen_V * matrix_eigen_pow_method_dfl(NSMatrix * matrix, const int neigen);
+
+/*
+    Compute the n eigen values and their eigen vectors through
+    deflation process with the inverse pow method
+*/
+EXTERN Matrix_Eigen_V * matrix_eigen_pow_method_inv_dfl(NSMatrix * matrix, const int neigen);
 
 /* Free Matrix_Eigen_V struct */
 EXTERN void matrix_eigen_free(Matrix_Eigen_V * eigen_v);
