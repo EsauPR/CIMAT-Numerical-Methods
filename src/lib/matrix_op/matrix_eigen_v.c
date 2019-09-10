@@ -91,37 +91,35 @@ static NS_MESP matrix_eigen_compute_scalar_product(double * y, double * z, int s
     return mesp;
 }
 
-/* Compute the max eigen value and their eigen vector */
-Matrix_Eigen_V matrix_eigen_potence_method(NSMatrix * matrix) {
-    Matrix_Eigen_V eigen_v = Matrix_Eigen_V_Default;
-    int size = matrix->rows;
-    double lambda = 0.0, lambda_prev = 0.0;
 
-    double * z_vector = matrixio_allocate_array_double(size);
-    double * y_vector = matrixio_allocate_array_double(size);
+/* Free Matrix_Eigen_V struct */
+void matrix_eigen_free(Matrix_Eigen_V * eigen_v) {
+    if (eigen_v->eigen_vector) {
+        free(eigen_v->eigen_vector);
+        eigen_v->eigen_vector = NULL;
+    }
+}
 
-    matrix_eigen_v_randomnize(z_vector, size);
-    matrix_eigen_v_normalize(z_vector, size, 0.0);
-
-    for (int iter = 0; iter < MATRIX_EIGEN_MAX_ITER; iter++) {
-        NS_MESP mesp = matrix_eigen_v_multiply(matrix->items, z_vector, y_vector, size);
-        lambda = mesp.yy / mesp.zy;
-        // printf("%4d) lambda: %lf\n", iter, lambda);
-        matrix_eigen_v_normalize(y_vector, size, sqrt(mesp.yy));
-        NS_SWAP(y_vector, z_vector, double *);
-
-        if (NS_IS_ZERO(lambda - lambda_prev)) {
-            break;
+/* Make the deflation process over the vector */
+static void matrix_eigen_deflation(Matrix_Eigen_V * eigenvs, int neigen, double * vector, int vsize) {
+    double mag;
+    for (int k = 0; k < neigen; k++) {
+        mag = 0.0;
+        for (int i = 0; i < vsize; i++) {
+            mag += vector[i] * eigenvs[k].eigen_vector[i];
         }
 
-        lambda_prev = lambda;
+        for (int i = 0; i < vsize; i++) {
+            vector[i] -= mag * eigenvs[k].eigen_vector[i];
+        }
     }
+}
 
-    eigen_v.eigen_value = lambda;
-    eigen_v.eigen_vector = z_vector;
-
-    free(y_vector);
-
+/* Compute the max eigen value and their eigen vector */
+Matrix_Eigen_V matrix_eigen_potence_method(NSMatrix * matrix) {
+    Matrix_Eigen_V * eigenvs = matrix_eigen_potence_method_deflation(matrix, 1);
+    Matrix_Eigen_V eigen_v = eigenvs[0];
+    free(eigenvs);
     return eigen_v;
 }
 
@@ -191,11 +189,47 @@ Matrix_Eigen_V matrix_eigen_potence_method_inverse(NSMatrix * matrix) {
     return eigen_v;
 }
 
+/* Compute the n eigen values and their eigen vectors trough defaltion process*/
+Matrix_Eigen_V * matrix_eigen_potence_method_deflation(NSMatrix * matrix, const int neigen) {
+    int size = matrix->rows;
+    NS_MESP mesp = NS_MESPDefault;
 
-/* Free Matrix_Eigen_V struct */
-void matrix_eigen_free(Matrix_Eigen_V * eigen_v) {
-    if (eigen_v->eigen_vector) {
-        free(eigen_v->eigen_vector);
-        eigen_v->eigen_vector = NULL;
+    // Array for eigen vectors and eigen values
+    Matrix_Eigen_V * eigenvs = (Matrix_Eigen_V *) malloc(neigen * sizeof(Matrix_Eigen_V));
+    if (eigenvs == NULL) {
+        perror("matrix_eigen_potence_method_deflation()");
+        return eigenvs;
     }
+
+    double * y_vector = matrixio_allocate_array_double(size);
+
+    for (int eiter = 0; eiter < neigen; eiter++) {
+        eigenvs[eiter] = Matrix_Eigen_V_Default;
+        double lambda = 0.0, lambda_prev = 0.0;
+
+        double * z_vector = matrixio_allocate_array_double(size);
+        matrix_eigen_v_randomnize(z_vector, size);
+
+        for (int iter = 0; iter < MATRIX_EIGEN_MAX_ITER; iter++) {
+            matrix_eigen_deflation(eigenvs, eiter, z_vector, size);
+            matrix_eigen_v_normalize(z_vector, size, 0.0);
+            mesp = matrix_eigen_v_multiply(matrix->items, z_vector, y_vector, size);
+            lambda = mesp.yy / mesp.zy;
+
+            NS_SWAP(y_vector, z_vector, double *);
+            if (NS_IS_ZERO(lambda - lambda_prev)) {
+                break;
+            }
+            lambda_prev = lambda;
+        }
+
+        // Normalize and save eigen value/vector
+        matrix_eigen_v_normalize(z_vector, size, sqrt(mesp.yy));;
+        eigenvs[eiter].eigen_vector = z_vector;
+        eigenvs[eiter].eigen_value = lambda;
+    }
+
+    free(y_vector);
+
+    return eigenvs;
 }

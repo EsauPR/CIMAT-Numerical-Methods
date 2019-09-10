@@ -34,6 +34,9 @@ EXTERN Matrix_Eigen_V matrix_eigen_potence_method(NSMatrix * matrix);
 /* Compute the min eigen value and their eigen vector */
 EXTERN Matrix_Eigen_V matrix_eigen_potence_method_inverse(NSMatrix * matrix);
 
+/* Compute the n eigen values and their eigen vectors trough defaltion process*/
+EXTERN Matrix_Eigen_V * matrix_eigen_potence_method_deflation(NSMatrix * matrix, const int neigen);
+
 /* Free Matrix_Eigen_V struct */
 EXTERN void matrix_eigen_free(Matrix_Eigen_V * eigen_v);
 
