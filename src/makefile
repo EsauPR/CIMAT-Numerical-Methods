@@ -25,13 +25,13 @@ LIBDIR = ./lib
 DEPS1 = $(shell find ${LIBDIR} -type f -name '*.c' | sed "s/\.c/\.o/")
 
 OBJS = ${DEPS1}
-TARGET = "./target/build"
-
+TARGET = ./target/build
+LIBNAME = ${TARGET}/libnumsys
 
 ## Compiles the executable program by default main.c
-build: $(OBJS)
+build: ${OBJS}
 	mkdir -p ${TARGET}
-	find ${LIBDIR} -type f -name '*.o' -exec cp {} ${TARGET} \;
+	${CC} -shared $(shell find ${LIBDIR} -type f -name '*.o') -o $(LIBNAME).so
 
 
 # This rule compiles each module into its object file
@@ -42,7 +42,7 @@ build: $(OBJS)
 ## Remove binaries and objects
 clean:
 	find ${LIBDIR}/ -type f -name '*.o' -exec rm {} +
-	find ${TARGET}/ -type f -name '*.o' -exec rm {} +
+	find ${TARGET}/ -type f -name '*.so' -exec rm {} +
 
 
 depend:

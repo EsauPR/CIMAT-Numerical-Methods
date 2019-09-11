@@ -1,14 +1,12 @@
 .PHONY: build buildlib clean depend run valgrind help
 
+CC = gcc
+
 # Compiler flags: all warnings + debugger meta-data
 CFLAGS = -Wall -Wextra -Werror -Wpedantic -g
 
 # Pre-defined macros for conditional compilation
 DEFS = -DDEBUG_FLAG -DEXPERIMENTAL=0
-CC = gcc
-
-# External libraries
-LIBS = -lm
 
 # Lib Location
 IDIR = ../../src/include/
@@ -16,16 +14,15 @@ IDIR = ../../src/include/
 # Executable name
 BIN = main
 
-# Source code
-SRC = ../../src/target/build
-
-OBJS = ${SRC}/direct_solution.o \
-	${SRC}/matrixio.o \
-	${SRC}/matrix.o
+# External libraries
+LIBNAME = numsys
+LIBPATH = ../../src/target/build
+LIBS = -l${LIBNAME} -lm
+export LD_LIBRARY_PATH = ${LIBPATH}
 
 ## Compiles the executable program by default main.c
 $(BIN): $(BIN).c buildlib
-	$(CC) $(CFLAGS) $(DEFS) $(BIN).c ${OBJS} -o $(BIN) -I${IDIR} $(LIBS)
+	$(CC) $(CFLAGS) $(DEFS) $(BIN).c -o $(BIN) -I${IDIR} -L${LIBPATH} ${LIBS}
 
 buildlib:
 	cd ../../src && make && cd -
@@ -33,10 +30,6 @@ buildlib:
 ## Remove binaries and objects
 clean:
 	rm -f *~ *.o $(BIN)
-	find ${SRC}/ -type f -name '*.o' -exec rm {} +
-
-depend:
-	makedepend -Y -- $(CFLAGS) $(DEFS) -- *.c
 
 ## Run the executable
 run:
