@@ -44,7 +44,7 @@ void solver_gaussian_elimination_simple(NSMatrixSystem * msystem) {
     for (int pivot = 0; pivot < size; pivot++) {
         // Replaze the pivots with value zero
         if (matrix[pivot][pivot] == 0) {
-            NSMatrixElem mp = matrix_find_max_element(matrix, pivot + 1, size, pivot, pivot + 1);
+            NSMatrixElem mp = matrix_find_max_element(matrix, pivot + 1, size, pivot, pivot + 1, NS__MATRIX_OPS_NONE_);
 
             if (NS_IS_ZERO(mp.value)) {
                 msystem->err |= NS__MATRIX_ERR_NO_SOLUTION__;
@@ -103,7 +103,7 @@ void solver_gaussian_elimination(NSMatrixSystem * msystem) {
     msystem->a.determinant = 1.0;
 
     for (int pivot = 0; pivot < size; pivot++) {
-        NSMatrixElem mp = matrix_find_max_element(matrix, pivot, size, pivot, size);
+        NSMatrixElem mp = matrix_find_max_element(matrix, pivot, size, pivot, size, NS__MATRIX_OPS_NONE_);
 
         if (NS_IS_ZERO(mp.value)) {
             msystem->err |= NS__MATRIX_ERR_NO_SOLUTION__;

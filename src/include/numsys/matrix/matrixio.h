@@ -70,6 +70,9 @@ EXTERN NSVector matrixio_fread_vector(char *file_name);
 /* Read two matrices from files and put the values in a augmented matrix*/
 EXTERN NSMatrixSystem matrixio_fread_matrix_system(char * file1_name, char * file2_name);
 
+/* Free NSEigenV struct */
+EXTERN void matrixio_free_eigen_v(NSEigenV * eigen_v);
+
 #undef MATRIXIO_IMPORT
 #undef EXTERN
 #endif

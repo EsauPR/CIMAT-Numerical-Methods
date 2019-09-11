@@ -9,7 +9,7 @@
 
 #include <stdlib.h>
 #include "numsys/matrix/matrix.h"
-#include "numsys/matrix_op/matrix_eigen_v.h"
+#include "numsys/matrix_op/eigen_v/pow.h"
 
 
 int main(int argc, char *argv[]) {
@@ -28,7 +28,7 @@ int main(int argc, char *argv[]) {
         exit(EXIT_FAILURE);
     }
 
-    Matrix_Eigen_V ev = matrix_eigen_pow_method_inv(& matrix);
+    NSEigenV ev = matrix_eigen_pow_method_inv(& matrix);
 
     printf("Eigen Value: %.10lf\n", ev.eigen_value);
     puts("Eigen Vector:");
@@ -38,7 +38,7 @@ int main(int argc, char *argv[]) {
     puts("");
 
     matrixio_free_matrix(&matrix);
-    matrix_eigen_free(&ev);
+    matrixio_free_eigen_v(&ev);
 
     return 0;
 }

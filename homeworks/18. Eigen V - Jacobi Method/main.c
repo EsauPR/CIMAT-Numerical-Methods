@@ -9,7 +9,7 @@
 
 #include <stdlib.h>
 #include "numsys/matrix/matrix.h"
-#include "numsys/matrix_op/eigen_v/pow.h"
+#include "numsys/matrix_op/eigen_v/jacobi.h"
 
 
 int main(int argc, char *argv[]) {
@@ -19,7 +19,7 @@ int main(int argc, char *argv[]) {
     }
 
     NSMatrix matrix = matrixio_fread_matrix(argv[1]);
-    // matrixio_show_matrix(matrix);
+    matrixio_show_matrix(matrix);
 
     NS__flag_err flags = matrix_check_dimensions(matrix);
     if (flags) {
@@ -28,24 +28,11 @@ int main(int argc, char *argv[]) {
         exit(EXIT_FAILURE);
     }
 
-    int neigen = matrix.rows;
-    NSEigenV * evs = matrix_eigen_pow_method_inv_dfl(& matrix, neigen);
+    NSMatrix eigen_vectors = matrix_eigen_jacobi_method(& matrix);
+    matrixio_show_matrix(matrix);
 
-    for (int k = 0; k < neigen; k++)
-    {
-        printf("\n%d)\nEigen Value: %.10lf\n", k+1, evs[k].eigen_value);
-        puts("Eigen Vector:");
-        for (int i = 0; i < matrix.rows; i++) {
-            printf("%.10lf ", evs[k].eigen_vector[i]);
-        }
-        puts("");
-    }
-
+    matrixio_free_matrix(&eigen_vectors);
     matrixio_free_matrix(&matrix);
-    for (int k = 0; k < neigen; k++) {
-        matrixio_free_eigen_v(&(evs[k]));
-    }
-    free(evs);
 
     return 0;
 }

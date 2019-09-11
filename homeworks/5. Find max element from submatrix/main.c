@@ -20,7 +20,7 @@ int main(int argc, char *argv[]) {
     NSMatrix matrix = matrixio_fread_matrix(argv[1]);
     matrixio_show_matrix(matrix);
 
-    NSMatrixElem mp = matrix_find_max_element(matrix.items, 0, matrix.rows, 0, matrix.cols);
+    NSMatrixElem mp = matrix_find_max_element(matrix.items, 0, matrix.rows, 0, matrix.cols, NS__MATRIX_OPS_NONE_);
     printf("The element with the highest absolute value is: %lf, in (%d, %d)\n", mp.value, mp.row + 1, mp.col + 1);
 
     matrixio_free_matrix(& matrix);
