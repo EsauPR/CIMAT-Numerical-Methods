@@ -1,6 +1,6 @@
 /**
     ANSI C standard: c11
-    Purpose: Solve a square matrix by Gauss Seidel method
+    Purpose: Find the max eigen value and eigen vector by the Inverse Pow Method
 
     @author Esaú Peralta
     @email esau.opr@gmail.com

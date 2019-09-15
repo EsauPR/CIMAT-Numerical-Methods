@@ -1,6 +1,7 @@
 /**
     ANSI C standard: c11
-    Purpose: Solve a square matrix by Gauss Seidel method
+    Purpose: Find the all the eigen values and eigen vectors
+    by Jacobi Method
 
     @author Esaú Peralta
     @email esau.opr@gmail.com

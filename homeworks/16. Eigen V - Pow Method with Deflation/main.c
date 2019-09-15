@@ -1,6 +1,7 @@
 /**
     ANSI C standard: c11
-    Purpose: Solve a square matrix by Gauss Seidel method
+    Purpose: Find the n eigen values and eigen vectors
+    by the Pow Method with deflation
 
     @author Esaú Peralta
     @email esau.opr@gmail.com
@@ -33,10 +34,10 @@ int main(int argc, char *argv[]) {
 
     for (int k = 0; k < neigen; k++)
     {
-        printf("\n%d)\nEigen Value: %.10lf\n", k+1, evs[k].eigen_value);
+        printf("\n%d)\nEigen Value: %le\n", k+1, evs[k].eigen_value);
         puts("Eigen Vector:");
         for (int i = 0; i < matrix.rows; i++) {
-            printf("%.10lf ", evs[k].eigen_vector[i]);
+            printf("%lelf ", evs[k].eigen_vector[i]);
         }
         puts("");
     }

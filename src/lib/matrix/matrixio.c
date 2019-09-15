@@ -141,9 +141,9 @@ void matrixio_show_matrix_system(NSMatrixSystem msystem, NS__flag_ops ops) {
     } else {
         for (int i = 0; i < msystem.a.rows; i++) {
             for (int j = 0; j < msystem.a.cols; j++) {
-                printf("%lf ", msystem.a.items[i][j]);
+                printf("%le ", msystem.a.items[i][j]);
             }
-            printf("%.10lf\n", msystem.b.items[i]);
+            printf("%le\n", msystem.b.items[i]);
         }
     }
 }
@@ -152,7 +152,7 @@ void matrixio_show_matrix_system(NSMatrixSystem msystem, NS__flag_ops ops) {
 void matrixio_scan_matrix(FILE *fp, double** matrix, int rows, int cols){
     for (int i = 0; i < rows; i++) {
         for (int j = 0; j < cols; j++) {
-            fscanf(fp ,"%lf", &matrix[i][j]);
+            fscanf(fp ,"%le", &matrix[i][j]);
         }
     }
 }
@@ -160,7 +160,7 @@ void matrixio_scan_matrix(FILE *fp, double** matrix, int rows, int cols){
 /* Read a vector */
 void matrixio_scan_vector(FILE *fp, double* vector, int size) {
     for (int i = 0; i < size; i++) {
-        fscanf(fp ,"%lf", &vector[i]);
+        fscanf(fp ,"%le", &vector[i]);
     }
 }
 

@@ -1,7 +1,8 @@
 /**
     ANSI C standard: c11
     matrix_ejen_v.h
-    Purpose: Prototype for module to get eigen vetors and eigen values
+    Purpose: Prototype for module to get eigen vetors
+    and eigen values with the pow method
 
     @author Esaú Peralta
     @email esau.opr@gmail.com

@@ -19,8 +19,7 @@
 #define NSEigenV_IMPORT
 #include "numsys/matrix_op/eigen_v/pow.h"
 
-#define MATRIX_EIGEN_MAX_ITER 100
-#define MATRIX_EIGEN_MIN_ITER 50
+#define MATRIX_EIGEN_MAX_ITER 1000
 
 
 static const struct matrix_eigen_scalar_products {
@@ -235,7 +234,7 @@ NSEigenV * matrix_eigen_pow_method_inv_dfl(NSMatrix * matrix, const int neigen) 
             // printf("%d) lambda: %.20lf\n", iter, lambda);
             NS_SWAP(y_vector, z_vector, double *);
 
-            if (NS_IS_ZERO(lambda - lambda_prev)) {
+            if (NS_IS_ZERO(NS_ABS(lambda) - NS_ABS(lambda_prev))) {
                 break;
             }
             lambda_prev = lambda;

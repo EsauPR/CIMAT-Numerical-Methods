@@ -15,6 +15,7 @@
 #include "numsys/matrix/matrix.h"
 
 #define NSEigenV_JACOBI_IMPORT
+#define NSEigenV_JACOBI_MAX_ITER 1000000
 #include "numsys/matrix_op/eigen_v/jacobi.h"
 
 /*
@@ -24,10 +25,10 @@
 */
 NSMatrix matrix_eigen_jacobi_method(NSMatrix * matrix) {
     double ** a = matrix->items;
-    int size = matrix->rows;
+    int size = matrix->rows, max_iter = NSEigenV_JACOBI_MAX_ITER;
     NSMatrix identity = matrix_create_identity(size);
 
-    while(1) {
+    while(max_iter--) {
         NSMatrixElem elem = matrix_find_max_element(a, 0, size, 0, size, NS__MATRIX_OPS_EXCLUDE_DIAG_);
         int i = elem.row, j = elem.col;
         if (NS_IS_ZERO(elem.value)) break;
@@ -52,6 +53,8 @@ NSMatrix matrix_eigen_jacobi_method(NSMatrix * matrix) {
             a[j][m] = -a_im * sin_theta + a[j][m] * cos_theta;
         }
     }
+
+    printf("\n%d\n", max_iter);
 
     return identity;
 }

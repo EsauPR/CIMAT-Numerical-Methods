@@ -1,6 +1,6 @@
 /**
     ANSI C standard: c11
-    Purpose: Solve a square matrix by Gaussian elimination
+    Purpose: Compute the inverse for a matrix
 
     @author Esaú Peralta
     @email esau.opr@gmail.com

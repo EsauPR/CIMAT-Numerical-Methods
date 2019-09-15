@@ -1,6 +1,6 @@
 /**
     ANSI C standard: c11
-    Purpose: Solve a square matrix by Gaussian elimination
+    Purpose: Solve a matrix system Ax=b by Jacobi method
 
     @author Esaú Peralta
     @email esau.opr@gmail.com
