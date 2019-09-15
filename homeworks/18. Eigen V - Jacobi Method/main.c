@@ -30,6 +30,7 @@ int main(int argc, char *argv[]) {
 
     NSMatrix eigen_vectors = matrix_eigen_jacobi_method(& matrix);
     matrixio_show_matrix(matrix);
+    matrixio_show_matrix(eigen_vectors);
 
     matrixio_free_matrix(&eigen_vectors);
     matrixio_free_matrix(&matrix);

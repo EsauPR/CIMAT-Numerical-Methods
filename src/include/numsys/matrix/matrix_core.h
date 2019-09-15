@@ -32,8 +32,8 @@ static const int NS__ARCH_32__ = 32;
 static const int NS__ARCH__ = sizeof(void *) * 8;
 
 /* Epsilon value */
-static const double NS__EPSILON_64__ = 2.22045E-14; // 2.22045E-16 Real value
-static const double NS__EPSILON_32__ = 1.0842E-17; // 1.0842E-19 Real Value
+static const double NS__EPSILON_64__ = 2.22045E-12; // 2.22045E-16 Real value
+static const double NS__EPSILON_32__ = 1.0842E-13; // 1.0842E-19 Real Value
 
 #define NS__EPSILON__ ((NS__ARCH__ == NS__ARCH_64__)? NS__EPSILON_64__ : NS__EPSILON_32__)
 #define NS_IS_ZERO(n) ((NS_ABS(n) <= NS__EPSILON__)? 1:0)
