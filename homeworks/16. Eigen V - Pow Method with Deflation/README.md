@@ -1,8 +1,8 @@
-# Solver for Inverse Matrix
+# Eigen Solver with Pow Method with deflation
 
 ## Task
 
-Implementation to compute a Inverse Matrix.
+Implementation to find the eigen values and eigen vector using the Pow Method with deflation
 
 ## Compilation
 
@@ -33,7 +33,7 @@ $ make run f1=[matrix_path]
 Example:
 
 ``` bash
-$ make run f1=../inputs/M_SMALL.txt
+$ make run f1=../inputs/M_MEDIUM.txt
 ```
 
 ### Output
