@@ -9,7 +9,7 @@
 
 #include <stdlib.h>
 #include "numsys/matrix/matrix.h"
-#include "numsys/matrix_op/matrix_eigen_v.h"
+#include "numsys/matrix_op/eigen_v/pow.h"
 
 
 int main(int argc, char *argv[]) {
@@ -29,7 +29,7 @@ int main(int argc, char *argv[]) {
     }
 
     int neigen = matrix.rows;
-    Matrix_Eigen_V * evs = matrix_eigen_pow_method_dfl(& matrix, neigen);
+    NSEigenV * evs = matrix_eigen_pow_method_dfl(& matrix, neigen);
 
     for (int k = 0; k < neigen; k++)
     {
@@ -43,7 +43,7 @@ int main(int argc, char *argv[]) {
 
     matrixio_free_matrix(&matrix);
     for (int k = 0; k < neigen; k++) {
-        matrix_eigen_free(&(evs[k]));
+        matrixio_free_eigen_v(&(evs[k]));
     }
     free(evs);
 

@@ -216,3 +216,12 @@ NSMatrixSystem matrixio_fread_matrix_system(char *file1_name, char *file2_name){
 
     return msystem;
 }
+
+
+/* Free NSEigenV struct */
+void matrixio_free_eigen_v(NSEigenV * eigen_v) {
+    if (eigen_v->eigen_vector) {
+        free(eigen_v->eigen_vector);
+        eigen_v->eigen_vector = NULL;
+    }
+}

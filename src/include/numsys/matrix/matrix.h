@@ -21,7 +21,7 @@
 #endif
 
 /* Find the max element into a matrix range */
-EXTERN NSMatrixElem matrix_find_max_element(double ** matrix, int from_row, int to_row, int from_col, int to_col);
+EXTERN NSMatrixElem matrix_find_max_element(double ** matrix, int from_row, int to_row, int from_col, int to_col, NS__flag_ops ops);
 
 /* Swap matrix columns */
 EXTERN void matrix_swap_cols(NSMatrix matrix, int col_1, int col_2);
@@ -29,8 +29,20 @@ EXTERN void matrix_swap_cols(NSMatrix matrix, int col_1, int col_2);
 /* Swap matrix rows */
 EXTERN void matrix_swap_rows(NSMatrix matrix, int row_1, int row_2);
 
-/* Multiply matrix a x b and returns the values in a new matrix */
-EXTERN NSMatrix matrix_multiply(NSMatrix a, NSMatrix b);
+/* Multiply two matrices type NSMatrix new matrix */
+EXTERN NSMatrix matrix_multiply_mm(NSMatrix a, NSMatrix b);
+
+/* Multiply matrix a x b = c and save the result in the matrix c */
+EXTERN void matrix_multiply_mmd(double ** a, double ** b, double ** c, int arows, int acols, int bcols);
+
+/* Multiply a matrix 'a' and a vector 'b' and returns a new vector with the result */
+EXTERN NSVector matrix_multiply_mv(NSMatrix a, NSVector b);
+
+/* Multiply a matrix 'a' and an array 'b' and save the result in the array 'c' */
+EXTERN void matrix_multiply_mvd(double ** a, double * b, double * c, int arows, int acols);
+
+/* Return a NSMatrix struct with that represents the identity */
+EXTERN NSMatrix matrix_create_identity(int size);
 
 /* Verify that the matrix is a upper triangular matrix */
 EXTERN NS__flag_err matrix_verify_upper_triangular(NSMatrix matrix);

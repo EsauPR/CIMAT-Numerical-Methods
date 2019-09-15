@@ -41,7 +41,7 @@ int main(int argc, char *argv[]) {
 
     matrixio_show_matrix(inverse);
 
-    NSMatrix identity = matrix_multiply(matrix, inverse);
+    NSMatrix identity = matrix_multiply_mm(matrix, inverse);
     matrixio_show_matrix(identity);
 
     matrixio_free_matrix(&matrix);

@@ -32,8 +32,8 @@ static const int NS__ARCH_32__ = 32;
 static const int NS__ARCH__ = sizeof(void *) * 8;
 
 /* Epsilon value */
-static const double NS__EPSILON_64__ = 2.22045E-14; // 2.22045E-16 Real value
-static const double NS__EPSILON_32__ = 1.0842E-17; // 1.0842E-19 Real Value
+static const double NS__EPSILON_64__ = 2.22045E-12; // 2.22045E-16 Real value
+static const double NS__EPSILON_32__ = 1.0842E-13; // 1.0842E-19 Real Value
 
 #define NS__EPSILON__ ((NS__ARCH__ == NS__ARCH_64__)? NS__EPSILON_64__ : NS__EPSILON_32__)
 #define NS_IS_ZERO(n) ((NS_ABS(n) <= NS__EPSILON__)? 1:0)
@@ -44,6 +44,7 @@ static const double NS__EPSILON_32__ = 1.0842E-17; // 1.0842E-19 Real Value
 typedef unsigned long int NS__flag_ops;
 static const NS__flag_ops NS__MATRIX_OPS_NONE_ = 0;
 static const NS__flag_ops NS__MATRIX_OPS_DIAG_HAS_ONES__ = 1;
+static const NS__flag_ops NS__MATRIX_OPS_EXCLUDE_DIAG_ = 1 << 1 ;
 
 /* Flags to track state and information about the matrix*/
 typedef unsigned long int NS__flag_err;
@@ -98,6 +99,16 @@ static const struct numsys_system {
     NS__flag_err err;
 } NSMatrixSystemDefault = {__NSMatrixDefaultValues, __NSVectorDefaultValues, __NSVectorDefaultValues, NULL, NULL, 0};
 typedef struct numsys_system NSMatrixSystem;
+
+
+/* Struct to represent an eigen value and eigen vector */
+static const struct numsys_eigen_v{
+    double eigen_value;
+    double * eigen_vector;
+    NS__flag_err err;
+} NSEigenVDefault = {0, NULL, NS__MATRIX_ERR_NONE__};
+
+typedef struct numsys_eigen_v NSEigenV;
 
 #undef NSMATRIX_CORE_IMPORT
 #undef EXTERN

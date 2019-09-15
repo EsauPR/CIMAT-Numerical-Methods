@@ -11,15 +11,13 @@
 #include "numsys/matrix/matrix.h"
 
 /* Find the max element into a matrix range */
-NSMatrixElem matrix_find_max_element(double ** matrix, int from_row, int to_row, int from_col, int to_col) {
-    NSMatrixElem mp;
-
-    mp.value = matrix[from_row][from_col];
-    mp.row = from_row;
-    mp.col = from_col;
+NSMatrixElem matrix_find_max_element(double ** matrix, int from_row, int to_row, int from_col, int to_col, NS__flag_ops ops) {
+    NSMatrixElem mp = NSMatrixElemDefault;
 
     for (int i = from_row; i < to_row; i++) {
         for (int j = from_col; j < to_col; j++) {
+            if (i == j && ops & NS__MATRIX_OPS_EXCLUDE_DIAG_) continue;
+
             if (NS_ABS(matrix[i][j]) > NS_ABS(mp.value)) {
                 mp.value = matrix[i][j];
                 mp.row = i;
@@ -43,19 +41,64 @@ void matrix_swap_rows(NSMatrix matrix, int row_1, int row_2) {
     NS_SWAP(matrix.items[row_1], matrix.items[row_2], double *);
 }
 
-/* Multiply matrix a x b and returns the values in a new matrix */
-NSMatrix matrix_multiply(NSMatrix a, NSMatrix b) {
-    NSMatrix result = matrixio_allocate_matrix(a.rows, b.cols);
-    for (int i = 0; i < a.rows; i++) {
-        for (int j = 0; j < b.cols; j++) {
-            result.items[i][j] = 0.0;
-            for (int k = 0; k < a.cols; k++) {
-                result.items[i][j] += a.items[i][k] * b.items[k][j];
+/* Multiply matrix a x b = c and save the result in the matrix c */
+void matrix_multiply_mmd(double ** a, double ** b, double ** c, int arows, int acols, int bcols) {
+    double ** a_i = a;
+    double ** b_i = b;
+    double ** c_i = c;
+
+    for (int i = 0; i < arows; i++, a_i++, b_i++, c_i++) {
+        double ** b_k = b;
+        double * a_ik = *a_i;
+
+        for (int k = 0; k < acols; k++, a_ik++, b_k++) {
+            double * b_kj = *b_k;
+            double * c_ij = *c_i;
+
+            for (int j = 0; j < bcols; j++, b_kj++, c_ij++) {
+                *c_ij += (*a_ik) * (*b_kj);
             }
         }
     }
+}
 
+/* Multiply matrix a x b and returns the values in a new matrix */
+NSMatrix matrix_multiply_mm(NSMatrix a, NSMatrix b) {
+    NSMatrix result = matrixio_allocate_matrix(a.rows, b.cols);
+    matrix_multiply_mmd(a.items, b.items, result.items, a.rows, a.cols, b.cols);
     return result;
+}
+
+/* Multiply a matrix 'a' and an array 'b' and save the result in the array 'c' */
+void matrix_multiply_mvd(double ** a, double * b, double * c, int arows, int acols) {
+    double ** a_i = a, * b_i = b, * c_i = c;
+
+    for (int i = 0; i < arows; i++, a_i++, b_i++, c_i++) {
+        double * b_j = b;
+        double * a_ij = *a_i;
+
+        *c_i = 0;
+        for (int j = 0; j < acols; j++, b_j++, a_ij++) {
+            *c_i += (*a_ij) * (*b_j);
+        }
+    }
+}
+
+/* Multiply a matrix 'a' and a vector 'b' and returns a new vector with the result */
+NSVector matrix_multiply_mv(NSMatrix a, NSVector b) {
+    NSVector result = matrixio_allocate_vector(b.size);
+    matrix_multiply_mvd(a.items, b.items, result.items, a.rows, a.cols);
+    return result;
+}
+
+/* Return a NSMatrix struct with that represents the identity */
+NSMatrix matrix_create_identity(int size) {
+    NSMatrix identity = matrixio_allocate_matrix(size, size);
+    for (int i = 0; i < size; i++) {
+        identity.items[i][i] = 1.0;
+    }
+
+    return identity;
 }
 
 /* Verify that the matrix is a upper triangular matrix */
