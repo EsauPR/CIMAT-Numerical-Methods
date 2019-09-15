@@ -20,7 +20,7 @@
 /*
     Compute the eigen vectors and eigen values with the Jacobi method
     Returns a matrix where the column i is the ith eigen vector
-    The 'matrix' will contains the egein values
+    The input 'matrix' will contains the egein values for each eigen vector
 */
 NSMatrix matrix_eigen_jacobi_method(NSMatrix * matrix) {
     double ** a = matrix->items;
