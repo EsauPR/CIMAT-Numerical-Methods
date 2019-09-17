@@ -1,8 +1,8 @@
-# Find the max element into a matrix
+# Eigen Solver with Rayleigh Method
 
 ## Task
 
-Implementation to find the maximun element into a matrix
+Implementation to find the eigen values and eigen vector using the Rayleigh Method.
 
 ## Compilation
 
@@ -16,8 +16,6 @@ $ make
 The executable input is a square matrix in one file, *f1*
 
 - *f1*: Square matrix with size $N x N$.
-
-Example input:
 
 ```
 4 4
@@ -35,12 +33,12 @@ $ make run f1=[matrix_path]
 Example:
 
 ``` bash
-$ make run f1=../inputs/M_SMALL.txt
+$ make run f1=../inputs/M_MEDIUM.txt
 ```
 
 ### Output
 
-Solution through standard output
+The solution through standard output
 
 Example
 
@@ -50,7 +48,15 @@ Example
 1.119958 0.964687 2.053172 0.566574
 0.742142 0.685178 0.566574 1.696828
 
-The element with the highest absolute value is: 4.425232, in (1, 2)
+5290922.867794 -10581846.610143 -0.602503 3.672447
+-1792383.492965 3584767.889953 -0.035834 -1.409393
+-1767970.895007 3535941.842308 0.832539 -1.341029
+-1000000.000082 2000000.000165 0.000000 0.000000
+
+1.000000 -0.000000 0.000000 0.000000
+0.000000 1.000000 0.000000 0.000000
+0.000000 -0.000000 1.000000 0.000000
+0.000000 -0.000000 0.000000 1.000000
 ```
 
 ## Other options
