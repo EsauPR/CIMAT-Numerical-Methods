@@ -33,7 +33,7 @@ clean:
 
 ## Run the executable
 run:
-	./$(BIN) ${f1} ${f2}
+	./$(BIN) ${f1}
 
 ## Run the executable with valgrind to check memory vulnerabiliies
 valgrind:
