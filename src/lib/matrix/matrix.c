@@ -7,6 +7,8 @@
     @email esau.opr@gmail.com
 */
 
+#include <math.h>
+
 #define MATRIX_IMPORT
 #include "numsys/matrix/matrix.h"
 
@@ -39,6 +41,24 @@ void matrix_swap_cols(NSMatrix matrix, int col_1, int col_2) {
 /* Swap matrix rows */
 void matrix_swap_rows(NSMatrix matrix, int row_1, int row_2) {
     NS_SWAP(matrix.items[row_1], matrix.items[row_2], double *);
+}
+
+/* Normalize a vector and returns the position the maximun element */
+double matrix_normalize_v(double * vector, int size) {
+    double norm = 0;
+
+    double * vec_pos = vector;
+    for (int i = 0; i < size; i++, vec_pos++) {
+        norm += (*vec_pos) * (*vec_pos);
+    }
+    norm = sqrt(norm);
+
+    vec_pos = vector;
+    for (int i = 0; i < size; i++, vec_pos++) {
+        *vec_pos /= norm;
+    }
+
+    return norm;
 }
 
 /* Multiply matrix a x b = c and save the result in the matrix c */

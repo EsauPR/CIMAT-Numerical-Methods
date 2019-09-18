@@ -10,7 +10,7 @@
 
 #include <stdlib.h>
 #include "numsys/matrix/matrix.h"
-#include "numsys/matrix_op/eigen_v/jacobi.h"
+#include "numsys/matrix_op/eigen_v/rayleigh.h"
 
 
 int main(int argc, char *argv[]) {
@@ -29,12 +29,28 @@ int main(int argc, char *argv[]) {
         exit(EXIT_FAILURE);
     }
 
-    NSMatrix eigen_vectors = matrix_eigen_jacobi_method(& matrix);
-    matrixio_show_matrix(matrix);
-    matrixio_show_matrix(eigen_vectors);
+    NSVector eigen_vector = matrixio_fread_vector(argv[2]);
+    NSEigenV eigenv;
+    eigenv.eigen_vector = eigen_vector.items;
+    eigenv.eigen_value = 0;
 
-    matrixio_free_matrix(&eigen_vectors);
+    puts("Aprox Eigen vector:");
+    for (int i = 0; i < matrix.rows; i++) {
+        printf("%lf ", eigenv.eigen_vector[i]);
+    }
+    puts("");
+
+    matrix_eigen_rayleigh_method(&matrix, &eigenv);
+
+    printf("\nEigen Value: %lf\n", eigenv.eigen_value);
+    puts("Eigen vector:");
+    for (int i = 0; i < matrix.rows; i++) {
+        printf("%lf ", eigenv.eigen_vector[i]);
+    }
+    puts("");
+
     matrixio_free_matrix(&matrix);
+    matrixio_free_eigen_v(&eigenv);
 
     return 0;
 }

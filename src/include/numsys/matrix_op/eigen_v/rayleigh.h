@@ -25,7 +25,7 @@
     Returns a matrix where the column i is the ith eigen vector
     The 'matrix' will contains the egein values
 */
-EXTERN NSMatrix matrix_eigen_rayleigh_method(NSMatrix * matrix);
+EXTERN void matrix_eigen_rayleigh_method(NSMatrix * matrix, NSEigenV * eigenv);
 
 #undef NSEigenV_RAYLEIGH_IMPORT
 #undef EXTERN
