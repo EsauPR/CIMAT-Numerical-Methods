@@ -13,9 +13,9 @@ $ make
 ## Execution
 
 ### Input
-The executable input is the augmented matrix that represents the equations system splitted in two files  *F1* and *F2*
+The executable input is the augmented matrix that represents the equations system splitted in two files  *f1* and *F2*
 
-- *F1*: Square matrix with size $N x N$ that represents the firsts members for the equations system.
+- *f1*: Square matrix with size $N x N$ that represents the firsts members for the equations system.
 
 ```
 4 4

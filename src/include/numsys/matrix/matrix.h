@@ -29,6 +29,9 @@ EXTERN void matrix_swap_cols(NSMatrix matrix, int col_1, int col_2);
 /* Swap matrix rows */
 EXTERN void matrix_swap_rows(NSMatrix matrix, int row_1, int row_2);
 
+/* Normalize a array and return the norm */
+EXTERN double matrix_normalize_v(double * vector, int size);
+
 /* Multiply two matrices type NSMatrix new matrix */
 EXTERN NSMatrix matrix_multiply_mm(NSMatrix a, NSMatrix b);
 

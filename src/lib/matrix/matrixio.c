@@ -68,11 +68,17 @@ NSMatrix matrixio_allocate_matrix(int rows, int cols) {
     return matrix;
 }
 
+/* Copy the matrix 'a' in 'b' */
+void matrixio_copy_matrix_(double ** a, double ** b, int rows, int cols) {
+    memcpy(*a, *b, rows * cols * sizeof(**a));
+}
+
+/* Copy the matrix memory */
 NSMatrix matrixio_copy_matrix(NSMatrix matrix) {
     int rows = matrix.rows;
     int cols = matrix.cols;
     NSMatrix matrix_copy = matrixio_allocate_matrix(rows, cols);
-    memcpy(matrix_copy.items[0], matrix.items[0], rows * cols * sizeof(**matrix.items));
+    matrixio_copy_matrix_(matrix_copy.items, matrix.items, rows, cols);
     return matrix_copy;
 }
 
@@ -152,7 +158,7 @@ void matrixio_show_matrix_system(NSMatrixSystem msystem, NS__flag_ops ops) {
 void matrixio_scan_matrix(FILE *fp, double** matrix, int rows, int cols){
     for (int i = 0; i < rows; i++) {
         for (int j = 0; j < cols; j++) {
-            fscanf(fp ,"%le", &matrix[i][j]);
+            fscanf(fp ,"%lf", &matrix[i][j]);
         }
     }
 }
@@ -160,7 +166,7 @@ void matrixio_scan_matrix(FILE *fp, double** matrix, int rows, int cols){
 /* Read a vector */
 void matrixio_scan_vector(FILE *fp, double* vector, int size) {
     for (int i = 0; i < size; i++) {
-        fscanf(fp ,"%le", &vector[i]);
+        fscanf(fp ,"%lf", &vector[i]);
     }
 }
 

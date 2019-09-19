@@ -54,7 +54,5 @@ NSMatrix matrix_eigen_jacobi_method(NSMatrix * matrix) {
         }
     }
 
-    printf("\n%d\n", max_iter);
-
     return identity;
 }

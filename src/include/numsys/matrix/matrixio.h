@@ -34,6 +34,9 @@ EXTERN NSMatrix matrixio_allocate_matrix(int rows, int cols);
 /* Create the memory for a Vector */
 EXTERN NSVector matrixio_allocate_vector(int size);
 
+/* Copy the matrix 'a' in 'b' */
+EXTERN void matrixio_copy_matrix_(double ** a, double ** b, int rows, int cols);
+
 /* Copy the matrix memory */
 EXTERN NSMatrix matrixio_copy_matrix(NSMatrix matrix);
 

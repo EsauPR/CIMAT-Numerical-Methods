@@ -13,9 +13,9 @@ $ make
 ## Execution
 
 ### Input
-The executable input is a square matrix in one file, *F1*
+The executable input is a square matrix in one file, *f1*
 
-- *F1*: Square matrix with size $N x N$.
+- *f1*: Square matrix with size $N x N$.
 
 Example input:
 
