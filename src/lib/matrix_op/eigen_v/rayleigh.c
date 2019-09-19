@@ -19,11 +19,8 @@
 #include "numsys/matrix_op/eigen_v/rayleigh.h"
 #include "numsys/solvers/doolittle.h"
 
-/*
-    Compute the eigen vector and eigen value with the Rayleigh Method
-    Returns a matrix where the column i is the ith eigen vector
-    The 'matrix' will contains the egein values
-*/
+
+/* Improve the eigen vector and eigen value given with the Rayleigh Method */
 void matrix_eigen_rayleigh_method(NSMatrix * matrix, NSEigenV * eigenv) {
     int size = matrix->rows;
 

@@ -1,7 +1,7 @@
 /**
     ANSI C standard: c11
-    Purpose: Find the all the eigen values and eigen vectors
-    by Jacobi Method
+    Purpose: Improve the eigen vector and eigen value given
+    with the Rayleigh Method
 
     @author Esaú Peralta
     @email esau.opr@gmail.com
