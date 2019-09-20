@@ -1,8 +1,7 @@
 /**
     ANSI C standard: c11
     matrix_ejen_v.c
-    Purpose: Module to get eigen vetors and
-    eigen values with Rayleigh Method
+    Purpose: Module to get eigen values by QR Method
 
     @author Esaú Peralta
     @email esau.opr@gmail.com

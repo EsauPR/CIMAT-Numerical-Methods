@@ -1,7 +1,7 @@
 /**
     ANSI C standard: c11
-    Purpose: Improve the eigen vector and eigen value given
-    with the Rayleigh Method
+    Purpose: Obtain the eigen values for a matrix
+    by QR MEthod
 
     @author Esaú Peralta
     @email esau.opr@gmail.com
