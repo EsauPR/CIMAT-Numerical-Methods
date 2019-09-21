@@ -75,7 +75,6 @@ void matrix_multiply_mmd(double ** a, double ** b, double ** c, int arows, int a
         for (int k = 0; k < acols; k++, a_ik++, b_k++) {
             double * b_kj = *b_k;
             double * c_ij = *c_i;
-
             for (int j = 0; j < bcols; j++, b_kj++, c_ij++) {
                 *c_ij += (*a_ik) * (*b_kj);
             }
