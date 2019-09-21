@@ -1,8 +1,8 @@
-# Solver for a Square Matrix by Gaussian Elimination
+# Solver for a matrix system Ax=b by Conjugate Gradient Method
 
 ## Task
 
-Implementation to Solve a Matrix System by Gaussian Elimination.
+Implementation to solve a matrix system Ax=b by Conjugate Gradient Method.
 
 ## Compilation
 
@@ -15,7 +15,7 @@ $ make
 ### Input
 The executable input is the augmented matrix that represents the equations system splitted in two files  *f1* and *F2*
 
-- *f1*: Square matrix with size $N x N$ that represents the firsts members for the equations system.
+- *f1*: Square symmetric matrix with size $N x N$ that represents the firsts members for the equations system.
 
 ```
 4 4
@@ -49,7 +49,7 @@ $ make run f1=../inputs/M_SMALL.txt  f2=../inputs/V_SMALL.txt
 
 ### Output
 
-Solution system through standard output
+The solution through standard output
 
 Example
 
