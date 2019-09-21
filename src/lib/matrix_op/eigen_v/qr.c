@@ -14,7 +14,7 @@
 #include "numsys/matrix_op/matrix_qr.h"
 
 #define NS_EIGEN_V_QR_IMPORT
-#define NS_EIGEN_V_QR_MAX_ITER 1000000
+#define NS_EIGEN_V_QR_MAX_ITER 10000
 #include "numsys/matrix_op/eigen_v/qr.h"
 
 
@@ -32,12 +32,10 @@ NSMatrix matrix_eigen_qr_method(NSMatrix * matrix) {
     for (int iter = 0; iter < NS_EIGEN_V_QR_MAX_ITER; iter++) {
         matrix_qr_decomposition(A, &R);
         NS_SWAP(Q.items, A->items, double **);
-
         matrix_multiply_mmd(R.items, Q.items, A->items, rows, cols, cols);
-        if (matrix_verify_upper_triangular(*A) == NS__MATRIX_ERR_NONE__) break;
+        if (matrix_verify_diagonal(*A) == NS__MATRIX_ERR_NONE__) break;
     }
 
-    // matrixio_show_matrix(R);
     matrixio_free_matrix(&R);
 
     return Q;
