@@ -10,7 +10,7 @@
 
 #include <stdlib.h>
 #include <numsys/matrix/matrix.h>
-#include "numsys/solvers/jacobi.h"
+#include "numsys/solvers/conjugate_gradient.h"
 
 int main(int argc, char *argv[]) {
     if (argc < 3) {
@@ -28,7 +28,7 @@ int main(int argc, char *argv[]) {
         exit(EXIT_FAILURE);
     }
 
-    jacobi_solver(&msystem);
+    conjugate_gradient_solver(&msystem);
 
     if (msystem.err) {
         nsperror("main():", msystem.err);

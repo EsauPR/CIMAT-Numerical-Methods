@@ -91,13 +91,13 @@ NSMatrix matrix_multiply_mm(NSMatrix a, NSMatrix b) {
 
 /* Multiply a matrix 'a' and an array 'b' and save the result in the array 'c' */
 void matrix_multiply_mvd(double ** a, double * b, double * c, int arows, int acols) {
-    double ** a_i = a, * b_i = b, * c_i = c;
+    double ** a_i = a, * c_i = c;
 
-    for (int i = 0; i < arows; i++, a_i++, b_i++, c_i++) {
+    for (int i = 0; i < arows; i++, a_i++, c_i++) {
         double * b_j = b;
         double * a_ij = *a_i;
 
-        *c_i = 0;
+        *c_i = 0.0;
         for (int j = 0; j < acols; j++, b_j++, a_ij++) {
             *c_i += (*a_ij) * (*b_j);
         }
