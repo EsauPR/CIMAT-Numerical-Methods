@@ -17,7 +17,6 @@
 #define NSEigenV_RAYLEIGH_IMPORT
 #define NSEigenV_RAYLEIGH_MAX_ITER 1000000
 #include "numsys/matrix_op/eigen_v/rayleigh.h"
-#include "numsys/solvers/doolittle.h"
 
 
 /* Improve the eigen vector and eigen value given with the Rayleigh Method */
