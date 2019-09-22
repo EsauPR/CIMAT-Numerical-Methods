@@ -14,8 +14,8 @@
 
 
 int main(int argc, char *argv[]) {
-    if (argc < 1) {
-        perror("main():: 2 Args missing");
+    if (argc < 2) {
+        perror("main():: 1 Args missing");
         exit(EXIT_FAILURE);
     }
 

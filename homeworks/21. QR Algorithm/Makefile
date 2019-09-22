@@ -37,7 +37,7 @@ run:
 
 ## Run the executable with valgrind to check memory vulnerabiliies
 valgrind:
-	valgrind --tool=memcheck --leak-check=yes ./$(BIN) ${f1} ${f2}
+	valgrind --tool=memcheck --leak-check=yes ./$(BIN) ${f1}
 
 help:
 	@echo "$$(tput bold)Available rules:$$(tput sgr0)"
