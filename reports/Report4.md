@@ -93,7 +93,7 @@ Los algoritmos de potencia con deflación implementados previamente mientras má
 
 ## Algoritmo $QR$ para calcular valores y vectores propios.
 
-El algoritmo $QR$ nos ayuda a calcular los valores propios de una matriz al descomponer una matriz en su factorización $QR$ ($Q$ es una matriz ortogonal y $R$  es una matriz triangular superior) y crear matrices $A_k$ ortogonalmente similares a $A$ bajo el siguiente procedimiento.
+El algoritmo $QR$ nos ayuda a calcular los valores y vectores propios de una matriz al descomponer una matriz en su factorización $QR$ ($Q$ es una matriz ortogonal y $R$  es una matriz triangular superior) y crear matrices $A_k$ ortogonalmente similares a $A$ bajo el siguiente procedimiento.
 
 Sea una matriz cuadrada real $A$ de tamaño $nxn$, luego:
 $$
@@ -108,7 +108,13 @@ $$
 A_{k+1} = R_kQ_k
 $$
 
-Como cada matriz $A_k$ es ortogonalmente similar a $A$ y tienen los mismos valores propios, puesto que $A_k = Q^t_k..Q^t_1A_0Q_1...Q_k$, entonces $A_k$ converge a una matriz diagonal con los valores propios de $A$.
+Como cada matriz $A_k$ es ortogonalmente similar a $A$ y tienen los mismos valores propios, puesto que $A_{k+1} = Q^t_k..Q^t_1A_0Q_1...Q_k$, entonces $A_{k+1}$ converge a una matriz diagonal con los valores propios de $A$.
+
+La matriz de vectores propios $\Phi$ se obtienen mediante:
+$$
+\Phi = I Q_0 Q_1 ... Q_k
+$$
+donde $I$ es la matriz Identidad.
 
 ### Proceso de factorización $QR$
 
@@ -274,13 +280,15 @@ for j = 0 to n - 1:
 
 ```pseudocode
 n -> Tamaño de la matriz
-a[n][n] -> Matriz a
-q[n][n] -> Matriz q
-r[n][n] -> Matriz r
+A[n][n] -> Matriz A
+Q[n][n] -> Matriz Q
+R[n][n] -> Matriz R
+Phi[n][n] -> Inicializada como una matriz Identidad
 
 while is_not_diagonal(A):
 	[Q, R] = qr_descomposition(A)
 	A = R * Q
+	Phi = Phi * Q
 ```
 
 
@@ -305,6 +313,12 @@ Eigen Values
 -0.0000000000 9.2688664888 -0.0000000000 -0.0000000000 
 -0.0000000000 0.0000000000 6.3568139827 0.0000000000 
 0.0000000000 -0.0000000000 0.0000000000 -6.2546365975
+
+Eigen Vectors
+-0.0168782711 -0.5486543461 0.7754166702 0.3121258080 
+-0.9833352317 0.1225974752 0.0115027924 0.1337511379 
+0.0978440936 0.7976799725 0.5917778752 -0.0627067875 
+-0.1522940555 -0.2183000895 0.2199900445 -0.9384859998
 ```
 
 ### Observaciones y mejoras

@@ -30,14 +30,26 @@ int main(int argc, char *argv[]) {
         exit(EXIT_FAILURE);
     }
 
-    NSMatrix I = matrix_eigen_qr_method(&matrix);
+    // NSMatrix R = matrixio_allocate_matrix(matrix.rows, matrix.cols);
+    // matrix_qr_decomposition(&matrix, &R);
+    // puts("Q");
+    // matrixio_show_matrix(matrix);
+    // puts("R");
+    // matrixio_show_matrix(R);
+    // NSMatrix QR = matrix_multiply_mm(matrix, R);
+    // puts("QR");
+    // matrixio_show_matrix(QR);
+    // matrixio_free_matrix(&QR);
+    // matrixio_free_matrix(&R);
 
+
+    NSMatrix Q = matrix_eigen_qr_method(&matrix);
+    // puts("Eigen Vectors");
+    // matrixio_show_matrix(Q);
     puts("Eigen Values");
     matrixio_show_matrix(matrix);
-    puts("Eigen Vectors");
-    matrixio_show_matrix(I);
+    matrixio_free_matrix(&Q);
 
-    matrixio_free_matrix(&I);
     matrixio_free_matrix(&matrix);
 
     return 0;

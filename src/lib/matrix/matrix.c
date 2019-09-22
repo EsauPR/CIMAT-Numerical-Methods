@@ -114,8 +114,10 @@ NSVector matrix_multiply_mv(NSMatrix a, NSVector b) {
 /* Return a NSMatrix struct with that represents the identity */
 NSMatrix matrix_create_identity(int size) {
     NSMatrix identity = matrixio_allocate_matrix(size, size);
-    for (int i = 0; i < size; i++) {
-        identity.items[i][i] = 1.0;
+
+    double ** idty_i = identity.items;
+    for (int i = 0; i < size; i++, idty_i++) {
+        (*idty_i)[i] = 1.0;
     }
 
     return identity;
