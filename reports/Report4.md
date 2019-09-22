@@ -85,15 +85,37 @@ Eigen vector:
 
 Los algoritmos de potencia con deflación implementados previamente mientras más valores y vectores propios se obtenían más era el error acumulado y los resultados ya no eran correctos, se procedió a tomar unos de los resultados arrojados por el Algoritmo de Potencia con deflación usando la matriz $M\_BIG.txt$ y se usaron como entrada para este algoritmo, a pesar de no obtener el valor y vector propio que se esperaba (dado el orden de mayor a menor), se obtuvieron valores y vectores propios cercanos (cercanos en sentido de orden de mayor a menor), esto dado que los valores son tan pequeños y a los errores de aproximación del primer algoritmo es difícil encontrar una entrada que sea lo mayor similar al valor y vector propio esperado.
 
+
+
 ##           Algoritmo de Iteración en el Subespacio para calcular valores y vectores propios.
 
 Este algoritmo nos proporciona los valores y vectores propios de mayor módulo iterando en un espacio más pequeño que contiene dichos vectores.
 
 La idea comienza en iniciar con $\{q_k\}$ vectores linealmente independientes con $k$ igual al número de vectores de interés y en cada paso se mejoran los vectores $\{q_k\}$ tal que se aproximen a los vectores propios necesitados.
 
-Sea $A$ una matriz de tamaño $nxn$ y $k$  vectores y valores propios necesitados. Proponemos una matriz $P$ de tamaño $nxk$ dónde cada columna es una propuesta a cada vector característico.
+Sea $A$ una matriz de tamaño $nxn$ y $k$  vectores y valores propios necesitados. Proponemos una matriz $P$ de tamaño $nxk$ dónde cada columna es una propuesta a cada vector característico. Luego:
+$$
+P_0 = Q_0 R_0
+$$
+donde $Q_0$ y $R_0$ son de tamaño $nxk$ y $kxk$ respectivamente
+$$
+\Lambda_1 = Q_0^tAQ_0
+$$
 
+$$
+P_1 = AQ_0
+$$
 
+Sucesivamente:
+$$
+\Lambda_{k+1} = Q_k^tAQ_k
+$$
+
+$$
+P_{k+1} = AQ_{k}
+$$
+
+Converge cuando la matriz $\Lambda$ de valores propios se vuelve diagonal.
 
 ### Algoritmo
 
@@ -155,6 +177,8 @@ Eigen Vectors
 El criterio de parada para el algoritmo es que la matriz $\Lambda$ converja a una matriz diagonal, sin embargo por definición cuando solo se calcula un valor y vector propio dicha matriz ya es diagonal y el algoritmo terminaría en la primer iteración. La solución propuesta es agregar un mínimo de iteraciones que puede ser observado en la implementación.
 
 Durante las pruebas con la matriz $M\_BIG.txt$ se observó que para aquellos valores propios que tiene multiplicidad mayor a 1 los vectores propios obtenidos no coincidían. Así que solo se obtuvieron los vectores propios correctos para valores propios con multiplicidad 1.
+
+
 
 ## Algoritmo $QR$ para calcular valores y vectores propios.
 
@@ -391,6 +415,8 @@ Eigen Vectors
 Es mucho menos eficiente (en tiempo) que otros algoritmos, puesto que en cada paso hay que factorizar la matriz $A$ en sus factores $QR$ y luego multiplicar $RQ$, lo cual es una tarea costosa muy costosa.
 
 Dado que sabemos que $R$ es una matriz triangular podemos modificar el algoritmo de multiplicación de matrices para que sea más eficiente y evite calcular los productos denotados por los ceros debajo de la diagonal.
+
+
 
 ## Algoritmo de Gradiente Conjugado para solucionar sistemas de ecuaciones
 
