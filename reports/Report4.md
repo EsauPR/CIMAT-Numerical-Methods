@@ -87,9 +87,74 @@ Los algoritmos de potencia con deflación implementados previamente mientras má
 
 ##           Algoritmo de Iteración en el Subespacio para calcular valores y vectores propios.
 
+Este algoritmo nos proporciona los valores y vectores propios de mayor módulo iterando en un espacio más pequeño que contiene dichos vectores.
+
+La idea comienza en iniciar con $\{q_k\}$ vectores linealmente independientes con $k$ igual al número de vectores de interés y en cada paso se mejoran los vectores $\{q_k\}$ tal que se aproximen a los vectores propios necesitados.
+
+Sea $A$ una matriz de tamaño $nxn$ y $k$  vectores y valores propios necesitados. Proponemos una matriz $P$ de tamaño $nxk$ dónde cada columna es una propuesta a cada vector característico.
 
 
 
+### Algoritmo
+
+```pseudocode
+n -> Tamaño de la matriz
+neigen -> Número de eigen vetores y valores a calcular
+a[n][n] -> Matriz a
+Lambda[neigen][neigen] -> Matrix de eigen valores
+p[n][neigen] -> Matriz de eigen vectores iniciada en ramdom
+q[n][p] -> Matriz con para la factorización QR
+r[n][p] -> Matriz con para la factorización QR
+
+while(true):
+	[q,r] = qr_decomposition(p);
+	lambda = transpose(q) * a * q
+	p = a * q
+	if (is_diagonal(a)) break
+	
+normalize_by_colums(p);
+
+lambda <- Contiene los eigen valores
+p <- Contiene los eigen vectores normalizados
+```
+
+### Ejemplo de prueba
+
+### Entrada
+
+```
+4 4
+6.0000000000 -1.0000000000 -1.0000000000 4.0000000000
+-1.0000000000 -10.0000000000 2.0000000000 -1.0000000000
+-1.0000000000 2.0000000000 8.0000000000 -1.0000000000
+4.0000000000 -1.0000000000 -1.0000000000 -5.0000000000
+```
+
+```
+Quantity of eigen values to compute [1 to 4]: 4
+```
+
+### Salida
+
+```
+Eigen Values
+-10.3710438740 -0.0000000000 0.0000000000 0.0000000000 
+-0.0000000000 9.2688664888 -0.0000000000 -0.0000000000 
+0.0000000000 -0.0000000000 6.3568139827 0.0000000000 
+0.0000000000 -0.0000000000 0.0000000000 -6.2546365975 
+
+Eigen Vectors
+0.0168782711 -0.5486543461 0.7754166702 -0.3121258080 
+0.9833352317 0.1225974752 0.0115027924 -0.1337511379 
+-0.0978440936 0.7976799725 0.5917778752 0.0627067875 
+0.1522940555 -0.2183000895 0.2199900445 0.9384859998
+```
+
+### Observaciones y mejoras
+
+El criterio de parada para el algoritmo es que la matriz $\Lambda$ converja a una matriz diagonal, sin embargo por definición cuando solo se calcula un valor y vector propio dicha matriz ya es diagonal y el algoritmo terminaría en la primer iteración. La solución propuesta es agregar un mínimo de iteraciones que puede ser observado en la implementación.
+
+Durante las pruebas con la matriz $M\_BIG.txt$ se observó que para aquellos valores propios que tiene multiplicidad mayor a 1 los vectores propios obtenidos no coincidían. Así que solo se obtuvieron los vectores propios correctos para valores propios con multiplicidad 1.
 
 ## Algoritmo $QR$ para calcular valores y vectores propios.
 

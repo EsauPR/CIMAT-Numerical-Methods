@@ -21,9 +21,9 @@
 #endif
 
 /*
-    Compute the eigen vectors and eigen values with the SUBSPACE_ITERATION Method
-    Returns a matrix where the column i is the ith eigen vector
-    The 'matrix' will contains the egein values
+    Compute the n eigen vectors and eigen values with the Subspace Iteration Method
+    A will be reduced to a matrix that contains the eigen values
+    Returns a matrix where each column is a eigen vector
 */
 EXTERN NSMatrix matrix_eigen_subspace_iteration_method(NSMatrix * matrix, int neigen);
 

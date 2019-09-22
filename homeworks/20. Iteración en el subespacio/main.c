@@ -11,7 +11,7 @@
 #include <stdlib.h>
 #include "numsys/matrix/matrix.h"
 #include "numsys/matrix_op/matrix_qr.h"
-#include "numsys/matrix_op/eigen_v/qr.h"
+#include "numsys/matrix_op/eigen_v/subspace_iteration.h"
 
 
 int main(int argc, char *argv[]) {
@@ -21,7 +21,11 @@ int main(int argc, char *argv[]) {
     }
 
     NSMatrix matrix = matrixio_fread_matrix(argv[1]);
-    matrixio_show_matrix(matrix);
+    // matrixio_show_matrix(matrix);
+
+    int neigen;
+    printf("Quantity of eigen values to compute [1 to %d]: ", matrix.rows);
+    scanf("%d", &neigen);
 
     NS__flag_err flags = matrix_check_dimensions(matrix);
     if (flags) {
@@ -30,26 +34,15 @@ int main(int argc, char *argv[]) {
         exit(EXIT_FAILURE);
     }
 
-    // NSMatrix R = matrixio_allocate_matrix(matrix.rows, matrix.cols);
-    // matrix_qr_decomposition(&matrix, &R);
-    // puts("Q");
-    // matrixio_show_matrix(matrix);
-    // puts("R");
-    // matrixio_show_matrix(R);
-    // NSMatrix QR = matrix_multiply_mm(matrix, R);
-    // puts("QR");
-    // matrixio_show_matrix(QR);
-    // matrixio_free_matrix(&QR);
-    // matrixio_free_matrix(&R);
 
+    NSMatrix eigenv = matrix_eigen_subspace_iteration_method(&matrix, neigen);
 
-    NSMatrix Q = matrix_eigen_qr_method(&matrix);
-    // puts("Eigen Vectors");
-    // matrixio_show_matrix(Q);
     puts("Eigen Values");
     matrixio_show_matrix(matrix);
-    matrixio_free_matrix(&Q);
+    puts("Eigen Vectors");
+    matrixio_show_matrix(eigenv);
 
+    matrixio_free_matrix(&eigenv);
     matrixio_free_matrix(&matrix);
 
     return 0;
