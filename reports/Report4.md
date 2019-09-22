@@ -6,41 +6,41 @@ Se realizó la implementación de los siguientes algoritmos:
 
 1. Algoritmo de Rayleigh para calcular valores y vectores propios.
 2. Algoritmo de Iteración en el Subespacio para calcular valores y vectores propios.
-3. Algoritmo de QR para calcular valores y vectores propios.
-4. Algoritmo de Gradiente Conjugado para solucionar sistemas de ecuaciones
+3. Algoritmo $QR$ para calcular valores y vectores propios.
+4. Algoritmo de Gradiente Conjugado para solucionar sistemas de ecuaciones.
 
 ## Algoritmo de Rayleigh para calcular valores y vectores propios.
 
-El Método de la Potencia Inversa es una modificación al Método de Potencia normal con la que se obtiene una convergencia más rápida. Su usa para calcular el valor propio más pequeño de una matriz. Sea $A$ una matriz de tamaño $nxn$, luego se toma cualquier vector  $x_0$ y en cada paso $k$ se calcula:
+El Algoritmo de Rayleigh, se basa en una modificación al algoritmo de Potencia al usar el cociente de Rayleigh para reducir el residuo de una aproximación a un valor y vector propio, donde el residuo $r$ está dado por:
 
 $$
-x_{k+1} = A^{-1}x_k
+r = \|Ax - \alpha x\|
 $$
-Dónde $x_{k+1}$ es la convergencia al vector propio, cuyo valor propio está dado por el cociente del producto punto de los vectores.
+$A$ es una matriz cuadrada simétrica, $x$ es es un vector propio y $\lambda$ es un valor propio. Se define el Cociente de Rayleigh de la forma
 $$
-\lambda = \frac{x_{k+1} . x_{k}}{x_{k+1} . x_{k+1}}
+\alpha = \frac{x^tAx}{x^tx}
 $$
-
-Para resolver la ecuación $(1)$, se procede a realizar la factorización $LU$ de $A$ y resolver el sistema resultante $LUx_{k+1} = x_k$. 
+Notemos que al usar vectores propios unitarios el cociente de $(2)$ es igual a 1. Así, sea $x_0$ la primer aproximación a nuestro vector propio luego:
+$$
+x_{k+1} = Ax_k
+$$
 
 ### Algoritmo
 
 ```pseudocode
 n -> Tamaño de la matriz
 a[n][n] -> Matriz a
-xprev -> Vector de tamaño n inicializado con valores aleatoreos
+xprev -> Vector de tamaño n con nuestra aproximación al vector propio
 xnext -> Vector de tamaño n
 MAX_ITER -> Número máximo de iteraciones
 lambda -> Valor propio
 last_lambda -> Ultimo Valor propio calculado
 epsilon -> Valor mínimo para considerar un cero
 
-LU = factorizar(a)
-
 while MAX_ITER --:
 	normalizar(xprev)
-	xnext = resolver(LU, xprev)
-	lambda = xnext * xprev / xnext * xnext // Producto escalar
+	xnext = A * xprev
+	lambda = xprev * A * xprev
 	xprev = xnext
 	if (abs(last_lambda) - abs(lambda)) <= epsilon:
 		break
@@ -58,314 +58,239 @@ lambda <- Contiene valor propio
 
 ```
 4 4
-6.0000000000 -1.0000000000 -1.0000000000 4.0000000000 
-1.0000000000 -10.0000000000 2.0000000000 -1.0000000000 
-3.0000000000 -2.0000000000 8.0000000000 -1.0000000000 
-1.0000000000 1.0000000000 1.0000000000 -5.0000000000
+6.0000000000 -1.0000000000 -1.0000000000 4.0000000000
+-1.0000000000 -10.0000000000 2.0000000000 -1.0000000000
+-1.0000000000 2.0000000000 8.0000000000 -1.0000000000
+4.0000000000 -1.0000000000 -1.0000000000 -5.0000000000
+
 ```
 
-
+```
+4 1
+17
+-7
+19
+-14
+```
 
 #### Salida
 
 ```
-Eigen Value: -5.4922091068
-Eigen Vector:
-0.3275393946 0.2274122123 -0.1066271118 -0.9108415283
+Eigen Value: -10.371044
+Eigen vector:
+-0.016879 -0.983335 0.097845 -0.152294
 ```
 
 ### Observaciones y mejoras
 
-Durante las pruebas se obtuvieron los resultados esperados incluso con la matriz $M\_BIG.txt$, tanto el vector como el valor propio obtenidos son los mismo que los proporcionados por la solución de otros software como *GNU Octave*. 
+Los algoritmos de potencia con deflación implementados previamente mientras más valores y vectores propios se obtenían más era el error acumulado y los resultados ya no eran correctos, se procedió a tomar unos de los resultados arrojados por el Algoritmo de Potencia con deflación usando la matriz $M\_BIG.txt$ y se usaron como entrada para este algoritmo, a pesar de no obtener el valor y vector propio que se esperaba (dado el orden de mayor a menor), se obtuvieron valores y vectores propios cercanos (cercanos en sentido de orden de mayor a menor), esto dado que los valores son tan pequeños y a los errores de aproximación del primer algoritmo es difícil encontrar una entrada que sea lo mayor similar al valor y vector propio esperado.
 
-Durante la implementación se optó por usar el Método de Doolittle para resolver el sistema en cada paso, si de ante mano se conoce la matriz a resolver se podría usar otro método que sea más eficiente dada las características de la matriz A.
+##           Algoritmo de Iteración en el Subespacio para calcular valores y vectores propios.
 
-# Algoritmo de Potencia con deflación
 
-Los métodos de deflación son técnicas usadas para obtener aproximaciones a otros valores y vectores propios de una matriz una vez que se ha calculado una aproximación a los valores y vectores propios más dominantes.
 
-Sea una matriz $A$ simétrica con valores propios $\lambda_1, \lambda_2, ..., \lambda_n $ y vectores propios $v_1, v_2,..., v_n$ y $\lambda_1$ con multiplicidad 1, también sea $x$ un vector tal que $x^tv_1 = 1$, entonces podemos obtener una matriz $B$
+
+
+## Algoritmo $QR$ para calcular valores y vectores propios.
+
+El algoritmo $QR$ nos ayuda a calcular los valores propios de una matriz al descomponer una matriz en su factorización $QR$ ($Q$ es una matriz ortogonal y $R$  es una matriz triangular superior) y crear matrices $A_k$ ortogonalmente similares a $A$ bajo el siguiente procedimiento.
+
+Sea una matriz cuadrada real $A$ de tamaño $nxn$, luego:
 $$
-B = A - \lambda_1v_1x^t
+A_0 = A
 $$
-con los valores propios  $0, \lambda_2, ..., \lambda_n $ y vectores propios $v_1, w_2, ..., w_n$, dónde $w_i$ y $v_i$ están relacionados por 
+
 $$
-v_i = (\lambda_i - \lambda_1) w_i + \lambda_1(x^tw_i)v_1, i \in \{2, ..., n\}
+A_0 = Q_0R_0
 $$
-Si $\lambda_1 $ era el valor propio dominante, entonces deja de serlo, propiciando así, la convergencia del algoritmo de Potencia a el siguiente valor propio dominante.
 
-El método de deflación usado está dado por siguiente proceso proceso.
-
-Por cada vector propio $v_i$ ya calculado:
 $$
-x_k = x_k - x_k.v_i.v_i
+A_{k+1} = R_kQ_k
 $$
-Dónde $x_k$ es la k-ésima  propuesta de vector propio.
 
+Como cada matriz $A_k$ es ortogonalmente similar a $A$ y tienen los mismos valores propios, puesto que $A_k = Q^t_k..Q^t_1A_0Q_1...Q_k$, entonces $A_k$ converge a una matriz diagonal con los valores propios de $A$.
 
+### Proceso de factorización $QR$
 
-### Algoritmo
-
-```pseudocode
-MAX_ITER -> Número máximo de iteraciones
-n -> Tamaño de la matriz
-a[n][n] -> Matriz a
-xprev -> Vector de tamaño n
-xnext -> Vector de tamaño n
-
-neigen -> Número de valores y vectores propios a calcular
-eigen_vectors[n][n] -> Matriz de vectores propios
-eigen_values[n] -> Vector de valores propios
-
-lambda -> Valor propio
-last_lambda -> Ultimo Valor propio calculado
-epsilon -> Valor mínimo para considerar un cero
-
-for k in [0, neigen]:
-	inicializar(xprev) // Con valores random
-    for iter in [0, MAX_ITER]:
-    	for i in [0, k]:
-    		xprev = xprev - xprev * eigen_vectors[i] * eigen_vectors[i]
-        normalizar(xnext)
-        xnext = a * nprev
-        lambda = xnext * xnext / xnext * xprev // Producto escalar
-        xprev = xnext
-        if (abs(last_lambda) - abs(lambda)) <= epsilon:
-            break
-        last_lambda = lambda
-	eigen_vectors[k] = normalizar(xnext)
-	eigen_values[k] = lambda
-```
-
-### Ejemplo de prueba
-
-#### Entrada
-
-```
-4 4
-
-6 -1 -1 4
--1 -10 2 -1
--1 2 8 -1
-4 -1 -1 -5
-```
-
-#### Salida
-
-```
-1)
-Eigen Value: -10.3710438740
-Eigen Vector:
-0.0168790461 0.9833350586 -0.0978452204 0.1522943639 
-
-2)
-Eigen Value: 9.2688664888
-Eigen Vector:
-0.5486548426 -0.1225958997 -0.7976798019 0.2183003497 
-
-3)
-Eigen Value: 6.4472017477
-Eigen Vector:
-0.7466891597 0.0003100016 0.5949464199 0.2974793439 
-
-4)
-Eigen Value: -6.3450243625
-Eigen Vector:
-0.2452965220 0.1322953225 -0.1126272429 -0.9537518902
-```
-
-### Observaciones y mejoras
-
-Debido a que en cada obtención de un valor y vector propio hay un error de aproximación, estos errores se acumulan mientras más iteraciones se hagan provocado que los cálculos posteriores de vectores y valores propios sean más inexactos. Usando la matriz $M\_Big.txt$ se observó solo la correcta convergencia para los primeros 17 valores y vectores propios, los siguientes a pesar de ser muy parecidos se encontraban inconsistencias en los valores puesto que cada valor propio obtenido debe ser menor al anterior y en algunos casos no sucedía así.
-
-## Algoritmo de Potencia Inversa con deflación
-
-El método de deflación usado es el mismo al anterior, esta vez en combinación con el método de Potencia Inversa.
-
-### Algoritmo
-
-```pseudocode
-MAX_ITER -> Número máximo de iteraciones
-n -> Tamaño de la matriz
-a[n][n] -> Matriz a
-xprev -> Vector de tamaño n
-xnext -> Vector de tamaño n
-
-neigen -> Número de valores y vectores propios a calcular
-eigen_vectors[n][n] -> Matriz de vectores propios
-eigen_values[n] -> Vector de valores propios
-
-lambda -> Valor propio
-last_lambda -> Ultimo Valor propio calculado
-epsilon -> Valor mínimo para considerar un cero
-
-LU = factorizar(a)
-
-for k in [0, neigen]:
-	inicializar(xprev) // Con valores random
-    for iter in [0, MAX_ITER]:
-    	for i in [0, k]:
-    		xnprev = xprev - xprev * eigen_vectors[i] * eigen_vectors[i]
-        normalizar(xnext)
-        xnext = resolver(LU, xprev)
-		lambda = xnext * xprev / xnext * xnext // Producto escalar
-        xprev = xnext
-        if (abs(last_lambda) - abs(lambda)) <= epsilon:
-            break
-        last_lambda = lambda
-	eigen_vectors[k] = normalizar(xnext)
-	eigen_values[k] = lambda
-```
-
-### Ejemplo de prueba
-
-#### Entrada
-
-```
-4 4
-6 -1 -1 9
--1 10 2 -1
--1 2 8 -1
-9 -1 -1 -3
-```
-
-#### Salida
-
-```
-1)
-Eigen Value: 6.715623e+00
-Eigen Vector:
-9.718471e-02 -4.837968e-01 8.683033e-01 5.045080e-02 
-
-2)
-Eigen Value: -8.573234e+00
-Eigen Vector:
-5.237401e-01 -1.559617e-02 -1.783302e-02 -8.515486e-01 
-
-3)
-Eigen Value: 9.536074e+00
-Eigen Vector:
-5.761235e-01 6.837826e-01 2.970335e-01 3.351031e-01 
-
-4)
-Eigen Value: 1.332154e+01
-Eigen Vector:
--6.201510e-01 5.460124e-01 3.968602e-01 -3.997315e-01 
-```
-
-### Observaciones y Mejoras
-
-A diferencia con el algoritmo del Método de Potencia con deflación, este algoritmo obtuvo en su mayoría una muy buena aproximación a todos los valores y vectores propios de la matriz $M\_BIG.txt $ excepto para los últimos valores propios con valor 1 y su vectores asociados.
-
-## Algoritmo de Jacobi
-
-El algoritmo de Jacobi nos ayuda a encontrar todos los valores y vectores propios de una matriz simétrica. La solución es garantizada con matrices simétricas reales.
-
-Dada una matriz simétrica $A$ de tamaño $n x n$, entonces existe una matriz ortogonal $Q$ tal que:
+Expresando las matrices $A$ , $Q$ y $R$ de la forma siguiente:
 $$
-Q^t A Q = D
-$$
-dónde $D$ es una matriz diagonal con los valores propios de $A$. 
-
-La técnica consiste en encontrar una serie de matrices ortogonales $\{S_k\}$ tal que
-$$
-\lim_{k->\infty}S_1S_2S_3...S_k = Q
-$$
-a través de la diagonalización de $A$ con una serie de transformaciones mediante una matriz de rotación
-$$
-S_k = 
+A = 
 \begin{pmatrix}
-	1 & ... & 0 & ... & 0 & ... & 0 \\
-	\vdots & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots \\
-	0 & ... & \cos(\theta)_{ii} & ... & \sin(\theta)_{ij} & ... & 0 \\
-	\vdots & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots \\
-	0 & ... & -\sin(\theta)_{ji} & ... & \cos(\theta)_{jj} & ... & 0 \\
-	\vdots & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots \\
-	0 & ... & 0 & ... & 0 & ... & 1 \\
+	a_{1} & a_{2} & ... & a_{n} \\
 \end{pmatrix}
 $$
-aplicada sobre la máximo elemento en valor absoluto de la matriz $A$ ignorando la diagonal con posición $(i,j)$.
-
-La multiplicación  $A_{k+1} = A_{k}S_k$ está dada por:
+donde $a_j$ es la j-ésima columna de $A$ con $j \in \{1,n\}$
 $$
-a_{lk}^{k+1} = a_{lk}^{k},\ cuando\ l \ne i\ y\ l \ne j,\ l\in[1,n]
+Q = 
+\begin{pmatrix}
+	q_{1} & q_{2} & ... & q_{n} \\
+\end{pmatrix}
 $$
-
+donde $q_j$ es la j-ésima columna de $Q$ con $j \in \{1,n\}$
 $$
-a_{li}^{k+1} = a_{li}^{k}\cos(\theta) + a_{lj}^{k}\sin(\theta),\ l\in[1,n]
+R = 
+\begin{pmatrix}
+	r_{1,1} & r_{1,2} & ... & r_{1,n} \\
+	0 & r_{2,2} & ... & r_{2,n} \\
+	\vdots & \vdots & \vdots & \vdots \\
+	0 & 0 & ... & r_{n,n} \\
+\end{pmatrix}
 $$
-
+Obtenemos las siguientes expresiones:
 $$
-a_{lj}^{k+1} = -a_{li}^{k}\sin(\theta) + a_{lj}^{k}\cos(\theta),\ l\in[1,n]
-$$
-
-$$
-a_{im}^{k+1} = a_{im}^{k}\cos(\theta) + a_{jm}^{k}\sin(\theta),\ m\in[1,n]
-$$
-
-$$
-a_{jm}^{k+1} = -a_{im}^{k}\sin(\theta) + a_{jm}^{k}\cos(\theta),\ m\in[1,n]
-$$
-
-Y la matriz $Q_{k+1}$ con $Q_0 = I$, contendrá los vectores propios asociados a los valores propios de la última $A_{k+1}$ y está dada por:
-$$
-q_{lk}^{k+1} = q_{lk}^{k},\ cuando\ l \ne i\ y\ l \ne j,\ l\in[1,n]
+a_1 = r_{1,1}q_1
 $$
 
 $$
-q_{li}^{k+1} = q_{li}^{k}\cos(\theta) + q_{lj}^{k}\sin(\theta),\ l\in[1,n]
+q_1 = \frac{a_1}{r_{1,1}}
+$$
+
+lo que implica que
+$$
+r_{1,1} = \|a_1\|
+$$
+puesto que todos los $q_j$ son unitarios.
+
+Luego
+$$
+a_2 = r_{1,2}q_1 + r_{2,2}q_2
 $$
 
 $$
-q_{lj}^{k+1} = -q_{li}^{k}\sin(\theta) + q_{lj}^{k}\cos(\theta),\ l\in[1,n]
+q_2 = \frac{a_2 - r_{1,2}q_1}{r_{2,2}}
 $$
 
-El valor de $\theta$ se calcula dado al máximo elemento de la matriz $A$ con posición $a_{ij}$ mediante
+sea
 $$
-\theta = \frac{\arctan(\frac{2*a_{ij}}{a_{ii} - a_{jj}})}{2}
+a_2^* = a_2 - r_{1,2}q_1
 $$
 
-### Algoritmo
+$$
+q_2 = \frac{a_2^*}{r_{2,2}}
+$$
+
+lo que implica que
+$$
+r_{2,2} = \|a_2^*\|
+$$
+además multiplicando $(13)$ por $q_1^t$ 
+$$
+q_1^ta_2 = q_1^tr_{1,2}q_1 + q_1^tr_{2,2}q_2
+$$
+
+$$
+r_{1,2} = q_1^ta_2
+$$
+
+puesto que todos los $q_j$ son ortogonales.
+
+Luego
+$$
+a_3 = r_{1,3}q_1 + r_{2,3}q_2 + r_{3,3}q_3
+$$
+
+$$
+q_3 = \frac{a_3 - r_{1,3}q_1 - r_{2,3}q_2}{r_{3,3}}
+$$
+
+sea
+$$
+a^*_3 = a_3 - r_{1,3}q_1 - r_{2,3}q_2
+$$
+
+$$
+q_3 = \frac{a^*_3}{r_{3,3}}
+$$
+
+lo que implica que
+$$
+r_{3,3} = \|a^*_3\|
+$$
+
+además multiplicando $(20)$ por $q_1^t$
+$$
+q_1^ta_3 = q_1^tr_{1,3}q_1 + q_1^tr_{2,3}q_2 + q_1^tr_{3,3}q_3
+$$
+
+$$
+r_{1,3} = q_1^ta_3
+$$
+
+y multiplicando $(20)$ por $q_2^t$
+$$
+q_2^ta_3 = q_2^tr_{1,3}q_1 + q_2^tr_{2,3}q_2 + q_2^tr_{3,3}q_3
+$$
+
+$$
+r_{2,3} = q_2^ta_3
+$$
+
+Generalizando:
+$$
+r_{i,j} = q^t_ia_j,\ i < j,\ i,j
+$$
+
+$$
+a^{*}_j = a_j - \sum^{j-1}_{k=1}r_{k,j}q_k
+$$
+
+$$
+r_{j,j} = \|a_j^*\|
+$$
+
+$$
+q_j = \frac{a_j^*}{\|a_j^*\|}
+$$
+
+### Algoritmo de Factorización $QR$
 
 ```pseudocode
-MAX_ITER -> Número máximo de iteraciones
 n -> Tamaño de la matriz
-a[n][n] -> Matriz a
-q[n][n] -> Matriz identidad
-epsilon -> Valor mínimo para considerar un cero
+a[n][n] -> Matriz a // Al final "a" contendrá los valores de "q"
+r[n][n] -> Matriz a
+ap[n] -> Vector de tamaño n que representa "a*"
 
-while MAX_ITER--
-	a_ij, i, j = encontrar_max(a)
-	
-	if (abs(a_ij) < epsilon) break
-	
-	theta = atan2(2.0 * a_ij, a[i][i] - a[j][j]) / 2.0;
-	cos_theta = cos(theta)
-    sin_theta = sin(theta)
-    
-    for l in [0,n]:
-        a_li = a[l][i];
-        a[l][i] = a_li * cos_theta + a[l][j] * sin_theta
-        a[l][j] = -a_li * sin_theta + a[l][j] * cos_theta
-    
-    	q_li = q[l][i]
-    	q[l][i] = q_li * cos_theta + q[l][j] * sin_theta
-        q[l][j] = -q_li * sin_theta + q[l][j] * cos_theta
-
-	for m in [0, n]:
-		a_im = a[i][m];
-        a[i][m] = a_im * cos_theta + a[j][m] * sin_theta
-        a[j][m] = -a_im * sin_theta + a[j][m] * cos_theta
-
-a <- Contiene los valores propios en la diagonal
-q <- contiene los vectores propios por columna asociados a los valores propios de a
+for j = 0 to n - 1:
+	// Compute r_ij
+	for i = 0 to j - 1:
+		r[i][j] = r[j][i] = 0
+		for k = 0 to n - 1:
+			r[i][j] += q[k][i] * a[k][i]
+	// Compute ap_j
+	norm = 0
+	for i = 0 to n -1:
+		ap[i] = a[i][j]
+		for k = 0 to n - 1:
+			ap[i] -= r[k][j] * q[i][k]
+		norm += ap[i] * ap[i]
+	// Compute r_jj
+	r[j][j] = sqrt(norm)
+	// Compute q_j
+	for i to n - 1:
+		q[i][j] = ap[i] / norm
 ```
 
-### Ejemplo de prueba
+### Algoritmo $QR$
+
+```pseudocode
+n -> Tamaño de la matriz
+a[n][n] -> Matriz a
+q[n][n] -> Matriz q
+r[n][n] -> Matriz r
+
+while is_not_diagonal(A):
+	[Q, R] = qr_descomposition(A)
+	A = R * Q
+```
+
+
+
+### Ejemplo de entrada
 
 #### Entrada
 
 ```
+4 4
 6.0000000000 -1.0000000000 -1.0000000000 4.0000000000 
 -1.0000000000 -10.0000000000 2.0000000000 -1.0000000000 
 -1.0000000000 2.0000000000 8.0000000000 -1.0000000000 
@@ -375,19 +300,135 @@ q <- contiene los vectores propios por columna asociados a los valores propios d
 #### Salida
 
 ```
-9.2688664888 -0.0000000000 0.0000000000 0.0000000000 
--0.0000000000 6.3568139827 -0.0000000000 0.0000000000 
-0.0000000000 -0.0000000000 -10.3710438740 -0.0000000000 
-0.0000000000 0.0000000000 -0.0000000000 -6.2546365975 
-
-0.5486543461 -0.7754166702 -0.0168782711 0.3121258080 
--0.1225974752 -0.0115027924 -0.9833352317 0.1337511379 
--0.7976799725 -0.5917778752 0.0978440936 -0.0627067875 
-0.2183000895 -0.2199900445 -0.1522940555 -0.9384859998
+Eigen Values
+-10.3710438740 0.0000000000 0.0000000000 0.0000000000 
+-0.0000000000 9.2688664888 -0.0000000000 -0.0000000000 
+-0.0000000000 0.0000000000 6.3568139827 0.0000000000 
+0.0000000000 -0.0000000000 0.0000000000 -6.2546365975
 ```
 
 ### Observaciones y mejoras
 
-Durante las pruebas se observó un comportamiento extraño que al no ser tan cercanos a ceros los elementos fuera de la diagonal de la matriz, así el algoritmo se veía envuelto en un bucle infinito. Se solucionó usando un épsilon más grande y agregando en el algoritmo un número máximo de iteraciones.
+Es mucho menos eficiente (en tiempo) que otros algoritmos, puesto que en cada paso hay que factorizar la matriz $A$ en sus factores $QR$ y luego multiplicar $RQ$, lo cual es una tarea costosa muy costosa.
 
-Se observó una mucho mejor aproximación a los valores y vectores propios (todos fueron correctos) de la matriz de entrada $M\_BIG.txt$ mediante el algoritmo de Jacobi que con los otros dos algoritmos de Potencia usando deflación.
+Dado que sabemos que $R$ es una matriz triangular podemos modificar el algoritmo de multiplicación de matrices para que sea más eficiente y evite calcular los productos denotados por los ceros debajo de la diagonal.
+
+## Algoritmo de Gradiente Conjugado para solucionar sistemas de ecuaciones
+
+El método de Gradiente Conjugado es usado para resolver sistemas de la forma $Ax=b$, al tratar de minimizar el residuo generado por
+$$
+r_0 = b - Ax_0
+$$
+ Dónde $x_0$ es una primer aproximación a la solución y $r_0$ el residuo generado.
+
+Una forma de mejorar la aproximación de $x$ es calcular recursivamente un $x^{k+1}$  mediante:
+$$
+x_{k+1} = x_k + \alpha_kP_k
+$$
+Dónde los vectores $\{p_k\}$ son llamados vectores de dirección y $\alpha_k$ es un escalar elegido para minimizar la expresión previa. $\alpha_k$ está dado por:
+$$
+\alpha_k = \frac{P_k^t(r_k)}{P_k^tAP_k}
+$$
+Los vectores dirección $\{P_k\}$ están dados por 
+$$
+P_{k+1} = r_{k+1} + B_k P_k
+$$
+
+$$
+B_k = - \frac{P_k^t r_{k+1}}{P_k^tP_k}
+$$
+
+Sea $r^k = b - Ax^k$ y $r^{k+1} = b - Ax^{k+1}$ dos residuos para dos aproximaciones $x^k$ y $x^{k+1}$, sumando ambas expresiones:
+$$
+r_{k+1} + r_k = -A(x_{k+1} - x^k)
+$$
+luego
+$$
+r^{k+1} = r_k -\alpha_k AP_k
+$$
+
+
+### Algoritmo
+
+```pseudocode
+n -> Tamaño de la matriz
+a[n][n] -> Matriz a
+b[n] -> Vector b 
+
+r[n] -> Vector residuo
+p[n] -> Vector dirección
+x[n] -> Vector solución
+
+MAX_ITER -> Número máximo de iteraciones
+epsilon -> Valor mínimo para ser considerado como cero
+
+r = b
+p = r
+x = {0}
+
+while MAX_ITER:
+	MAX_ITER -= 1
+	w = A*p
+	alpha = (p * r) / (p * w)
+	x = x + alpha * p
+	r = r - alpha * w
+	error = norm(r)
+	if error < epsilon: 
+		break
+	beta = (p * r) / (p*p)
+	p = r + beta * p
+
+```
+
+### Ejemplo de entrada
+
+#### Entrada
+
+```
+3 3
+4.000000 -1.000000 0.000000
+-1.000000 4.000000 -1.000000
+0.000000 -1.000000 4.000000
+```
+
+```
+3 1
+2.000000
+6.000000
+2.000000
+```
+
+#### Salida
+
+```
+error: 2.052057e+00
+error: 3.627558e-01
+error: 1.122219e-01
+error: 1.983821e-02
+error: 6.137133e-03
+error: 1.084902e-03
+error: 3.356245e-04
+error: 5.933058e-05
+error: 1.835446e-05
+error: 3.244641e-06
+error: 1.003760e-06
+error: 1.774413e-07
+error: 5.489311e-08
+error: 9.703822e-09
+error: 3.001967e-09
+error: 5.306778e-10
+error: 1.641701e-10
+error: 2.902144e-11
+error: 8.978050e-12
+error: 1.587110e-12
+
+x_0: 1.0000000000
+x_1: 2.0000000000
+x_2: 1.0000000000
+```
+
+### Observaciones y mejoras
+
+Como podemos ver en la salida de ejemplo, por cada iteración el error se reduce al buscar el mínimo en la función implícita de error a minimizar. Durante las pruebas se observó que el antes de converger el error oscila demasiado y el decremento del error se vuelve cada vez más lento.
+
+Con la matriz de entrada $M\_BIG.txt$ la convergencia a la solución fue bastante tardada lo cual lo hace no tan eficiente para matrices con las características de esta.
