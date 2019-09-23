@@ -23,15 +23,15 @@
 
 
 /*
-    Multiply matrix a* x b = c and save the result in the matrix c
-    a* is the transpose matrix of a
+    Multiply matrix q* x p = s and save the result in the matrix c
+    q* is the transpose matrix of q
 */
-static void multiply_qta(double ** q, double ** a, double ** s, int qrows, int qcols) {
+static void multiply_qta(double ** q, double ** p, double ** s, int qrows, int qcols) {
     for (int i = 0; i < qcols; i++) {
         for (int j = 0; j < qrows; j++) {
             s[i][j] = 0;
             for (int k = 0; k < qrows; k++) {
-                s[i][j] += q[k][i] * a[k][j];
+                s[i][j] += q[k][i] * p[k][j];
             }
         }
     }
@@ -71,7 +71,6 @@ NSMatrix matrix_eigen_subspace_iteration_method(NSMatrix * matrix, int neigen) {
     NSMatrix Q = matrixio_allocate_matrix(A->rows, neigen);
     NSMatrix R = matrixio_allocate_matrix(neigen, neigen);
     NSMatrix LAMBDA = R;
-    NSMatrix QtA = matrixio_allocate_matrix(neigen, A->rows);
 
     matrix_randomnize_v(P.items[0], A->rows * neigen);
 
@@ -80,11 +79,10 @@ NSMatrix matrix_eigen_subspace_iteration_method(NSMatrix * matrix, int neigen) {
         matrix_qr_decomposition(&P, &R);
         NS_SWAP(P.items, Q.items, double **);
         NS_SWAP(P.pointer_start, Q.pointer_start, double *);
-        // LAMBDA = Q*AQ
-        multiply_qta(Q.items, A->items, QtA.items, Q.rows, Q.cols);
-        matrix_multiply_mmd(QtA.items, Q.items, LAMBDA.items, QtA.rows, QtA.cols, Q.cols);
         // P = AQ
         matrix_multiply_mmd(A->items, Q.items, P.items, A->rows, A->cols, Q.cols);
+        // LAMBDA = Q*AQ = Q*P
+        multiply_qta(Q.items, P.items, LAMBDA.items, Q.rows, Q.cols);
         // When there is only one eigen value to compute
         // the matrix LAMBDA is always diagonal
         // With NS_EIGEN_V_SUBSPACE_ITERATION_MIN_ITER we make sure that
@@ -96,7 +94,6 @@ NSMatrix matrix_eigen_subspace_iteration_method(NSMatrix * matrix, int neigen) {
 
     matrixio_free_matrix(A);
     matrixio_free_matrix(&Q);
-    matrixio_free_matrix(&QtA);
 
     *A = LAMBDA;
 
