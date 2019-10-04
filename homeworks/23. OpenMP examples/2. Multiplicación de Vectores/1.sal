@@ -1,0 +1,10 @@
+Max threads 6
+Array size 1000000000
+Memory used:  7.3GB
+
+3.63s user 2.97s system
+3.71s user 3.66s system
+3.66s user 3.96s system
+3.74s user 4.35s system
+3.80s user 4.75s system
+3.85s user 5.43s system
