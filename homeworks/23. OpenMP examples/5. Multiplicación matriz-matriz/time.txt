@@ -1,0 +1,12 @@
+Cores: 1: InputSize: 3000 Time 116.56s Memory: 72044Kb CPU: 99%
+Cores: 2: InputSize: 3000 Time 60.43s Memory: 71988Kb CPU: 199%
+Cores: 3: InputSize: 3000 Time 42.69s Memory: 72040Kb CPU: 290%
+Cores: 4: InputSize: 3000 Time 30.31s Memory: 72056Kb CPU: 393%
+Cores: 5: InputSize: 3000 Time 24.74s Memory: 72052Kb CPU: 489%
+Cores: 6: InputSize: 3000 Time 20.83s Memory: 72072Kb CPU: 579%
+Cores: 7: InputSize: 3000 Time 24.72s Memory: 72060Kb CPU: 553%
+Cores: 8: InputSize: 3000 Time 24.98s Memory: 72084Kb CPU: 610%
+Cores: 9: InputSize: 3000 Time 20.45s Memory: 72104Kb CPU: 786%
+Cores: 10: InputSize: 3000 Time 20.41s Memory: 72120Kb CPU: 901%
+Cores: 11: InputSize: 3000 Time 19.86s Memory: 72228Kb CPU: 1016%
+Cores: 12: InputSize: 3000 Time 19.33s Memory: 72248Kb CPU: 1141%

@@ -14,12 +14,15 @@
 
 #include "../memory.h"
 
-void vector_scalar_product(double * vec_a, double * vec_b, int size) {
+double vector_scalar_product(double * vec_a, double * vec_b, int size) {
     int res = 0;
+
     #pragma omp parallel for reduction(+:res)
     for (int i = 0; i < size; ++i) {
         res += vec_a[i] * vec_b[i];
     }
+
+    return res;
 }
 
 

@@ -1,0 +1,12 @@
+Cores: 1: InputSize: 1000000000 Time 6.66s Memory: 7814300Kb CPU: 99%
+Cores: 2: InputSize: 1000000000 Time 3.84s Memory: 7814168Kb CPU: 191%
+Cores: 3: InputSize: 1000000000 Time 2.78s Memory: 7814104Kb CPU: 275%
+Cores: 4: InputSize: 1000000000 Time 2.27s Memory: 7814148Kb CPU: 356%
+Cores: 5: InputSize: 1000000000 Time 2.01s Memory: 7813940Kb CPU: 433%
+Cores: 6: InputSize: 1000000000 Time 1.88s Memory: 7814084Kb CPU: 502%
+Cores: 7: InputSize: 1000000000 Time 1.94s Memory: 7813848Kb CPU: 542%
+Cores: 8: InputSize: 1000000000 Time 1.84s Memory: 7813996Kb CPU: 625%
+Cores: 9: InputSize: 1000000000 Time 1.80s Memory: 7814136Kb CPU: 705%
+Cores: 10: InputSize: 1000000000 Time 1.76s Memory: 7813528Kb CPU: 790%
+Cores: 11: InputSize: 1000000000 Time 1.74s Memory: 7813548Kb CPU: 864%
+Cores: 12: InputSize: 1000000000 Time 1.82s Memory: 7814092Kb CPU: 848%
