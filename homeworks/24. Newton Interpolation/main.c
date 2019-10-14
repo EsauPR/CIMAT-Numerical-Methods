@@ -13,7 +13,7 @@
 #include "numsys/interpolation/newton.h"
 
 int main(int argc, char *argv[]) {
-    if (argc < 3) {
+    if (argc < 5) {
         perror("main():: 2 Args missing");
         exit(EXIT_FAILURE);
     }
@@ -33,13 +33,14 @@ int main(int argc, char *argv[]) {
     FILE * fsamples = fopen("./samples", "w");
     double delta = 0.1;
 
-    double from = 0, to = 100;
+    double from = atof(argv[3]), to = atof(argv[4]);
     for (double i = from; i <= to; i+= delta) {
         fprintf(fsamples, "%lf\n", interpolation_newton_evaluate(x.items, coefs, x.size, i));
     }
 
     matrixio_free_vector(&x);
     matrixio_free_vector(&y);
+    free(coefs);
     fclose(fsamples);
 
     return 0;
