@@ -16,12 +16,6 @@ DEFS = -DDEBUG_FLAG -DEXPERIMENTAL=0
 
 LIBDIR = ./lib
 
-# # Object files from which $BIN depends
-# OBJSDIR1 = ${LIBDIR}/matrix
-# DEPS1 = matrixio.o \
-# 	   matrix.o
-# OBJS1 =  $(patsubst %,$(OBJSDIR1)/%,$(DEPS1))
-
 DEPS1 = $(shell find ${LIBDIR} -type f -name '*.c' | sed "s/\.c/\.o/")
 
 OBJS = ${DEPS1}
@@ -31,7 +25,7 @@ LIBNAME = ${TARGET}/libnumsys
 ## Compiles the executable program by default main.c
 build: ${OBJS}
 	mkdir -p ${TARGET}
-	${CC} -shared $(shell find ${LIBDIR} -type f -name '*.o') -o $(LIBNAME).so
+	ar rcs $(LIBNAME).a $(shell find ${LIBDIR} -type f -name '*.o')
 
 
 # This rule compiles each module into its object file
@@ -43,6 +37,7 @@ build: ${OBJS}
 clean:
 	find ${LIBDIR}/ -type f -name '*.o' -exec rm {} +
 	find ${TARGET}/ -type f -name '*.so' -exec rm {} +
+	find ${TARGET}/ -type f -name '*.a' -exec rm {} +
 
 
 depend:

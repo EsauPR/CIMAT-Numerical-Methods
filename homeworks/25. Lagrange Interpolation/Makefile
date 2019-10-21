@@ -18,7 +18,6 @@ BIN = main
 LIBNAME = numsys
 LIBPATH = ../../src/target/build
 LIBS = -l${LIBNAME} -lm
-export LD_LIBRARY_PATH = ${LIBPATH}
 
 ## Compiles the executable program by default main.c
 $(BIN): $(BIN).c buildlib

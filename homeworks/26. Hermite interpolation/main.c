@@ -13,8 +13,8 @@
 #include "numsys/interpolation/hermite.h"
 
 int main(int argc, char *argv[]) {
-    if (argc < 5) {
-        perror("main():: 5 Args missing");
+    if (argc < 6) {
+        perror("main():: 4 Args missing");
         exit(EXIT_FAILURE);
     }
 
@@ -26,7 +26,7 @@ int main(int argc, char *argv[]) {
     printf("\nf(%lf) = %lf\n", value, interpolation_hermite(x.items, y.items, dy.items, x.size, value));
 
     FILE * fsamples = fopen("./samples.txt", "w");
-    double delta = 0.31;
+    double delta = 0.1;
     double from = atof(argv[4]), to = atof(argv[5]);
     for (double i = from; i <= to; i+= delta) {
         fprintf(fsamples, "%f %lf\n", i, interpolation_hermite(x.items, y.items, dy.items, x.size, i));

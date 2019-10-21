@@ -18,7 +18,6 @@ BIN = main
 LIBNAME = numsys
 LIBPATH = ../../src/target/build
 LIBS = -l${LIBNAME} -lm
-export LD_LIBRARY_PATH = ${LIBPATH}
 
 ## Compiles the executable program by default main.c
 $(BIN): $(BIN).c buildlib
@@ -33,11 +32,11 @@ clean:
 
 ## Run the executable
 run:
-	./$(BIN) ${f1} ${f2} ${f3} ${f4}
+	./$(BIN) ${f1} ${f2} ${f3} ${f4} ${f5}
 
 ## Run the executable with valgrind to check memory vulnerabiliies
 valgrind:
-	valgrind --tool=memcheck --leak-check=yes ./$(BIN) ${f1} ${f2} ${f3} ${f4}
+	valgrind --tool=memcheck --leak-check=yes ./$(BIN) ${f1} ${f2} ${f3} ${f4} ${f5}
 
 help:
 	@echo "$$(tput bold)Available rules:$$(tput sgr0)"
