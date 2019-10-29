@@ -80,6 +80,20 @@ static const struct numsys_Matrix{
 } NSMatrixDefault = __NSMatrixDefaultValues;
 typedef struct numsys_Matrix NSMatrix;
 
+/* Struct to represent a sparse matrix */
+#define __NSMatrixSparseDefaultValues {0, 0, 0, 0, NULL, NULL, NULL, NS__MATRIX_ERR_NONE__}
+static const struct numsys_Matrix_Sparse {
+    int max;
+    int length;
+    int nrows;
+    int ncols;
+    int * rows;
+    int * cols;
+    double * values;
+    NS__flag_err err;
+} NSMatrixSparseDefault = __NSMatrixSparseDefaultValues;
+typedef struct numsys_Matrix_Sparse NSMatrixSparse;
+
 /* Represent a matrix element with the positions i,j */
 #define __NSMatrixElemDefaultValues {0.0, 0, 0}
 static const struct numsys_Matrix_Element {
