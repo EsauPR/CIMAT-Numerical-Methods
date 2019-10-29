@@ -14,6 +14,11 @@
 #include "numsys/matrix/matrix.h"
 #include "numsys/interpolation/newton.h"
 
+
+/*
+    Newton interpolation with Divided Diferences
+    Returns an array with the Divided Diferences values
+*/
 double * interpolation_newton(double * x, double * y, int size) {
     int ndots = (size * (size + 1)) / 2;
     double * div_table = matrixio_allocate_array_double(ndots);
@@ -38,7 +43,7 @@ double * interpolation_newton(double * x, double * y, int size) {
     return coefs;
 }
 
-
+/* Evaluate a point using the Divided Diferences values */
 double interpolation_newton_evaluate(double * x, double * coefs, int size, double value) {
     if (size == 1) {
         return coefs[0];

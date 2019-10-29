@@ -1,7 +1,7 @@
 /**
     ANSI C standard: c11
     main.c
-    Purpose: Newton Interpolation example
+    Purpose: Hermite Interpolation example
 
     @author Esaú Peralta
     @email esau.opr@gmail.com
@@ -10,37 +10,32 @@
 
 #include <stdlib.h>
 #include <numsys/matrix/matrix.h>
-#include "numsys/interpolation/newton.h"
+#include "numsys/interpolation/hermite.h"
 
 int main(int argc, char *argv[]) {
-    if (argc < 5) {
+    if (argc < 6) {
         perror("main():: 4 Args missing");
         exit(EXIT_FAILURE);
     }
 
     NSVector x = matrixio_fread_vector(argv[1]);
     NSVector y = matrixio_fread_vector(argv[2]);
+    NSVector dy = matrixio_fread_vector(argv[3]);
 
-    double * coefs = interpolation_newton(x.items, y.items, x.size);
-
-    for (int i = 0; i < x.size; i++) {
-        printf("a_%d = %.10lf\n", i, coefs[i]);
-    }
-
-    double value = 2006.0;
-    printf("\nf(%lf) = %lf\n", value, interpolation_newton_evaluate(x.items, coefs, x.size, value));
+    double value = 0.5;
+    printf("\nf(%lf) = %lf\n", value, interpolation_hermite(x.items, y.items, dy.items, x.size, value));
 
     FILE * fsamples = fopen("./samples.txt", "w");
     double delta = 0.1;
-
-    double from = atof(argv[3]), to = atof(argv[4]);
+    double from = atof(argv[4]), to = atof(argv[5]);
     for (double i = from; i <= to; i+= delta) {
-        fprintf(fsamples, "%f %lf\n", i, interpolation_newton_evaluate(x.items, coefs, x.size, i));
+        fprintf(fsamples, "%f %lf\n", i, interpolation_hermite(x.items, y.items, dy.items, x.size, i));
     }
 
     matrixio_free_vector(&x);
     matrixio_free_vector(&y);
-    free(coefs);
+    matrixio_free_vector(&dy);
+
     fclose(fsamples);
 
     return 0;
