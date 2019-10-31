@@ -6,7 +6,7 @@ IDIR = ./include/
 CC = gcc
 
 # Compiler flags: all warnings + debugger meta-data
-CFLAGS = -Wall -Wextra -Werror -Wpedantic -g -I${IDIR}
+CFLAGS = -Wall -Wextra -Werror -Wpedantic -g -I${IDIR} -O2 -fopenmp
 
 # External libraries
 LIBS = -lm

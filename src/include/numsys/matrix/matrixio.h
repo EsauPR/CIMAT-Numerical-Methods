@@ -76,6 +76,10 @@ EXTERN NSMatrixSystem matrixio_fread_matrix_system(char * file1_name, char * fil
 /* Free NSEigenV struct */
 EXTERN void matrixio_free_eigen_v(NSEigenV * eigen_v);
 
+EXTERN void matrixio_save_matrix(NSMatrix matrix, const char *file_name);
+
+EXTERN void matrixio_save_vector(NSVector vector, const char *file_name);
+
 #undef MATRIXIO_IMPORT
 #undef EXTERN
 #endif

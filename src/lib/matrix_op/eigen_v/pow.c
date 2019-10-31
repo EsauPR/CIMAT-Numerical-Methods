@@ -19,7 +19,7 @@
 #define NSEigenV_IMPORT
 #include "numsys/matrix_op/eigen_v/pow.h"
 
-#define MATRIX_EIGEN_MAX_ITER 1000
+#define MATRIX_EIGEN_MAX_ITER 10000
 
 
 static const struct matrix_eigen_scalar_products {
@@ -141,6 +141,7 @@ NSEigenV * matrix_eigen_pow_method_dfl(NSMatrix * matrix, const int neigen) {
     double * y_vector = matrixio_allocate_array_double(size);
 
     for (int eiter = 0; eiter < neigen; eiter++) {
+        printf("eiter: %d\n", eiter);
         // mesp = NS_MESPDefault;
         eigenvs[eiter] = NSEigenVDefault;
         double lambda = 0.0, lambda_prev = 0.0;
@@ -148,13 +149,14 @@ NSEigenV * matrix_eigen_pow_method_dfl(NSMatrix * matrix, const int neigen) {
         NSEigenV_randomnize(z_vector, size);
 
         for (int iter = 0; iter < MATRIX_EIGEN_MAX_ITER; iter++) {
+            // printf("\titer: %d\n", iter);
             matrix_eigen_pow_deflation(eigenvs, eiter, z_vector, size);
             NSEigenV_normalize(z_vector, size, 0.0);
             mesp = NSEigenV_multiply(matrix->items, z_vector, y_vector, size);
             lambda = mesp.yy / mesp.zy;
 
             NS_SWAP(y_vector, z_vector, double *);
-            if (NS_IS_ZERO(lambda - lambda_prev)) {
+            if (NS_IS_ZERO(NS_ABS(lambda) - NS_ABS(lambda_prev))) {
                 break;
             }
             lambda_prev = lambda;
@@ -164,6 +166,7 @@ NSEigenV * matrix_eigen_pow_method_dfl(NSMatrix * matrix, const int neigen) {
         NSEigenV_normalize(z_vector, size, sqrt(mesp.yy));;
         eigenvs[eiter].eigen_vector = z_vector;
         eigenvs[eiter].eigen_value = lambda;
+        printf("\tlambda: %le\n", lambda);
     }
 
     free(y_vector);

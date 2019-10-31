@@ -231,3 +231,39 @@ void matrixio_free_eigen_v(NSEigenV * eigen_v) {
         eigen_v->eigen_vector = NULL;
     }
 }
+
+
+void matrixio_save_matrix(NSMatrix matrix, const char *file_name) {
+    FILE *fp = fopen(file_name, "w");
+    if(fp == NULL) {
+        perror("Can't open file to write");
+        return;
+    }
+
+    fprintf(fp, "%d %d\n", matrix.rows, matrix.cols);
+
+    for (int i = 0; i < matrix.rows; i++) {
+        for (int j = 0; j < matrix.cols; j++) {
+            fprintf(fp, "%le ", matrix.items[i][j]);
+        }
+        fprintf(fp, "\n");
+    }
+
+    fclose(fp);
+}
+
+void matrixio_save_vector(NSVector vector, const char *file_name) {
+    FILE *fp = fopen(file_name, "w");
+    if(fp == NULL) {
+        perror("Can't open file to write");
+        return;
+    }
+
+    fprintf(fp, "%d 1\n", vector.size);
+
+    for (int i = 0; i < vector.size; i++) {
+        fprintf(fp, "%le\n", vector.items[i]);
+    }
+
+    fclose(fp);
+}

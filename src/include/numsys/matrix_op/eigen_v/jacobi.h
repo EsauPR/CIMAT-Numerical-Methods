@@ -26,6 +26,7 @@
     The 'matrix' will contains the egein values
 */
 EXTERN NSMatrix matrix_eigen_jacobi_method(NSMatrix * matrix);
+EXTERN NSMatrix matrix_eigen_jacobi_method_band(NSMatrix * matrix, int band_size);
 
 #undef NSEigenV_JACOBI_IMPORT
 #undef EXTERN
