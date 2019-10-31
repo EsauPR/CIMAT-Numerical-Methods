@@ -15,7 +15,7 @@ void save_matrix(const char * file_name) {
         return;
     }
 
-    fprintf(fp, "%d %d\n", SIZE, SIZE);
+    fprintf(fp, "%d %d\n", SIZE-1, SIZE-1);
 
     for (int i = 1; i < SIZE; i++) {
         for (int j = 1; j < SIZE; j++) {
