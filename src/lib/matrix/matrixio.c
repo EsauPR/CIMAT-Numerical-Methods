@@ -267,3 +267,30 @@ void matrixio_save_vector(NSVector vector, const char *file_name) {
 
     fclose(fp);
 }
+
+
+/* Read a matrix from a file */
+NSMatrix matrixio_fread_matrix_sparse_as_normal(char *file_name) {
+    int rows, cols;
+
+    FILE *fp = fopen(file_name, "rb");
+    if(fp == NULL) {
+        puts(file_name);
+        perror("fopen()");
+        exit(EXIT_FAILURE);
+    }
+
+    fscanf(fp, "%d %d", &rows, &cols);
+
+    NSMatrix matrix = matrixio_allocate_matrix(rows, cols);
+
+    int i, j;
+    double value;
+    while(fscanf(fp, "%d %d %lf", &i, &j, &value)) {
+        matrix.items[i-1][j-1] = value;
+    }
+
+    fclose(fp);
+
+    return matrix;
+}
