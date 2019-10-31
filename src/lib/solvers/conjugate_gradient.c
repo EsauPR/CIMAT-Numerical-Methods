@@ -64,7 +64,7 @@ static void make_xnext(double * x, double * p, double alpha, int size) {
 }
 
 static double make_rnext(double * r, double * w, double alpha, int size, double * betha) {
-    double norm = 0;
+    // double norm = 0;
 
     // for (int i = 0; i < size; i++, r++, w++) {
     //     *r = (*r) - alpha * (*w);
@@ -75,17 +75,16 @@ static double make_rnext(double * r, double * w, double alpha, int size, double 
     double rr_new = 0.0;
 
 
-    #pragma omp parallel for reduction(+:norm) reduction(+:rr_old) reduction(+:rr_new)
+    #pragma omp parallel for reduction(+:rr_old) reduction(+:rr_new)
     for (int i = 0; i < size; i++) {
         rr_old += r[i] * r[i];
         r[i] = r[i] + alpha * w[i];
         rr_new += r[i] * r[i];
-        norm += r[i] * r[i];
     }
 
     *betha = rr_new / rr_old;
 
-    return sqrt(norm);
+    return sqrt(rr_new);
 }
 
 static void make_pnext(double * p, double * r, double beta, int size) {
@@ -109,7 +108,12 @@ void conjugate_gradient_solver(NSMatrixSystem * msystem) {
     double * w = matrixio_allocate_array_double(size);
     double alpha, beta, error = 1.0;
 
-    memcpy(p, r, size * sizeof(double));
+    #pragma omp parallel for
+    for (int i = 0; i < size; i++) {
+        r[i] = -r[i];
+        p[i] = -r[i];
+    }
+
 
     int iter = 0;
     for (iter = 0; iter < CONJ_GRADIENT_MAX_ITER; iter++) {
