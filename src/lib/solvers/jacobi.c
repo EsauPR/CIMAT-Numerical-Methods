@@ -14,7 +14,7 @@
 #define JACOBI_IMPORT
 #include "numsys/solvers/jacobi.h"
 
-#define JACOBI_MAX_ITER 1000
+#define JACOBI_MAX_ITER 100000
 #define JACOBI_TOLERANCE 0.000001
 
 /* Solve a square matrix by Jacobi iterative method */
@@ -26,8 +26,8 @@ void jacobi_solver(NSMatrixSystem * msystem) {
     double * x_prev = msystem->x.items;
 
     memcpy(x_prev, b, size * sizeof(double));
-
-    for (int k = 0; k < JACOBI_MAX_ITER; k++) {
+    int k;
+    for (k = 0; k < JACOBI_MAX_ITER; k++) {
         double error = 0.0;
 
         double ** a_i  = a; // Avoid to reference each time matrix + i
@@ -69,6 +69,8 @@ void jacobi_solver(NSMatrixSystem * msystem) {
             break;
         }
     }
+
+    printf("Iter: %d\n", k);
 
     free(x_next);
 }

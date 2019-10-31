@@ -1,15 +1,16 @@
 /**
     ANSI C standard: c11
-    Purpose: Solve a square matrix by Gaussian elimination
+    Purpose: Solver for a matrix system Ax=b by Conjugate Gradient Method
+    A must be symmetric
 
     @author Esaú Peralta
     @email esau.opr@gmail.com
 */
 
-#include <stdlib.h>
-#include "numsys/matrix/matrix.h"
-#include "numsys/solvers/gaussian_elimination.h"
 
+#include <stdlib.h>
+#include <numsys/matrix/matrix.h>
+#include "numsys/solvers/conjugate_gradient.h"
 
 int main(int argc, char *argv[]) {
     if (argc < 3) {
@@ -17,9 +18,7 @@ int main(int argc, char *argv[]) {
         exit(EXIT_FAILURE);
     }
 
-    puts("Read a");
     NSMatrix A = matrixio_fread_matrix_sparse_as_normal(argv[1]);
-    puts("Read b");
     NSVector b = matrixio_fread_vector(argv[2]);
     NSVector x;
     x.size = A.rows;
@@ -30,18 +29,15 @@ int main(int argc, char *argv[]) {
     msystem.b = b;
     msystem.x = x;
 
-    printf("%d %d %d %d\n", A.rows, A.cols, b.size, x.size);
+    conjugate_gradient_solver(&msystem);
 
-    matrixio_save_matrix(msystem.a, "a.mtx");
-
-    solver_gaussian_elimination(&msystem);
     if (msystem.err) {
         nsperror("main():", msystem.err);
         matrixio_free_matrix_system(&msystem);
         exit(EXIT_FAILURE);
     }
 
-    matrixio_save_vector(msystem.x, "x_gauss.vec");
+    matrixio_save_vector(msystem.x, "x_gradient.vec");
     matrixio_free_matrix_system(&msystem);
 
     return 0;

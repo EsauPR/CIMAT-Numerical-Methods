@@ -14,7 +14,7 @@
 #define GAUSS_SEIDEL_IMPORT
 #include "numsys/solvers/gauss_seidel.h"
 
-#define GAUSS_SEIDEL_MAX_ITER 1000
+#define GAUSS_SEIDEL_MAX_ITER 10000
 #define GAUSS_SEIDEL_TOLERANCE 0.000001
 
 
@@ -22,8 +22,8 @@ void gauss_seidel_solver(NSMatrixSystem * msystem) {
     int size = msystem->a.rows;
 
     memcpy(msystem->x.items, msystem->b.items, size * sizeof(double));
-
-    for (int k = 0; k < GAUSS_SEIDEL_MAX_ITER; k++) {
+    int k = 0;
+    for (k = 0; k < GAUSS_SEIDEL_MAX_ITER; k++) {
         double error = 0.0;
 
         double ** a_i = msystem->a.items; // Avoid to reference a[i] each time
@@ -59,4 +59,6 @@ void gauss_seidel_solver(NSMatrixSystem * msystem) {
 
         if (error <= GAUSS_SEIDEL_TOLERANCE) break;
     }
+
+    printf("Iters: %d\n", k);
 }

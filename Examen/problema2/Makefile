@@ -3,7 +3,7 @@
 CC = gcc
 
 # Compiler flags: all warnings + debugger meta-data
-CFLAGS = -Wall -Wextra -Werror -Wpedantic -g -O2
+CFLAGS = -Wall -Wextra -Werror -Wpedantic -O3
 
 # Pre-defined macros for conditional compilation
 DEFS = -DDEBUG_FLAG -DEXPERIMENTAL=0
@@ -33,6 +33,18 @@ $(DOOLITTLE): $(DOOLITTLE).c buildlib
 CHOOLESKY=choolesky
 $(CHOOLESKY): $(CHOOLESKY).c buildlib
 	$(CC) $(CFLAGS) $(DEFS) $(CHOOLESKY).c -o $(CHOOLESKY) -I${IDIR} -L${LIBPATH} ${LIBS}
+
+JACOBI=jacobi
+$(JACOBI): $(JACOBI).c buildlib
+	$(CC) $(CFLAGS) $(DEFS) $(JACOBI).c -o $(JACOBI) -I${IDIR} -L${LIBPATH} ${LIBS}
+
+GAUUS_SEIDEL=gauss_seidel
+$(GAUUS_SEIDEL): $(GAUUS_SEIDEL).c buildlib
+	$(CC) $(CFLAGS) $(DEFS) $(GAUUS_SEIDEL).c -o $(GAUUS_SEIDEL) -I${IDIR} -L${LIBPATH} ${LIBS}
+
+GRADIENT=gradient
+$(GRADIENT): $(GRADIENT).c buildlib
+	$(CC) $(CFLAGS) $(DEFS) $(GRADIENT).c -o $(GRADIENT) -I${IDIR} -L${LIBPATH} ${LIBS}
 
 
 buildlib:

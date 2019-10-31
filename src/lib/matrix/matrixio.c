@@ -286,7 +286,7 @@ NSMatrix matrixio_fread_matrix_sparse_as_normal(char *file_name) {
 
     int i, j;
     double value;
-    while(fscanf(fp, "%d %d %lf", &i, &j, &value)) {
+    while(fscanf(fp, "%d %d %lf", &i, &j, &value) != EOF) {
         matrix.items[i-1][j-1] = value;
     }
 
