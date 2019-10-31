@@ -55,16 +55,20 @@ Se procedió a realizar el cálculo de la solución con los siguientes algoritmo
 
 La siguiente tabla muestra los resultados obtenidos:
 
-| Método        | Tiempo de ejecución | Memoria  | No. de Iteraciones | Error Medio |
-| ------------- | ------------------- | -------- | ------------------ | ----------- |
-| Gauss Pivoteo | 337.45s             | 196924Kb | N/A                |             |
-| Doolittle     | 254.42s             | 197652Kb | N/A                |             |
-| Choolesky     | 124.02s             | 197808Kb | N/A                |             |
-| Jacobi        |                     |          |                    |             |
-| Gauss Seidel  |                     |          |                    |             |
-| Gradiente     |                     |          |                    |             |
+| Método        | Tiempo de ejecución | Memoria  | No. de Iteraciones | Error        |
+| ------------- | ------------------- | -------- | ------------------ | ------------ |
+| Gauss Pivoteo | 337.45s             | 196924Kb | N/A                | 1.5973x10^-8 |
+| Doolittle     | 254.42s             | 197652Kb | N/A                | 1.5973x10^-8 |
+| Choolesky     | 124.02s             | 197808Kb | N/A                | 1.5973x10^-8 |
+| Jacobi        | 344.51s             | 90860Kb  | 1000               | 3.68345x10^6 |
+| Gauss Seidel  | 156.19s             | 90792Kb  | 5000               | 1.4094x10^5  |
+| Gradiente     | 9.14s               | 90888Kb  | 1138               | 1.5973x10^-8 |
 
+Los métodos que más inconvenientes presentaron fueron los dos iterativos de Jacobi y Gauss Seidel puesto que como se vió la matriz no es diagonalmente dominante por tanto la convergencia no es garantizada, aunque con el método de Gauss-Seidel se obtuvieron valores relativamente cercanos.
 
+El mejor método fue el de Gradiente conjugado, con un tiempo de ejecución de 9.15 segundos obteniendo un error de $3.052713e^{-11}$.
+
+El método de directo de Gauss a pesar de ser uno de los conocidos es uno de los menos eficientes sin embargo la solución es asegurada al igual que los los demás algoritmos exactos, en cambio como se vió los iterativos tienen convergencia bajo ciertas condiciones las cuales siempre no pueden ser cumplidas, exceptuando al el método de gradiente que ha demostrado ser bastante eficiente con muy buenos resultados de aproximación.
 
 ## Problema 3
 
@@ -160,3 +164,53 @@ Los vectores propios asociados a cada valor propio se encuentran en el archivo a
 
 ## Problema 4
 
+### Desarrollo del polinomio de Hermite
+
+El polinomio de Hermite es definido como aquel que interpola $n+1$ puntos de una función $f(x)$ y $f'(x)$, así entonces el el polinomio requerido es de grado $\le 2n+1$, que satisface $2(n+1)$ restricciones en $n+1$ puntos $x_i: i=0,1,2, ..., n$:
+$$
+P_{2n+1}(x_i) = f(x) \\
+P'_{2n+1}(x_i) = f'(x) \\
+$$
+Expresando el polinomio en términos de los puntos anteriores tenemos que:
+$$
+P_{2n+1}(x_i) = \sum_{i=0}^{n}u_i(x)P_{2n+1}(x_i) + \sum_{i=0}^{n}v_i(x)P_{2n+1}(x_i) \\
+= \sum_{i=0}^{n}u_i(x)f(x_i) + \sum_{i=0}^{n}v_i(x)f'(x_i)
+$$
+en donde $u_i(x)$ y $v_i(x)$ son polinomios de grado $\le 2n+1$, pudiendo expresarlos en términos de los coeficientes del polinomio de Lagrange $l_i(x)$:
+$$
+u_i(x) = (a_ix+b_i)l^2(x)
+$$
+
+$$
+v_i(x) = (c_ix+d_i)l^2(x)
+$$
+
+dónde $l_i$ está dado por:
+$$
+l_i(x) = \prod_{k=0, k\ne i}^{n} \frac{x-x_k}{x_i-x_k}
+$$
+y $a_i$, $b_i$, $c_i$. $d_i$ son constantes que como se demostró en la *tarea 12* están determinadas por:
+$$
+a_i = -2l'_i(x_i),\ b_i = 1 + 2x_il'_i(x_i), \ c_i = 1, \ d_i = -x_i
+$$
+y sustituyendo en la ecuación $6$ y $7$ tenemos:
+$$
+u_i(x) = (-2l'_i(x_i)x+1+2x_il'_i(x_i))l^2_i(x)
+$$
+
+$$
+v_i(x) = (x-x_i)l^2_i(x)
+$$
+
+y así sustituyendo en la ecuación $5$ tenemos:
+$$
+P_{2n+1}(x_i) = \sum_{i=0}^{n}u_i(x)f(x_i) + \sum_{i=0}^{n}v_i(x)f'(x_i) \\
+= \sum_{i=0}^{n}(-2l'_i(x_i)x+1+2x_il'_i(x_i))l^2_i(x)f(x_i) + \sum_{i=0}^{n}(x-x_i)l^2_i(x)f'(x_i)
+$$
+
+### Desarrollo del método de integración del polinomio de Hermite de 3 pasos
+
+El polinomio de Hermite que pasa por los puntos:
+$$
+(x_0 , y_0), (x_1 , y_1), (x_2, y_2 ), (x_0 , f_0 ), (x_1 , f_1 ), (x_2 , f_2 ), fi = f(xi , yi)
+$$

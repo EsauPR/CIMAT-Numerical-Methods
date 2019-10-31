@@ -14,7 +14,7 @@
 #define JACOBI_IMPORT
 #include "numsys/solvers/jacobi.h"
 
-#define JACOBI_MAX_ITER 100000
+#define JACOBI_MAX_ITER 1000
 #define JACOBI_TOLERANCE 0.000001
 
 /* Solve a square matrix by Jacobi iterative method */

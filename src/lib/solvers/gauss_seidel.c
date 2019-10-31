@@ -14,7 +14,7 @@
 #define GAUSS_SEIDEL_IMPORT
 #include "numsys/solvers/gauss_seidel.h"
 
-#define GAUSS_SEIDEL_MAX_ITER 10000
+#define GAUSS_SEIDEL_MAX_ITER 5000
 #define GAUSS_SEIDEL_TOLERANCE 0.000001
 
 
@@ -54,7 +54,7 @@ void gauss_seidel_solver(NSMatrixSystem * msystem) {
 
         error = sqrt(error);
         if (isnan(error)) {
-            printf("Warning:: Step %d, Error is NaN\n", k);
+            //printf("Warning:: Step %d, Error is NaN\n", k);
         }
 
         if (error <= GAUSS_SEIDEL_TOLERANCE) break;
