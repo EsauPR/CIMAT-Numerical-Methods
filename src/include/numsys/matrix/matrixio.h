@@ -80,6 +80,8 @@ EXTERN void matrixio_save_matrix(NSMatrix matrix, const char *file_name);
 
 EXTERN void matrixio_save_vector(NSVector vector, const char *file_name);
 
+EXTERN NSMatrix matrixio_fread_matrix_sparse_as_normal(char *file_name);
+
 #undef MATRIXIO_IMPORT
 #undef EXTERN
 #endif
