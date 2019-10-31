@@ -167,6 +167,7 @@ NSEigenV * matrix_eigen_pow_method_dfl(NSMatrix * matrix, const int neigen) {
         eigenvs[eiter].eigen_vector = z_vector;
         eigenvs[eiter].eigen_value = lambda;
         printf("\tlambda: %le\n", lambda);
+        printf("\tv: %le %le %le %le %le\n", z_vector[0], z_vector[1], z_vector[2], z_vector[3], z_vector[4]);
     }
 
     free(y_vector);
