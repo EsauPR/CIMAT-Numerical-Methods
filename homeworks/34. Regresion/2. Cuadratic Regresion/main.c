@@ -27,5 +27,9 @@ int main(int argc, char * argv[]) {
 
     printf("y(x) = %lfx^2 + %lfx + %lf\n", z.items[0], z.items[1], z.items[2]);
 
+    matrixio_free_vector(&x);
+    matrixio_free_vector(&y);
+    matrixio_free_vector(&z);
+
     return 0;
 }
