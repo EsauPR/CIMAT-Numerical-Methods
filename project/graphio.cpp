@@ -24,8 +24,8 @@ Graph graph_read(const string file_name, int * n_nodes) {
         exit(EXIT_FAILURE);
     }
 
-    string comment;
-    getline(f_in, comment);
+    // string comment;
+    // getline(f_in, comment);
 
     int rows, cols, nitems;
     f_in >> rows >> cols >> nitems;
@@ -40,8 +40,7 @@ Graph graph_read(const string file_name, int * n_nodes) {
     while (nitems--) {
         f_in >> node_i >> node_j >> weight;
         // cout << node_i << " " << node_j << " " << weight << endl;
-        graph[make_pair(node_i - 1, node_j - 1)] = weight;
-        graph[make_pair(node_j - 1, node_i - 1)] = weight;
+        graph.push_back(make_pair(make_pair(node_i - 1, node_j - 1), weight));
     }
 
     f_in.close();

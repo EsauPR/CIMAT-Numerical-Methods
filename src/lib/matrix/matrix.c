@@ -36,6 +36,7 @@ NSMatrixElem matrix_find_max_element(double ** matrix, int from_row, int to_row,
 
 /* Swap matrix columns */
 void matrix_swap_cols(NSMatrix matrix, int col_1, int col_2) {
+    #pragma omp parallel for
     for (int i = 0; i < matrix.rows; i++){
         NS_SWAP(matrix.items[i][col_1], matrix.items[i][col_2], double);
     }
@@ -75,11 +76,12 @@ void matrix_randomnize_v(double * vector, int size) {
 
 /* Multiply matrix a x b = c and save the result in the matrix c */
 void matrix_multiply_mmd(double ** a, double ** b, double ** c, int arows, int acols, int bcols) {
-    double ** a_i = a;
-    double ** b_i = b;
-    double ** c_i = c;
+    #pragma omp parallel for
+    for (int i = 0; i < arows; i++) {
+        double ** a_i = a + i;
+        // double ** b_i = b + i;
+        double ** c_i = c + i;
 
-    for (int i = 0; i < arows; i++, a_i++, b_i++, c_i++) {
         double ** b_k = b;
         double * a_ik = *a_i;
         memset(*c_i, 0, bcols * sizeof(double));
@@ -102,9 +104,11 @@ NSMatrix matrix_multiply_mm(NSMatrix a, NSMatrix b) {
 
 /* Multiply a matrix 'a' and an array 'b' and save the result in the array 'c' */
 void matrix_multiply_mvd(double ** a, double * b, double * c, int arows, int acols) {
-    double ** a_i = a, * c_i = c;
 
-    for (int i = 0; i < arows; i++, a_i++, c_i++) {
+    #pragma omp parallel for
+    for (int i = 0; i < arows; i++) {
+        double ** a_i = a+i, * c_i = c+i;
+
         double * b_j = b;
         double * a_ij = *a_i;
 

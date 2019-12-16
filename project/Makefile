@@ -19,7 +19,7 @@ LIBNAME = numsys
 LIBPATH = ../src/target/build
 LIBS = -l${LIBNAME} -lm
 
-EXTRAFILES = graphio.cpp graph_draw_solver.cpp
+EXTRAFILES = graphio.cpp graph_draw_solver.cpp canvas.cpp
 
 ## Compiles the executable program by default main.c
 $(BIN): $(BIN).cpp buildlib

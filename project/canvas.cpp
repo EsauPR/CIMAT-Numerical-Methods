@@ -7,7 +7,7 @@
     @email esau.opr@gmail.com
 */
 
-// Includes
+#include <vector>
 
 #define CANVAS_IMPORT
 #include "canvas.hpp"

@@ -20,7 +20,7 @@
 #endif
 using namespace std;
 
-#define Graph std::map<std::pair<int, int>, double>
+#define Graph vector<pair<pair<int, int>, double>>
 
 Graph graph_read(const string file_name, int * n_nodes);
 
