@@ -43,7 +43,7 @@ NSMatrixSparse matrix_sparse_create(int max, int rows, int cols) {
 
 void matrix_sparse_insert(NSMatrixSparse * matrix, int row, int col, double value) {
     if (row > matrix->nrows || col > matrix->ncols) {
-        nsperror("Invalid entry size", NS__MATRIX_ERR_NONE__);
+        nsperror((char*)"Invalid entry size", NS__MATRIX_ERR_NONE__);
         return;
     }
 
@@ -55,7 +55,7 @@ void matrix_sparse_insert(NSMatrixSparse * matrix, int row, int col, double valu
 
 void matrix_sparse_add(NSMatrixSparse * A, NSMatrixSparse * B, NSMatrixSparse * C) {
     if (A->nrows != B->nrows || A->ncols != B->ncols) {
-        nsperror("Invalid matrices dimentions", NS__MATRIX_ERR_NONE__);
+        nsperror((char*)"Invalid matrices dimentions", NS__MATRIX_ERR_NONE__);
     }
 
     int apos = 0, bpos = 0;
@@ -148,7 +148,7 @@ void matrix_sparse_transpose(NSMatrixSparse * matrix, NSMatrixSparse * transpose
 
 void matrix_sparse_multiply(NSMatrixSparse * A, NSMatrixSparse * B, NSMatrixSparse * C) {
     if (A->ncols != B->ncols) {
-        nsperror("Invalid matrices dimentions", NS__MATRIX_ERR_NONE__);
+        nsperror((char*)"Invalid matrices dimentions", NS__MATRIX_ERR_NONE__);
         return;
     }
 

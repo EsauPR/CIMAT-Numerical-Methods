@@ -201,7 +201,7 @@ NSEigenV * matrix_eigen_pow_method_inv_dfl(NSMatrix * matrix, const int neigen) 
     if (matrix->err) {
         matrixio_free_vector(&(msystem.b));
         matrixio_free_vector(&(msystem.x));
-        nsperror("matrix_lu_decomposition():", matrix->err);
+        nsperror((char*)"matrix_lu_decomposition():", matrix->err);
         return NULL;
     }
 
@@ -219,7 +219,7 @@ NSEigenV * matrix_eigen_pow_method_inv_dfl(NSMatrix * matrix, const int neigen) 
             memcpy(msystem.b.items, z_vector, size * sizeof(double));
             solver_doolittle_method_lu(&msystem);
             if (msystem.err) {
-                nsperror("solver_doolittle_method_lu():", msystem.err);
+                nsperror((char*)"solver_doolittle_method_lu():", msystem.err);
                 free(y_vector);
                 free(z_vector);
                 matrixio_free_vector(&(msystem.b));
