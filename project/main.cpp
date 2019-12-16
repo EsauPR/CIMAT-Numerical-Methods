@@ -61,8 +61,8 @@ int main(int argc, char *argv[]) {
     int n_nodes = 0;
     Graph graph = graph_read(argv[1], &n_nodes);
 
-    int max_iters = 30;
-    NSMatrix layout = graph_layout_solver2(n_nodes, graph, width, hight, max_iters);
+    int max_iters = 3;
+    NSMatrix layout = graph_layout_solver(n_nodes, graph, width, hight, max_iters);
 
     save_layout(layout);
 

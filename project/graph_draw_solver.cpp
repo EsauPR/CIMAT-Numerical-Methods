@@ -25,10 +25,10 @@ static NSMatrix _get_distances(vector<pair<pair<int, int>, double>> graph, int n
     NSMatrix distances = matrixio_allocate_matrix(n_nodes, n_nodes);
 
     // Set the matrix distance to inf
-    double INF = 10e9;
+    // double INF = 10e9;
     for (int i = 0; i < n_nodes; i++) {
         for (int j = 0; j < n_nodes; j++) {
-            distances.items[i][j] = INF;
+            distances.items[i][j] = n_nodes + 5;
         }
     }
 
@@ -98,7 +98,12 @@ static void _get_laplacian_z_matrix(NSMatrix Lz, NSMatrix X, NSMatrix delta_matr
     for (int i = 0; i < rows; i++) {
         for (int j = 0; j < cols; j++) {
             if (i==j) continue;
-            Lz.items[i][j] = - delta_matrix.items[i][j] / sqrt(X.items[i][0] * X.items[i][0] + X.items[i][1] * X.items[i][1]);
+            double tmp = sqrt((X.items[i][0] - X.items[j][0]) * (X.items[i][0] - X.items[j][0]) + (X.items[i][1] - X.items[j][1]) * (X.items[i][1] - X.items[j][1]));
+            if (NS_IS_ZERO(tmp)) {
+                Lz.items[i][j] = 0;
+            } else {
+                Lz.items[i][j] = -pow(delta_matrix.items[i][j], -2.0) * delta_matrix.items[i][j] / tmp;
+            }
         }
     }
 
@@ -107,7 +112,7 @@ static void _get_laplacian_z_matrix(NSMatrix Lz, NSMatrix X, NSMatrix delta_matr
         double sum = 0.0;
         for (int k = 0; k < cols; k++) {
             if (i==k) continue;
-            sum += pow(Lz.items[i][k], -2.0);
+            sum += Lz.items[i][k];
         }
         Lz.items[i][i] = -sum;
     }
@@ -189,12 +194,14 @@ NSMatrix graph_layout_solver(int n_nodes, vector<pair<pair<int, int>, double>> g
     return X;
 }
 
+
 static void solver_cholesky_make_perm(double * b, int * row_perm_map, int size) {
     for (int i = 0; i < size - 1; i++) {
         if (row_perm_map[i] == i) continue;
         NS_SWAP(b[i], b[row_perm_map[i]], double);
     }
 }
+
 
 NSMatrix graph_layout_solver2(int n_nodes, vector<pair<pair<int, int>, double>> graph, int width, int hight, int niters) {
     puts("build X");

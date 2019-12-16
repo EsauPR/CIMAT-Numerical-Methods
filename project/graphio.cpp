@@ -29,7 +29,7 @@ Graph graph_read(const string file_name, int * n_nodes) {
 
     int rows, cols, nitems;
     f_in >> rows >> cols >> nitems;
-    *n_nodes = nitems;
+    *n_nodes = rows;
 
     cout << rows << " " << cols << " " << nitems << endl;
 

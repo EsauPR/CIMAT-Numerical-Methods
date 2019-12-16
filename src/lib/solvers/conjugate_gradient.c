@@ -16,7 +16,7 @@
 #define CONJ_GRADIENT_IMPORT
 #include "numsys/solvers/conjugate_gradient.h"
 
-#define CONJ_GRADIENT_MAX_ITER 1000
+#define CONJ_GRADIENT_MAX_ITER 10000
 
 static double get_alpha(double *p, double * r, double* w, int size) {
     double rr = 0, pw = 0;
