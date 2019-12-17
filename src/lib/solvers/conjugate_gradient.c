@@ -16,7 +16,7 @@
 #define CONJ_GRADIENT_IMPORT
 #include "numsys/solvers/conjugate_gradient.h"
 
-#define CONJ_GRADIENT_MAX_ITER 10000
+#define CONJ_GRADIENT_MAX_ITER 5000
 
 static double get_alpha(double *p, double * r, double* w, int size) {
     double rr = 0, pw = 0;
@@ -106,7 +106,7 @@ void conjugate_gradient_solver(NSMatrixSystem * msystem) {
     double * p = matrixio_allocate_array_double(size);
     double * x = msystem->x.items;
     double * w = matrixio_allocate_array_double(size);
-    double alpha, beta, error = 1.0;
+    double alpha, beta, error = 100.0;
 
     #pragma omp parallel for
     for (int i = 0; i < size; i++) {
@@ -118,18 +118,15 @@ void conjugate_gradient_solver(NSMatrixSystem * msystem) {
     int iter = 0;
     for (iter = 0; iter < CONJ_GRADIENT_MAX_ITER; iter++) {
         if (NS_IS_ZERO(error)) break;
+
         matrix_multiply_mvd(a, p, w, size, size);
         alpha = get_alpha(p, r, w, size);
         make_xnext(x, p, alpha, size);
 
         error = make_rnext(r, w, alpha, size, &beta);
 
-        if (iter % 100 == 0) {
+        if (iter % 500 == 0) {
             printf("Iter %d, Error: %le\n", iter, error);
-        }
-
-        if (NS_ABS(error) < 10e-6) {
-            break;
         }
 
         make_pnext(p, r, beta, size);

@@ -34,33 +34,33 @@ void draw(int argc, char *argv[], Graph graph, NSMatrix layout, int width, int h
     app->run(window);
 }
 
-void save_layout(NSMatrix layout) {
-    string file_name = "layout.txt";
+// void save_layout(NSMatrix layout) {
+//     string file_name = "layout.txt";
 
-    FILE * fp = fopen("layout.txt", "w");
-    if (fp == NULL) {
-        cout << "Can't not open file: " << file_name << endl;
-    }
+//     FILE * fp = fopen("layout.txt", "w");
+//     if (fp == NULL) {
+//         cout << "Can't not open file: " << file_name << endl;
+//     }
 
-    for (int i = 0; i < layout.cols; i++) {
-        fprintf(fp, "%4d - %lf %lf\n", i, layout.items[0][i], layout.items[1][i]);
-    }
+//     for (int i = 0; i < layout.cols; i++) {
+//         fprintf(fp, "%4d - %lf %lf\n", i, layout.items[0][i], layout.items[1][i]);
+//     }
 
-    fclose(fp);
+//     fclose(fp);
 
-    // string file_name = "layout.txt";
-    // ofstream f_out(file_name);
-    // if (!f_out.is_open()) {
-    //     cout << "Can't not open file: " << file_name << endl;
-    //     return;
-    // }
+//     // string file_name = "layout.txt";
+//     // ofstream f_out(file_name);
+//     // if (!f_out.is_open()) {
+//     //     cout << "Can't not open file: " << file_name << endl;
+//     //     return;
+//     // }
 
-    // for (int i = 0; i < layout.cols; i++) {
-    //     f_out << i << " " << layout.items[0][i] << " " << layout.items[1][i] << endl;
-    // }
+//     // for (int i = 0; i < layout.cols; i++) {
+//     //     f_out << i << " " << layout.items[0][i] << " " << layout.items[1][i] << endl;
+//     // }
 
-    // f_out.close();
-}
+//     // f_out.close();
+// }
 
 
 int main(int argc, char *argv[]) {
@@ -80,13 +80,16 @@ int main(int argc, char *argv[]) {
 
     int max_iters = 100;
 
-    NSMatrix layout = graph_layout_solver1(n_nodes, graph, max_iters, 10e-5);
+    NSMatrix layout = graph_layout_solver2(n_nodes, graph, max_iters, 10e-8);
+
     // cout << "final Layput start" << endl;
     // matrixio_show_matrix(layout);
     // cout << "final Layput end" << endl;
-    save_layout(layout);
+    // save_layout(layout);
 
     draw(1, argv, graph, layout, width, hight);
+
+    matrixio_free_matrix(&layout);
 
     return 0;
 }

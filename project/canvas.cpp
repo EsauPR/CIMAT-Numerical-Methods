@@ -53,7 +53,7 @@ CCanvas::CCanvas(Graph graph, double ** layout, int size, int width, int hight) 
 }
 
 
-/* Draw a queen in any cell position */
+/* Draw a edge that join two nodes */
 void CCanvas::draw_edges(const Cairo::RefPtr<Cairo::Context>& cr) {
 
     cr->set_line_width(0.5);
@@ -71,7 +71,7 @@ void CCanvas::draw_edges(const Cairo::RefPtr<Cairo::Context>& cr) {
 }
 
 
-/* Draw the board */
+/* Draw the nodes */
 void CCanvas::draw_nodes(Cairo::RefPtr<Cairo::Context> const & cr) {
     cr->set_line_width(0.5);
     cr->set_source_rgb(0.3, 0.3, 0.3);
@@ -84,7 +84,7 @@ void CCanvas::draw_nodes(Cairo::RefPtr<Cairo::Context> const & cr) {
 }
 
 
-/* Draw a board and queens for any solution*/
+/* Draw draw the graph with the given layout */
 bool CCanvas::on_draw(Cairo::RefPtr<Cairo::Context> const & cr) {
     draw_edges(cr);
     draw_nodes(cr);

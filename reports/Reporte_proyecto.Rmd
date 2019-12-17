@@ -1,0 +1,156 @@
+---
+title: "Dibujado de grafos mediante Stress Majorization"
+author: "Oscar Esaú Peralta Rosales"
+date: "12/17/2019"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+\begin{center}
+Proyecto final - Métodos Numéricos
+\end{center}
+
+
+El principal objetivo en el campo de Visualización de Datos es ayudar a descubrir, interpretar y comparar relaciones e información  existente en un conjunto de datos a través de distintos medios visuales, y uno de estos medios que se analizan en este proyecto son los grafos.
+
+Gran variedad de características presentes en los datos pueden ser modeladas a través de grafos, y gracias a su enorme versatilidad diversos campos de estudio hacen de su uso; geografía, ciencias sociales, movilidad, telefonía, bases de datos, inteligencia artififial, medicina, electrónica, química, etc. Así, a través del proceso de *Stress Majorization* se buscó la una forma de poder dibujar este modelo tal que podamos identificar más fácilmente las relaciones en él conservando la estructura intrínseca del grafo y las similitudes existentes entre los nodos.
+
+## Introducción
+
+Un grafo $G={V, E}$ se define como un un conjunto de vértices $V$ y aristas $E$. en dónde cada nodo mapea alguna entidad o característica de los datos y las aristas las relaciones entre estos. Durante este trabajo nos concetramos a trabajar sobre grafos no dirigidos, es decir, las relación presente por una arista es bidireccional.
+
+Dadas las características modeladas de los datos a través de los grafos, podemos intuir que cada grafo es único y por tanto la forma de como dibujarlo de tal manera que se preserve la estructura de sus relaciones también es variada. Diversas técnicas se han realizado con este fin como, *Stochastic Gradient Descent*, *gradient proyection*, *Weighted Constraint Relaxation*, *Multidimensional Scaling* y el método implementado aquí *Stress Majorization*.
+
+*Stress Majorization* es una técnica de optimización usada comúnte para desplegar información almacenada en una matrix de distancias, la cual contiene la distancia entre cada par de nodos. Esta técnica trata de colocar cada nodo dentro de un *layout* multidimencional tal que la distancias sean preservadas de la mejor manera a través de la función de coste *stress*. La función de coste se define como:
+
+\begin{equation}\label{eq:stress}
+stress(X) = \sum_{i<j} w_{ij}(||X_i - X_j|| - d_{ij})^2
+\end{equation}
+
+Dónde $X$ es un *layout* $X$ de dimenciones $N x R$ con $N$ como el número de nodos y $R$ la dimensionalidad de este. $d_{ij}$ es la distancia entre el nodo $i$ y el nodo $j$ y $w_{ij}$ es una constante de normalización igual a $d_{ij}^{-\alpha}$.
+
+Así, dado un *layout* inicial $X$ se busca minimizar la función de *stress* para encontrar un nuevo *layout* tal que se tenga un dibujado óptimo.
+
+##Stress Majorization
+
+Dado un *layout* $X$ de dimenciones $NxR$ con $R=2$ o  $R=3$  se busca minimizar la función de *stress*
+
+$$
+stress(X) = \sum_{i<j} w_{ij}(||X_i - X_j|| - d_{ij})^2
+$$
+
+Expandiendo la función de *stress* se tiene
+
+\begin{equation}\label{eq:stressexp}
+stress(X) = \sum_{i<j} w_{ij}d_{ij}^2 + \sum_{i<j} w_{ij}||X_i - X_j||^2 - 2\sum_{i<j} \delta_{ij}||X_i-X_j||
+\end{equation}
+
+Con $\delta_{ij} = w_{ij}d_{ij}$ y $w_{ij} = d_{ij}^{-\alpha}$ con $\alpha=2$ (proporciona mejores resultados).
+
+El segundo término de (2) se puede escribir como
+
+\begin{equation}\label{eq:t2}
+\sum_{i<j} w_{ij}||X_i - X_j||^2 = (X^TL^wX)^T
+\end{equation}
+
+Donde $L^w$ es la forma cuadrática de la Matriz Laplaciana Ponderada de dimensiones $NxN$
+
+\begin{equation}\label{eq:lw}
+L^w_{ij}= 
+  \left\{ \begin{array}{lcc}
+           -w_{ij} &   i \neq j \\
+           \\ \sum_{k \neq i} w_{ik} &  i = k \\
+           \end{array}
+ \right.
+\end{equation}
+
+El tercer término puede ser limitado, usando la desigualdad de *Cauchy-Schwartz* $$||x||||y|| \geq x^Ty $$ y adicionalmente dada una matriz $Z$ de las mismas dimenciones de $X$ tenemos
+
+\begin{equation}\label{eq:cst3}
+||X_i-X_j||||Z_i-Z_j|| \geq (X_i - X_j)^T (Z_i-Z_j)
+\end{equation}
+
+\begin{equation}\label{eq:t3}
+\sum_{i<j} \delta_{ij}||X_i-X_j|| \geq \sum_{i<j} \delta_{ij}(||Z_i-Z_j||)^{-1} (X_i - X_j)^T (Z_i-Z_j)
+\end{equation}
+
+La ecuación (6) puede ser reescrita de forma matricial como
+
+\begin{equation}\label{eq:t3m}
+\sum_{i<j} \delta_{ij}||X_i-X_j|| \geq (X^TL^ZZ)^T
+\end{equation}
+
+Dónde dada una matriz $Z$ de posiciones de las mismas dimensiones de $X$ podemos construir $L^Z$ como
+
+\begin{equation}\label{eq:lz}
+L^Z_{ij}= 
+  \left\{ \begin{array}{lcc}
+           -\delta_{ij} (||Z_i - Z_j||)^{-1} &   i \neq j \\
+           \\ \sum_{k \neq i} L^Z_{ik} &  i = k \\
+           \end{array}
+ \right.
+\end{equation}
+
+De esta forma la función *stress* puede ser limitada usando las ecuaciones anteriores
+
+\begin{equation}\label{eq:stressbounded}
+stress(X) \leq \sum_{i<j} w_{ij}d_{ij} + (X^TL^WX)^T + 2(X^TL^ZZ)^T
+\end{equation}
+
+
+Diferenciando con respecto a $X$ se obtiene que el mínimo de la función de stress (9) está dado por 
+
+\begin{equation}\label{eq:stressmin}
+L^wX = L^ZZ
+\end{equation}
+
+equivalentemente resolviendo para cada eje de $X$
+
+\begin{equation}\label{eq:stressboundedbyaxes}
+L^wX^{(a)} = L^ZZ^{(a)}\ a = 1,2,3...R
+\end{equation}
+
+La ecuación (11) puede formularse de manera iterativa para un *layout* inicial $X(t)$ y obtener un nuevo *layout* $X(t+1)$ tal que satisfaga $stress(X(t+1)) \leq stress(X(t))$
+
+\begin{equation}\label{eq:stressiter}
+L^wX(t+1)^{(a)} = L^{X(t)}X(t)^{(a)}\ a = 1,2,3...R
+\end{equation}
+
+El proceso iterativo se detiene mediante la siguiente condición
+
+\begin{equation}\label{eq:stopcondition}
+\frac{stress(X(t)) - stress(X(t+1))}{stress(X(t))} \leq \epsilon
+\end{equation}
+
+
+con $\epsilon \sim 10e^-4$. Nótese que $L^w$ es constante durante todo el proceso y $L^{X(t)}$ depende del layout actual.
+
+## Implementación y Resultados
+
+### Datos
+
+Los conjuntos de datos fueron obtenidos desde la página de [The SuiteSparse Matrix Collection](https://sparse.tamu.edu/) elegidos por cantidad de nodos y distribución de los nodos.
+
+```{r tables-mtcars, echo=FALSE}
+
+Nombre <- c('1138_bus', 'cage9', 'CSphd', 'dwt_1005', 'dwt_2680', 'g_26', 'gre_216a', 'gre_1107', 'qh882')
+Nodos <- c(1138, 3534, 1882, 1005, 2680, 2000, 216, 1107, 882)
+Tipo <- c('Power Network Problem', 'Directed Weighted Graph', 'Directed Graph', 'Structural Problem', 'Structural Problem', 'Undirected Random Graph', 'Directed Weighted Graph', 'Directed Weighted Graph', 'Power Network Problem')
+
+knitr::kable(data.frame(Nombre, Nodos, Tipo), caption = 'Datasets usados para dibujado')
+```
+
+### Generación del layout inicial
+
+El *layout* solo cuenta con dos dimensiones por tanto la matriz $X$ es de dimensión $Nx2$. La primer columna de la matriz representa el eje x y la segunda columna el eje y. Así el i-ésimo nodo está posicionado en las coordenadas $(X[i][0], X[i][1])$.
+
+Los valores de las coordenadas iniciales para cada nodo son tomados aleatoreamente y posteriormente cada columna es normalizada tener en la menor manera posible errores numéricos.
+
+### Cálculo de las distancias entre los nodos
+
+En la literatura sobre diversas implementaciones se observa que el cálculo de la distancia de los nodos lo realizan a través del *Algorimo de Dijkstra*, el cual nos ayuda a obtener la distancia de un nodo hacia los demás. Sin embargo, necesitamos la distancia de todos los nodos hacia todos los nodos y así poder construir una matriz de distancias $D$, dónde la intersección de la fila $i$ con la columna $j$ representa la distancia que hay entre los dos nodos $i$ y $j$ se procedió a implementar el algortimo de *Floyd Warshall*. el cuál hace uso de de la aproximación *Buttom-Up* de programación dinámica para realizar el cálculo de todas estas distancias de unas sola vez.
+
+### 

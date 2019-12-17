@@ -140,18 +140,18 @@ static NSMatrix _graph_build_layout_matrix(int n_nodes) {
     }
 
     // Scale and ortogonalize
-    // for (int k = 0; k < 2; k++) {
-    //     double sum = 0.0;
-    //     double * pntr = layout.items[k];
-    //     for (int i = 0; i < n_nodes; i++) {
-    //         sum += *pntr++;
-    //     }
-    //     sum /= n_nodes;
-    //     pntr = layout.items[k];
-    //     for (int i = 0; i < n_nodes; i++) {
-    //         *pntr++ -= sum;
-    //     }
-    // }
+    for (int k = 0; k < 2; k++) {
+        double sum = 0.0;
+        double * pntr = layout.items[k];
+        for (int i = 0; i < n_nodes; i++) {
+            sum += *pntr++;
+        }
+        sum /= n_nodes;
+        pntr = layout.items[k];
+        for (int i = 0; i < n_nodes; i++) {
+            *pntr++ -= sum;
+        }
+    }
 
     matrix_normalize_v(layout.items[0], n_nodes);
     matrix_normalize_v(layout.items[1], n_nodes);
@@ -167,7 +167,7 @@ static double stress(NSMatrix distances, NSMatrix X) {
     int size = distances.rows;
     double _stress = 0.0;
     for (int i = 0; i < size; i++) {
-        for (int j = 0; j < i; j++) {
+        for (int j = i + 1; j < size; j++) {
             double w_ij = pow(distances.items[i][j], -2);
             double norm = sqrt((X.items[0][i] - X.items[0][j]) * (X.items[0][i] - X.items[0][j]) + (X.items[1][i] - X.items[1][j]) * (X.items[1][i] - X.items[1][j]));
             _stress += w_ij * pow(norm - distances.items[i][j], 2.0);
@@ -181,7 +181,9 @@ static double stress(NSMatrix distances, NSMatrix X) {
 
 NSMatrix graph_layout_solver1(int n_nodes, vector<pair<pair<int, int>, double>> graph, int niters, double tolerance) {
     puts("build X");
-    NSMatrix X = _graph_build_layout_matrix(n_nodes);
+    // NSMatrix X = _graph_build_layout_matrix(n_nodes);
+    // Try to get a better inicialization of X solution before the gradiente method
+    NSMatrix X = graph_layout_solver2(n_nodes, graph, 3, tolerance);
     puts("distances");
     NSMatrix distances = _get_distances(graph, n_nodes);
     puts("Delta");
@@ -315,6 +317,7 @@ NSMatrix graph_layout_solver2(int n_nodes, vector<pair<pair<int, int>, double>> 
         double stress_xt = stress(distances, Z);
         double stress_xt1 = stress(distances, X);
         double ctol = (stress_xt - stress_xt1) / stress_xt;
+        printf("stress: %le %le\n", stress_xt, stress_xt1);
         printf("ctol: %le\n", ctol);
 
         if (abs(ctol) < tolerance) {
