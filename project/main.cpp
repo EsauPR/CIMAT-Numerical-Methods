@@ -79,8 +79,8 @@ int main(int argc, char *argv[]) {
     Graph graph = graph_read(argv[1], &n_nodes, has_weight);
 
     int max_iters = 100;
-    // NSMatrix layout = graph_layout_solver(n_nodes, graph, max_iters);
-    NSMatrix layout = graph_layout_solver2(n_nodes, graph, max_iters);
+
+    NSMatrix layout = graph_layout_solver1(n_nodes, graph, max_iters, 10e-5);
     // cout << "final Layput start" << endl;
     // matrixio_show_matrix(layout);
     // cout << "final Layput end" << endl;

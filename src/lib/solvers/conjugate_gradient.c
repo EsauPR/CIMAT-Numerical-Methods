@@ -1,7 +1,7 @@
 /**
     ANSI C standard: c11
-    {file}.c
-    Purpose: Jacobi iterative method
+    conjugate_gradient.c
+    Purpose: Conjugate gradient method
 
    @author Esaú Peralta
    @email esau.opr@gmail.com
@@ -122,9 +122,16 @@ void conjugate_gradient_solver(NSMatrixSystem * msystem) {
         alpha = get_alpha(p, r, w, size);
         make_xnext(x, p, alpha, size);
 
-        // printf("\t%d\n", iter);
-
         error = make_rnext(r, w, alpha, size, &beta);
+
+        if (iter % 100 == 0) {
+            printf("Iter %d, Error: %le\n", iter, error);
+        }
+
+        if (NS_ABS(error) < 10e-6) {
+            break;
+        }
+
         make_pnext(p, r, beta, size);
     }
 

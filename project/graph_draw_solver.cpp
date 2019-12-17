@@ -171,7 +171,7 @@ static double stress(NSMatrix distances, NSMatrix X) {
             double w_ij = pow(distances.items[i][j], -2);
             double norm = sqrt((X.items[0][i] - X.items[0][j]) * (X.items[0][i] - X.items[0][j]) + (X.items[1][i] - X.items[1][j]) * (X.items[1][i] - X.items[1][j]));
             _stress += w_ij * pow(norm - distances.items[i][j], 2.0);
-            printf("w_ij: %lf  norm: %lf   stress: %lf\n", w_ij, norm, _stress);
+            // printf("w_ij: %lf  norm: %lf   stress: %lf\n", w_ij, norm, _stress);
         }
     }
 
@@ -179,7 +179,7 @@ static double stress(NSMatrix distances, NSMatrix X) {
 }
 
 
-NSMatrix graph_layout_solver(int n_nodes, vector<pair<pair<int, int>, double>> graph, int niters, double tolerance) {
+NSMatrix graph_layout_solver1(int n_nodes, vector<pair<pair<int, int>, double>> graph, int niters, double tolerance) {
     puts("build X");
     NSMatrix X = _graph_build_layout_matrix(n_nodes);
     puts("distances");
@@ -200,15 +200,16 @@ NSMatrix graph_layout_solver(int n_nodes, vector<pair<pair<int, int>, double>> g
     msystem.b = matrixio_allocate_vector(n_nodes);
 
 
-    while(niters--) {
-        printf("step %d\n", niters);
+    for (int iter = 0; iter < niters; iter++) {
+        printf("step %d\n", iter);
+
         NS_SWAP(X.items, Z.items, double **);
         NS_SWAP(X.pointer_start, Z.pointer_start, double *);
 
+        _get_laplacian_z_matrix(Lz, Z, delta_matrix);
+
         for (int axe = 0; axe < 2; axe++) {
             memcpy(x_axes_tmp.items, Z.items[axe], sizeof(double) * n_nodes);
-
-            _get_laplacian_z_matrix(Lz, Z, delta_matrix);
             matrix_multiply_mvd(Lz.items, x_axes_tmp.items, msystem.b.items, Lz.rows, Lz.cols);
 
             conjugate_gradient_solver(&msystem);
@@ -218,24 +219,22 @@ NSMatrix graph_layout_solver(int n_nodes, vector<pair<pair<int, int>, double>> g
 
         double stress_xt = stress(distances, Z);
         double stress_xt1 = stress(distances, X);
-        double ctol = NS_ABS(stress_xt - stress_xt1) / stress_xt;
-        printf("ctol: %lf\n", ctol);
+        double ctol = (stress_xt - stress_xt1) / stress_xt;
+        printf("ctol: %le\n", ctol);
 
-        if (ctol < tolerance) {
+        if (iter != 0 && abs(ctol) < tolerance) {
             break;
         }
-
-        // puts("layout");
-        // matrixio_show_matrix(X);
     }
 
-    // matrixio_free_matrix(&Lw);
-    // matrixio_free_matrix(&delta_matrix);
-    // matrixio_free_matrix(&Z);
-    // matrixio_free_matrix(&Lz);
-    // matrixio_free_matrix(&distances);
-    // matrixio_free_vector(&x_axes_tmp);
-    // matrixio_free_matrix_system(&msystem);
+    matrixio_free_matrix(&Lw);
+    matrixio_free_matrix(&delta_matrix);
+    matrixio_free_matrix(&Z);
+    matrixio_free_matrix(&Lz);
+    matrixio_free_matrix(&distances);
+    matrixio_free_vector(&x_axes_tmp);
+    matrixio_free_vector(&msystem.b);
+    matrixio_free_vector(&msystem.x);
 
     return X;
 }
@@ -316,22 +315,23 @@ NSMatrix graph_layout_solver2(int n_nodes, vector<pair<pair<int, int>, double>> 
         double stress_xt = stress(distances, Z);
         double stress_xt1 = stress(distances, X);
         double ctol = (stress_xt - stress_xt1) / stress_xt;
-        printf("ctol: %lf\n", ctol);
+        printf("ctol: %le\n", ctol);
 
-        if (ctol < tolerance) {
+        if (abs(ctol) < tolerance) {
             break;
         }
         // puts("layout");
         // matrixio_show_matrix(X);
     }
 
-    // matrixio_free_matrix(&Lw);
-    // matrixio_free_matrix(&delta_matrix);
-    // matrixio_free_matrix(&Z);
-    // matrixio_free_matrix(&Lz);
-    // matrixio_free_matrix(&distances);
-    // matrixio_free_vector(&x_axes_tmp);
-    // matrixio_free_matrix_system(&msystem);
+    matrixio_free_matrix(&Lw);
+    matrixio_free_matrix(&delta_matrix);
+    matrixio_free_matrix(&Z);
+    matrixio_free_matrix(&Lz);
+    matrixio_free_matrix(&distances);
+    matrixio_free_vector(&x_axes_tmp);
+    matrixio_free_vector(&msystem.b);
+    matrixio_free_vector(&msystem.x);
 
     return X;
 }
