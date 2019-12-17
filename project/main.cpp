@@ -80,7 +80,7 @@ int main(int argc, char *argv[]) {
 
     int max_iters = 100;
 
-    NSMatrix layout = graph_layout_solver2(n_nodes, graph, max_iters, 10e-8);
+    NSMatrix layout = graph_layout_solver3(n_nodes, graph, max_iters, 10e-8);
 
     // cout << "final Layput start" << endl;
     // matrixio_show_matrix(layout);

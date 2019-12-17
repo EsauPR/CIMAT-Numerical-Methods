@@ -154,3 +154,7 @@ Los valores de las coordenadas iniciales para cada nodo son tomados aleatoreamen
 En la literatura sobre diversas implementaciones se observa que el cálculo de la distancia de los nodos lo realizan a través del *Algorimo de Dijkstra*, el cual nos ayuda a obtener la distancia de un nodo hacia los demás. Sin embargo, necesitamos la distancia de todos los nodos hacia todos los nodos y así poder construir una matriz de distancias $D$, dónde la intersección de la fila $i$ con la columna $j$ representa la distancia que hay entre los dos nodos $i$ y $j$ se procedió a implementar el algortimo de *Floyd Warshall*. el cuál hace uso de de la aproximación *Buttom-Up* de programación dinámica para realizar el cálculo de todas estas distancias de unas sola vez.
 
 ### 
+
+
+- choolesky no convergencia iteraciones 100,82 time
+- 

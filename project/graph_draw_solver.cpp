@@ -15,7 +15,9 @@
 
 #include "numsys/solvers/cholesky.h"
 #include "numsys/solvers/conjugate_gradient.h"
-#include "numsys/solvers/cholesky.h"
+#include "numsys/solvers/doolittle.h"
+#include "numsys/solvers/gauss_seidel.h"
+#include "numsys/solvers/jacobi.h"
 #include "numsys/matrix/matrix.h"
 #include "numsys/matrix/matrix_core.h"
 #include "numsys/matrix_op/matrix_ldlt.h"
@@ -325,6 +327,68 @@ NSMatrix graph_layout_solver2(int n_nodes, vector<pair<pair<int, int>, double>> 
         }
         // puts("layout");
         // matrixio_show_matrix(X);
+    }
+
+    matrixio_free_matrix(&Lw);
+    matrixio_free_matrix(&delta_matrix);
+    matrixio_free_matrix(&Z);
+    matrixio_free_matrix(&Lz);
+    matrixio_free_matrix(&distances);
+    matrixio_free_vector(&x_axes_tmp);
+    matrixio_free_vector(&msystem.b);
+    matrixio_free_vector(&msystem.x);
+
+    return X;
+}
+
+
+NSMatrix graph_layout_solver3(int n_nodes, vector<pair<pair<int, int>, double>> graph, int niters, double tolerance) {
+    NSMatrix X = _graph_build_layout_matrix(n_nodes);
+    NSMatrix distances = _get_distances(graph, n_nodes);
+    NSMatrix delta_matrix = _get_delta_matrix(distances);
+    NSMatrix Lw = _get_laplacian_w_matrix(distances);
+
+    NSMatrix Z = matrixio_allocate_matrix(2, n_nodes);
+    NSMatrix Lz = matrixio_allocate_matrix(n_nodes, n_nodes);
+
+    NSVector x_axes_tmp = matrixio_allocate_vector(n_nodes);
+
+    NSMatrixSystem msystem = NSMatrixSystemDefault;
+    msystem.a = Lw;
+    msystem.x = matrixio_allocate_vector(n_nodes);
+    msystem.b = matrixio_allocate_vector(n_nodes);
+
+    while(niters--) {
+        printf("step %d\n", niters);
+        NS_SWAP(X.items, Z.items, double **);
+        NS_SWAP(X.pointer_start, Z.pointer_start, double *);
+
+        _get_laplacian_z_matrix(Lz, Z, delta_matrix);
+
+        for (int axe = 0; axe < 2; axe++) {
+            memcpy(x_axes_tmp.items, Z.items[axe], sizeof(double) * n_nodes);
+            matrix_multiply_mvd(Lz.items, x_axes_tmp.items, msystem.b.items, Lz.rows, Lz.cols);
+
+            // #include "numsys/solvers/cholesky.h"
+            // #include "numsys/solvers/conjugate_gradient.h"
+            // #include "numsys/solvers/doolittle.h"
+            // #include "numsys/solvers/gauss_seidel.h"
+            // #include "numsys/solvers/jacobi.h
+
+            solver_cholesky_method(&msystem);
+
+            memcpy(X.items[axe], msystem.x.items, sizeof(double) * n_nodes);
+        }
+
+        double stress_xt = stress(distances, Z);
+        double stress_xt1 = stress(distances, X);
+        double ctol = (stress_xt - stress_xt1) / stress_xt;
+        printf("stress: %le %le\n", stress_xt, stress_xt1);
+        printf("ctol: %le\n", ctol);
+
+        if (abs(ctol) < tolerance) {
+            break;
+        }
     }
 
     matrixio_free_matrix(&Lw);
