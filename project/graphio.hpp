@@ -22,7 +22,7 @@ using namespace std;
 
 #define Graph vector<pair<pair<int, int>, double>>
 
-Graph graph_read(const string file_name, int * n_nodes);
+Graph graph_read(const string file_name, int * n_nodes, bool has_weight);
 
 #undef GRAPHIO_IMPORT
 #undef EXTERN

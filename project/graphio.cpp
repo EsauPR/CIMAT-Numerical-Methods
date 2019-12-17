@@ -17,7 +17,7 @@ using namespace std;
 #include "graphio.hpp"
 
 
-Graph graph_read(const string file_name, int * n_nodes) {
+Graph graph_read(const string file_name, int * n_nodes, bool has_weight) {
     ifstream f_in (file_name);
     if (!f_in.is_open()) {
         cout << "Can't open file: " << file_name << endl;
@@ -38,8 +38,15 @@ Graph graph_read(const string file_name, int * n_nodes) {
     Graph graph;
 
     while (nitems--) {
-        f_in >> node_i >> node_j >> weight;
-        // cout << node_i << " " << node_j << " " << weight << endl;
+        if (has_weight) {
+            f_in >> node_i >> node_j >> weight;
+            cout << node_i << " " << node_j << " " << weight << endl;
+        } else {
+            f_in >> node_i >> node_j;
+            cout << node_i << " " << node_j << " " << "None" << endl;
+        }
+
+        if (node_i == node_j) continue;
         graph.push_back(make_pair(make_pair(node_i - 1, node_j - 1), weight));
     }
 

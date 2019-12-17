@@ -28,13 +28,15 @@ using namespace std;
 
 class CCanvas: public Gtk::DrawingArea {
     public:
-        CCanvas(Graph graph, double ** layout, int size);
+        CCanvas(Graph graph, double ** layout, int size, int width, int hight);
         virtual ~CCanvas() { };
 
     private:
         Graph _graph;
         int _size;
-        double ** _layout;
+        int _scale;
+        vector<vector<double>> _layout;
+
         void draw_nodes(Cairo::RefPtr<Cairo::Context> const & cr);
         void draw_edges(Cairo::RefPtr<Cairo::Context> const & cr);
 

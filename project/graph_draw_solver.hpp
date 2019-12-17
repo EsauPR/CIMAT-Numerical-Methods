@@ -20,8 +20,8 @@
 
 using namespace std;
 
-NSMatrix graph_layout_solver(int n_nodes, vector<pair<pair<int, int>, double>> graph, int width, int hight, int niters);
-NSMatrix graph_layout_solver2(int n_nodes, vector<pair<pair<int, int>, double>> graph, int width, int hight, int niters);
+NSMatrix graph_layout_solver(int n_nodes, vector<pair<pair<int, int>, double>> graph, int niters, double tolerance=0.01);
+NSMatrix graph_layout_solver2(int n_nodes, vector<pair<pair<int, int>, double>> graph, int niters, double tolerance=0.01);
 
 
 #undef GRAPH_DRAW_SOLVER_IMPORT
