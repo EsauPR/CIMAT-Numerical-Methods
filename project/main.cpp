@@ -73,20 +73,19 @@ int main(int argc, char *argv[]) {
     string w = (argc >= 3)? argv[2] : "";
     bool has_weight = (w == "-w")? true: false;
 
-    int width = 1024, hight = 768;
-
     int n_nodes = 0;
     Graph graph = graph_read(argv[1], &n_nodes, has_weight);
 
-    int max_iters = 100;
+    int max_iters = 1000;
 
-    NSMatrix layout = graph_layout_solver3(n_nodes, graph, max_iters, 10e-8);
+    NSMatrix layout = graph_layout_solver2(n_nodes, graph, max_iters, 10e-6);
 
     // cout << "final Layput start" << endl;
     // matrixio_show_matrix(layout);
     // cout << "final Layput end" << endl;
     // save_layout(layout);
 
+    int width = 1024, hight = 768;
     draw(1, argv, graph, layout, width, hight);
 
     matrixio_free_matrix(&layout);

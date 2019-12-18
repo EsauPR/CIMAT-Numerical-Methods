@@ -2,7 +2,10 @@
 title: "Dibujado de grafos mediante Stress Majorization"
 author: "Oscar Esaú Peralta Rosales"
 date: "12/17/2019"
-output: pdf_document
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
 ---
 
 ```{r setup, include=FALSE}
@@ -130,7 +133,7 @@ con $\epsilon \sim 10e^-4$. Nótese que $L^w$ es constante durante todo el proce
 
 ## Implementación y Resultados
 
-### Datos
+### Conjuntos de Datos
 
 Los conjuntos de datos fueron obtenidos desde la página de [The SuiteSparse Matrix Collection](https://sparse.tamu.edu/) elegidos por cantidad de nodos y distribución de los nodos.
 
@@ -153,8 +156,62 @@ Los valores de las coordenadas iniciales para cada nodo son tomados aleatoreamen
 
 En la literatura sobre diversas implementaciones se observa que el cálculo de la distancia de los nodos lo realizan a través del *Algorimo de Dijkstra*, el cual nos ayuda a obtener la distancia de un nodo hacia los demás. Sin embargo, necesitamos la distancia de todos los nodos hacia todos los nodos y así poder construir una matriz de distancias $D$, dónde la intersección de la fila $i$ con la columna $j$ representa la distancia que hay entre los dos nodos $i$ y $j$ se procedió a implementar el algortimo de *Floyd Warshall*. el cuál hace uso de de la aproximación *Buttom-Up* de programación dinámica para realizar el cálculo de todas estas distancias de unas sola vez.
 
-### 
+### Implementación del algoritmo
+
+Como se vió anteriomente la solución de la función *stress* está dada por 
+
+$$
+L^wX(t+1)^{(a)} = L^{X(t)}X(t)^{(a)}\ a = 1,2,3...R
+$$
+Con las matrices $L$ tal como se definen arriba, se muestra a continuación el pseudocódigo de la implementación.
 
 
-- choolesky no convergencia iteraciones 100,82 time
-- 
+``` {pseudocode, class.source = "numberLines"}
+function graph_layout_solver1(n_nodes, graph, niters, tolerance) {
+    // Inicializar posiciones de los nodos aleatoreamente
+    X <- graph_build_layout_matrix(n_nodes);
+    
+    // Calcular matriz de distancias mediante Floyd Warshall
+    distances <- get_distances(graph, n_nodes);
+    
+    // Construir matriz delta delta_ij = w_ij * d_ij
+    delta_matrix <- get_delta_matrix(distances);
+    
+    // Construir matriz laplaciana ponderada con las distancias
+    Lw <- get_laplacian_w_matrix(distances);
+    A <- Lw
+    for (iter = 0; iter < niters; iter++) {
+        Z <- X;
+        // Obtenemos la matriz laplaciana de Z
+        Lz <- _get_laplacian_z_matrix(Z, delta_matrix);
+
+        for (axe = 0; axe < 2; axe++) {
+            // Calculamos b como el producto matricial de Lz por el eje actual de X
+            b = Lz @ X[axe]
+            // Resolver Ax=b
+            X[axe] <- solve(A, b);
+        }
+        // Criterio de parada
+        stress_tol = (stress(distances, Z) - stress(distances, X)) / stress(distances, Z);
+        if (abs(ctol) < tolerance) {
+            break;
+        }
+    }
+
+    return X;
+```
+
+
+Así, la solución está dada por resolver iterativamente un sistema lineal $Ax=b$ generadas por las matrices Laplacianas y el *layout* generado. La solución de estos sistemas fué encontrada con el uso de 5 métodos de solución; Método de Cholesky, Método de Doolittle, Método de Gauss-Seidel, Método de Jacobi, y el Método de Gradiente Conjugado.
+
+```{r tables-msols, echo=FALSE}
+
+method <- c('Cholesky', 'Doolittle', 'Gauss-Seidel', 'Jacobi', 'Conjugate Gradiente')
+iterations <- c(13, 25, 13, 15, 4)
+time <- c('3.117s', '3.665s', '90.189s', '109.634s', '25.870s')
+stress_diff <- c(4.950656e-06, 4.370231e-06, 4.855111e-06, 8.760448e-06, 4.777939e-06)
+col_names = c('Método', 'Iteraciones', 'Tiempo de ejecución', 'Criterio de convergencia alcanzado')
+
+knitr::kable(data.frame(method, iterations, time, stress_diff), caption = 'Resultados de los métodos internos de solución', col.names=col_names)
+```
+

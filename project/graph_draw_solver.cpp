@@ -22,6 +22,7 @@
 #include "numsys/matrix/matrix_core.h"
 #include "numsys/matrix_op/matrix_ldlt.h"
 #include "numsys/solvers/bwfw_substitution.h"
+#include "numsys/matrix_op/matrix_lu.h"
 
 #define GRAPH_DRAW_SOLVER_IMPORT
 #include "graph_draw_solver.hpp"
@@ -244,7 +245,7 @@ NSMatrix graph_layout_solver1(int n_nodes, vector<pair<pair<int, int>, double>> 
 }
 
 
-static void solver_cholesky_make_perm(double * b, int * row_perm_map, int size) {
+static void solver_make_perm(double * b, int * row_perm_map, int size) {
     for (int i = 0; i < size - 1; i++) {
         if (row_perm_map[i] == i) continue;
         NS_SWAP(b[i], b[row_perm_map[i]], double);
@@ -277,7 +278,7 @@ NSMatrix graph_layout_solver2(int n_nodes, vector<pair<pair<int, int>, double>> 
     double **matrix = msystem.a.items;
 
     int * row_perm_map = matrix_ldlt_decomposition(&(msystem.a));
-    solver_cholesky_make_perm(msystem.b.items, row_perm_map, msystem.b.size);
+    solver_make_perm(msystem.b.items, row_perm_map, msystem.b.size);
     free(row_perm_map);
 
     if (msystem.a.err) {
@@ -358,6 +359,16 @@ NSMatrix graph_layout_solver3(int n_nodes, vector<pair<pair<int, int>, double>> 
     msystem.x = matrixio_allocate_vector(n_nodes);
     msystem.b = matrixio_allocate_vector(n_nodes);
 
+    // Uncomment for doolittle
+    // int * row_perm_map = matrix_lu_decomposition(&(msystem.a));
+    // solver_make_perm(msystem.b.items, row_perm_map, msystem.b.size);
+    // free(row_perm_map);
+
+    // if (msystem.a.err) {
+    //     msystem.err |= msystem.a.err | NS__MATRIX_ERR_NO_SOLUTION__;
+    //     return X;
+    // }
+
     while(niters--) {
         printf("step %d\n", niters);
         NS_SWAP(X.items, Z.items, double **);
@@ -369,13 +380,9 @@ NSMatrix graph_layout_solver3(int n_nodes, vector<pair<pair<int, int>, double>> 
             memcpy(x_axes_tmp.items, Z.items[axe], sizeof(double) * n_nodes);
             matrix_multiply_mvd(Lz.items, x_axes_tmp.items, msystem.b.items, Lz.rows, Lz.cols);
 
-            // #include "numsys/solvers/cholesky.h"
-            // #include "numsys/solvers/conjugate_gradient.h"
-            // #include "numsys/solvers/doolittle.h"
-            // #include "numsys/solvers/gauss_seidel.h"
-            // #include "numsys/solvers/jacobi.h
-
-            solver_cholesky_method(&msystem);
+            // solver_doolittle_method_lu(&msystem);
+            gauss_seidel_solver(&msystem);
+            // jacobi_solver(&msystem);
 
             memcpy(X.items[axe], msystem.x.items, sizeof(double) * n_nodes);
         }

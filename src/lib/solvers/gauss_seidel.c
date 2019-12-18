@@ -53,6 +53,10 @@ void gauss_seidel_solver(NSMatrixSystem * msystem) {
         }
 
         error = sqrt(error);
+        if (k % 100 == 0) {
+            printf("Iter %d, Error: %le\n", k, error);
+        }
+
         if (isnan(error)) {
             printf("Warning:: Step %d, Error is NaN\n", k);
         }
