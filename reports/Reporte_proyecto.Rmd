@@ -204,7 +204,7 @@ function graph_layout_solver1(n_nodes, graph, niters, tolerance) {
 
     return X;
 ```
-
+  
 
 Así, la solución está dada por resolver iterativamente un sistema lineal $Ax=b$ generado consecutivamente por las matrices Laplacianas y el *layout* actual obtenido. La solución de estos sistemas fue encontrada con el uso de 5 métodos de solución; Método de Cholesky, Método de Doolittle, Método de Gauss-Seidel, Método de Jacobi, y el Método de Gradiente Conjugado.
 
