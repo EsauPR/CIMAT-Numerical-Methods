@@ -10,6 +10,7 @@ output:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(magick)
 ```
 
 \begin{center}
@@ -17,27 +18,29 @@ Proyecto final - Métodos Numéricos
 \end{center}
 
 
-El principal objetivo en el campo de Visualización de Datos es ayudar a descubrir, interpretar y comparar relaciones e información  existente en un conjunto de datos a través de distintos medios visuales, y uno de estos medios que se analizan en este proyecto son los grafos.
+El principal objetivo en el campo de Visualización de Datos es ayudar a descubrir, interpretar y comparar relaciones e información  existente en un conjunto de datos a través de distintos medios visuales, y uno de los medios que se analizan en este proyecto son los grafos.
 
-Gran variedad de características presentes en los datos pueden ser modeladas a través de grafos, y gracias a su enorme versatilidad diversos campos de estudio hacen de su uso; geografía, ciencias sociales, movilidad, telefonía, bases de datos, inteligencia artififial, medicina, electrónica, química, etc. Así, a través del proceso de *Stress Majorization* se buscó la una forma de poder dibujar este modelo tal que podamos identificar más fácilmente las relaciones en él conservando la estructura intrínseca del grafo y las similitudes existentes entre los nodos.
+Gran variedad de características presentes en los datos pueden ser modeladas a través de grafos, y gracias a su enorme versatilidad, diversos campos de estudio hacen de su uso; geografía, ciencias sociales, movilidad, telefonía, bases de datos, inteligencia artificial, medicina, electrónica, química, etc. 
+
+Dadas las características modeladas de los datos a través de los grafos, podemos decir que cada grafo es único y por tanto la forma de como dibujarlo de tal manera que se preserve la estructura de sus relaciones también es variada. Diversas técnicas se han realizado con este fin como, *Stochastic Gradient Descent*, *gradient proyection*, *Weighted Constraint Relaxation*, *Multidimensional Scaling* y el método implementado aquí *Stress Majorization*.
+
+Así, a través del proceso de *Stress Majorization* se buscó una forma de poder dibujar este modelo tal que podamos identificar más fácilmente las relaciones en él conservando la estructura intrínseca del grafo y las similitudes existentes entre los nodos.
 
 ## Introducción
 
-Un grafo $G={V, E}$ se define como un un conjunto de vértices $V$ y aristas $E$. en dónde cada nodo mapea alguna entidad o característica de los datos y las aristas las relaciones entre estos. Durante este trabajo nos concetramos a trabajar sobre grafos no dirigidos, es decir, las relación presente por una arista es bidireccional.
+Un grafo $G=\{V, E\}$ se define como un un conjunto de vértices $V$ y aristas $E$ en dónde cada nodo mapea alguna entidad o característica de los datos y las aristas las relaciones entre estos. Durante este proyecto nos concetramos a trabajar sobre grafos no dirigidos, es decir, las relación presente por una arista es bidireccional.
 
-Dadas las características modeladas de los datos a través de los grafos, podemos intuir que cada grafo es único y por tanto la forma de como dibujarlo de tal manera que se preserve la estructura de sus relaciones también es variada. Diversas técnicas se han realizado con este fin como, *Stochastic Gradient Descent*, *gradient proyection*, *Weighted Constraint Relaxation*, *Multidimensional Scaling* y el método implementado aquí *Stress Majorization*.
-
-*Stress Majorization* es una técnica de optimización usada comúnte para desplegar información almacenada en una matrix de distancias, la cual contiene la distancia entre cada par de nodos. Esta técnica trata de colocar cada nodo dentro de un *layout* multidimencional tal que la distancias sean preservadas de la mejor manera a través de la función de coste *stress*. La función de coste se define como:
+*Stress Majorization* es una técnica de optimización usada comúnmente para desplegar información almacenada en una matriz de distancias, la cual contiene la distancia entre cada par de nodos. Esta técnica trata de colocar cada nodo dentro de un *layout* multidimensional tal que la distancias sean preservadas de la mejor manera a través de la función de coste *stress*. La función de coste se define como:
 
 \begin{equation}\label{eq:stress}
 stress(X) = \sum_{i<j} w_{ij}(||X_i - X_j|| - d_{ij})^2
 \end{equation}
 
-Dónde $X$ es un *layout* $X$ de dimenciones $N x R$ con $N$ como el número de nodos y $R$ la dimensionalidad de este. $d_{ij}$ es la distancia entre el nodo $i$ y el nodo $j$ y $w_{ij}$ es una constante de normalización igual a $d_{ij}^{-\alpha}$.
+Dónde $X$ es un *layout* $X$ de dimensiones $N x R$ con $N$ como el número de nodos y $R$ la dimensionalidad de este. $d_{ij}$ es la distancia entre el nodo $i$ y el nodo $j$ y $w_{ij}$ es una constante de normalización igual a $d_{ij}^{-\alpha}$.
 
 Así, dado un *layout* inicial $X$ se busca minimizar la función de *stress* para encontrar un nuevo *layout* tal que se tenga un dibujado óptimo.
 
-##Stress Majorization
+## Stress Majorization
 
 Dado un *layout* $X$ de dimenciones $NxR$ con $R=2$ o  $R=3$  se busca minimizar la función de *stress*
 
@@ -129,7 +132,7 @@ El proceso iterativo se detiene mediante la siguiente condición
 \end{equation}
 
 
-con $\epsilon \sim 10e^-4$. Nótese que $L^w$ es constante durante todo el proceso y $L^{X(t)}$ depende del layout actual.
+comúnmente con $\epsilon \sim 10e^-4$. Nótese que $L^w$ es constante durante todo el proceso y $L^{X(t)}$ depende del layout actual y que las matrices formadas en el proceso derivadas del Laplaciado son semidefinidas positivas.
 
 ## Implementación y Resultados
 
@@ -139,9 +142,9 @@ Los conjuntos de datos fueron obtenidos desde la página de [The SuiteSparse Mat
 
 ```{r tables-mtcars, echo=FALSE}
 
-Nombre <- c('1138_bus', 'cage9', 'CSphd', 'dwt_1005', 'dwt_2680', 'g_26', 'gre_216a', 'gre_1107', 'qh882')
-Nodos <- c(1138, 3534, 1882, 1005, 2680, 2000, 216, 1107, 882)
-Tipo <- c('Power Network Problem', 'Directed Weighted Graph', 'Directed Graph', 'Structural Problem', 'Structural Problem', 'Undirected Random Graph', 'Directed Weighted Graph', 'Directed Weighted Graph', 'Power Network Problem')
+Nombre <- c('1138_bus', 'cage9', 'CSphd', 'dwt_1005', 'g_26', 'gre_216a', 'gre_1107', 'qh882')
+Nodos <- c(1138, 3534, 1882, 1005, 2000, 216, 1107, 882)
+Tipo <- c('Power Network Problem', 'Directed Weighted Graph', 'Directed Graph', 'Structural Problem', 'Undirected Random Graph', 'Directed Weighted Graph', 'Directed Weighted Graph', 'Power Network Problem')
 
 knitr::kable(data.frame(Nombre, Nodos, Tipo), caption = 'Datasets usados para dibujado')
 ```
@@ -154,16 +157,17 @@ Los valores de las coordenadas iniciales para cada nodo son tomados aleatoreamen
 
 ### Cálculo de las distancias entre los nodos
 
-En la literatura sobre diversas implementaciones se observa que el cálculo de la distancia de los nodos lo realizan a través del *Algorimo de Dijkstra*, el cual nos ayuda a obtener la distancia de un nodo hacia los demás. Sin embargo, necesitamos la distancia de todos los nodos hacia todos los nodos y así poder construir una matriz de distancias $D$, dónde la intersección de la fila $i$ con la columna $j$ representa la distancia que hay entre los dos nodos $i$ y $j$ se procedió a implementar el algortimo de *Floyd Warshall*. el cuál hace uso de de la aproximación *Buttom-Up* de programación dinámica para realizar el cálculo de todas estas distancias de unas sola vez.
+En la literatura sobre diversas implementaciones se observa que el cálculo de la distancia de los nodos lo realizan a través del *Algoritmo de Dijkstra*, el cual nos ayuda a obtener la distancia de un nodo hacia los demás. Sin embargo, necesitamos la distancia de todos los nodos hacia todos los nodos y así poder construir una matriz de distancias $D$, dónde la intersección de la fila $i$ con la columna $j$ representa la distancia que hay entre los dos nodos $i$ y $j$ se procedió a implementar el algoritmo de *Floyd Warshall*, el cuál hace uso de de la aproximación *Buttom-Up* de programación dinámica para realizar el cálculo de todas estas distancias de una sola vez.
 
 ### Implementación del algoritmo
 
-Como se vió anteriomente la solución de la función *stress* está dada por 
+Como se vio anteriormente, la solución de la función *stress* está dada por
 
 $$
 L^wX(t+1)^{(a)} = L^{X(t)}X(t)^{(a)}\ a = 1,2,3...R
 $$
-Con las matrices $L$ tal como se definen arriba, se muestra a continuación el pseudocódigo de la implementación.
+
+Con las matrices $L$ tal como se definen arriba. A continuación se muestra el pseudocódigo de la implementación.
 
 
 ``` {pseudocode, class.source = "numberLines"}
@@ -202,7 +206,9 @@ function graph_layout_solver1(n_nodes, graph, niters, tolerance) {
 ```
 
 
-Así, la solución está dada por resolver iterativamente un sistema lineal $Ax=b$ generadas por las matrices Laplacianas y el *layout* generado. La solución de estos sistemas fué encontrada con el uso de 5 métodos de solución; Método de Cholesky, Método de Doolittle, Método de Gauss-Seidel, Método de Jacobi, y el Método de Gradiente Conjugado.
+Así, la solución está dada por resolver iterativamente un sistema lineal $Ax=b$ generado consecutivamente por las matrices Laplacianas y el *layout* actual obtenido. La solución de estos sistemas fue encontrada con el uso de 5 métodos de solución; Método de Cholesky, Método de Doolittle, Método de Gauss-Seidel, Método de Jacobi, y el Método de Gradiente Conjugado.
+
+A continuación se presentan una comparativa de entre los métodos de solución para el grafo formado a partir del conjunto de datos *dwt_1005*.
 
 ```{r tables-msols, echo=FALSE}
 
@@ -212,6 +218,96 @@ time <- c('3.117s', '3.665s', '90.189s', '109.634s', '25.870s')
 stress_diff <- c(4.950656e-06, 4.370231e-06, 4.855111e-06, 8.760448e-06, 4.777939e-06)
 col_names = c('Método', 'Iteraciones', 'Tiempo de ejecución', 'Criterio de convergencia alcanzado')
 
-knitr::kable(data.frame(method, iterations, time, stress_diff), caption = 'Resultados de los métodos internos de solución', col.names=col_names)
+knitr::kable(data.frame(method, iterations, time, stress_diff), caption = 'Resultados de los métodos internos de solución para el dataset dwt_1005', col.names=col_names)
 ```
+
+Como se observa el la tabla de resultados (2) el método que mejor se comporta fue el de Cholesky con un tiempo promedio de 3.117 segundos y 13 iteraciones necesarias para la convergencia. El método de Doolittle a pesar te necesitar mayor número de iteraciones de convergencia su tiempo promedio de solución es muy similar para Choolesky, ambos con resultados muy similares en el dibujado del grafo.
+
+Los siguientes dos métodos iterativos, Gauss-Seidel y Jacobi también obtuvieron muy buenos resultados, sin embargo su tiempo de convergencia incrementó drásticamente. A pesar de que el proceso iterativo de la minimización del la función *stress* llegó a converger no se logró una convergencia en las soluciones parciales de los sistemas de ecuaciones generados, generando *layouts* nada prometedores.
+
+Las siguientes figuras muestran una comparativa entre el layout obtenido con los métodos descritos anteriormente contra la herramienta de dibujado de grafos [graph-tool](https://graph-tool.skewed.de/).
+
+``` {r, fig.cap='A la izquierda layout obtenido usando Graph-tool a la derecha el layout obtenido en la implementación del dataset 1138_bus.', fig.show='hold', echo=FALSE}
+img1 <- image_read("../project/inputs/1138_bus.mtx/buss_11138.png")
+img2 <- image_read("../project/inputs/1138_bus.mtx/Screenshot_20191217_182008.png")
+par(mfrow=c(1, 2))
+plot(img1)
+plot(img2)
+```
+
+``` {r, fig.cap='A la izquierda layout obtenido usando Graph-tool a la derecha el layout obtenido en la implementación del dataset cage9.', fig.show='hold', echo=FALSE}
+img1 <- image_read("../project/inputs/cage9/Screenshot_2019-12-17 Untitled.png")
+img2 <- image_read("../project/inputs/cage9/Screenshot_20191217_182335.png")
+par(mfrow=c(1, 2))
+plot(img1)
+plot(img2)
+```
+
+``` {r, fig.cap='A la izquierda layout obtenido usando Graph-tool a la derecha el layout obtenido en la implementación del dataset CSphd.', fig.show='hold', echo=FALSE}
+img1 <- image_read("../project/inputs/CSphd/Screenshot_2019-12-17 Untitled.png")
+img2 <- image_read("../project/inputs/CSphd/Screenshot_20191216_165107.png")
+par(mfrow=c(1, 2))
+plot(img1)
+plot(img2)
+```
+
+``` {r, fig.cap='A la izquierda layout obtenido usando Graph-tool a la derecha el layout obtenido en la implementación del dataset dwt_1005.', fig.show='hold', echo=FALSE}
+img1 <- image_read("../project/inputs/dwt_1005/Screenshot_2019-12-17 Untitled.png")
+img2 <- image_read("../project/inputs/dwt_1005/Screenshot_20191217_183055.png")
+par(mfrow=c(1, 2))
+plot(img1)
+plot(img2)
+```
+
+``` {r, fig.cap='A la izquierda layout obtenido usando Graph-tool a la derecha el layout obtenido en la implementación del dataset G26.', fig.show='hold', echo=FALSE}
+img1 <- image_read("../project/inputs/G26/Screenshot_2019-12-17 Untitled.png")
+img2 <- image_read("../project/inputs/G26/Screenshot_20191216_170933.png")
+par(mfrow=c(1, 2))
+plot(img1)
+plot(img2)
+```
+
+``` {r, fig.cap='A la izquierda layout obtenido usando Graph-tool a la derecha el layout obtenido en la implementación del dataset gre_216a.', fig.show='hold', echo=FALSE}
+img1 <- image_read("../project/inputs/gre_216a/Screenshot_2019-12-17 Untitled.png")
+img2 <- image_read("../project/inputs/gre_216a/Screenshot_20191216_162307.png")
+par(mfrow=c(1, 2))
+plot(img1)
+plot(img2)
+```
+
+``` {r, fig.cap='A la izquierda layout obtenido usando Graph-tool a la derecha el layout obtenido en la implementación del dataset gre_1107.', fig.show='hold', echo=FALSE}
+img1 <- image_read("../project/inputs/gre_1107/Screenshot_2019-12-17 Untitled.png")
+img2 <- image_read("../project/inputs/gre_1107/Screenshot_20191217_184353.png")
+par(mfrow=c(1, 2))
+plot(img1)
+plot(img2)
+```
+
+``` {r, fig.cap='A la izquierda layout obtenido usando Graph-tool a la derecha el layout obtenido en la implementación del dataset qh882.', fig.show='hold', echo=FALSE}
+img1 <- image_read("../project/inputs/qh882/Screenshot_2019-12-17 Untitled.png")
+img2 <- image_read("../project/inputs/qh882/Screenshot_20191217_184433.png")
+par(mfrow=c(1, 2))
+plot(img1)
+plot(img2)
+```
+
+\newpage 
+
+## Conclusiones
+
+Dado que la matrices usadas durante el proceso de solución derivan del la matriz Laplaciana y como se menciona en [1] son semidefinidas positivas. Así que los mejores métodos de solución propuestos son el Método de Choleskyy el Método de Gradiente Conjugado.
+
+Al igual que se menciona en diversos artículos se corroboró que el mejor método de solución para la minimización de la función *stress* fue el método de Choolesky. Como se vio en los resultados el tiempo de convergencia y número de iteraciones fue superior (en términos de rapidez) a los demás algoritmos probados. 
+
+Sin embargo, no se obtuvieron los resultados deseados con el Método de Gradiente a pesar de que los artículos mencionan su uso. Durante su ejecución se observaba un convergencia entre el criterio de parada dado por el cálculo de la función *stress* con el *layout* anterior y el *layout* actual, pero a pesar de los esfuerzos la convergencia de la solución de los sistemas de la forma $Ax=b$ generados internamente no ocurrió.
+
+Los resultados obtenidos y mostrados en las distintas figuras comparativas son bastante buenos, aunque aún lejos de los resultados posibles usando herramientas profesionales para este tipo de problemas.
+
+
+\newpage 
+
+## Referencias
+
+- Emden R. Gansner, Yehuda Koren and Stephen North, Graph Drawing by Stress Majorization, Springer 2004
+- Tim Dwyer, Yehuda Koren, Kim Marriott, Constrained graph layout by stress majorization and gradient projection, 13th International Symposium on Graph Drawing, 2005
 

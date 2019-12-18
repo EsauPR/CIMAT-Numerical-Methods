@@ -36,6 +36,7 @@ static NSMatrix _get_distances(vector<pair<pair<int, int>, double>> graph, int n
         for (int j = 0; j < n_nodes; j++) {
             distances.items[i][j] = n_nodes + 5;
         }
+        // distances.items[i][i] = 1;
     }
 
     // Set the distance for connected nodes to 1
